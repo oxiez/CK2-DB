@@ -4,6 +4,8 @@ import get_dynasties
 import get_chars
 import get_provs
 import get_titles
+import get_religion
+import get_culture
 
 # connect and get a cursor
 conn = psycopg2.connect("dbname=postgres user=postgres password=superuser")
@@ -19,6 +21,12 @@ with open("Leon1067_02_12.ck2") as f:
 	#get_chars.get_chars(f, cur)
 	#get_provs.get_provs(f, cur)
 	#get_titles.get_titles(f, cur)
+
+#read in religion
+get_religion.get_religion(cur)
+get_culture.get_culture(cur)
+
+#read in culture
 
 # commit changes made and disconnect from database
 conn.commit()
