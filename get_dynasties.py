@@ -5,7 +5,12 @@ def get_dynasties(file,cur):
     line = file.readline()
     while(line):
         line = file.readline()
-        if line=='\t':
-            cur.execute('INSERT INTO ')
         
+        #beginning of dynasties data
+        if line=='\tdynasties\n':
+            #every dynasty has 14 lines of information
+            i = line[2:len(line-1)]
+            cur.execute('INSERT INTO dynasty Values(%s,%s)',[i,name])
+        
+        #end of dynasties data
         if line=='\t}': break

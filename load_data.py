@@ -1,9 +1,9 @@
 
 import psycopg2
-import get_dynasties.py
-import get_chars.py
-import get_provs.py
-import get_titles.py
+import get_dynasties
+import get_chars
+import get_provs
+import get_titles
 
 # connect and get a cursor
 conn = psycopg2.connect("dbname=postgres user=postgres password=superuser")
@@ -15,10 +15,10 @@ with open("ck2_make_table.sql") as f:
 
 # parse the file and fill the tables with data
 with open("Leon1067_02_12.ck2") as f:
-	get_dynasties(f, cur)
-	get_chars(f, cur)
-	get_provs(f, cur)
-	get_titles(f, cur)
+	get_dynasties.get_dynasties(f, cur)
+	get_chars.get_chars(f, cur)
+	get_provs.get_provs(f, cur)
+	get_titles.get_titles(f, cur)
 
 # parse in culture
 
