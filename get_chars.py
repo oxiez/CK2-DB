@@ -61,7 +61,7 @@ def get_chars(file, cur):
 		elif line == '}':
 			if(num_brace > 1):
 				
-				cur.execute('INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)', [char_id, birthName, dynasty, isMale, birthday, deathday, fatherID, real_fatherID, motherID, spouseID, religionID, cultureID, fertility, health, wealth, chostID, prestige, piety, provinceLocationID, employerID, martial, diplomacy, stewardship, intrigue, learning = None])
+				cur.execute('INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)', [char_id, birthName, dynasty, isMale, birthday, deathday, fatherID, real_fatherID, motherID, spouseID, religionID, cultureID, fertility, health, wealth, chostID, prestige, piety, provinceLocationID, employerID, martial, diplomacy, stewardship, intrigue, learning])
 				char_id = None
 				birthName = None
 				dynasty = None
@@ -113,7 +113,7 @@ def get_chars(file, cur):
 				real_fatherID = int(line[5:])
 			elif line[0:3] == "mot=":
 				motherID = int(line[4:])
-			elif line[0:6] == "spouse="
+			elif line[0:6] == "spouse=":
 				spouseID = int(line[7:])
 			elif line[0:3] == "rel=":
 				religionID = get_rel_ID(line[5:-1])
