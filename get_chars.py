@@ -60,7 +60,8 @@ def get_chars(file, cur):
 			continue
 		elif line == '}':
 			if(num_brace > 1):
-				# PUSH
+				
+				cur.execute('INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)', [char_id, birthName, dynasty, isMale, birthday, deathday, fatherID, real_fatherID, motherID, spouseID, religionID, cultureID, fertility, health, wealth, chostID, prestige, piety, provinceLocationID, employerID, martial, diplomacy, stewardship, intrigue, learning = None])
 				char_id = None
 				birthName = None
 				dynasty = None
