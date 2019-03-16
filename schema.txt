@@ -1,4 +1,4 @@
-Person(INT id, VARCHAR(63) birthName, INT dynasty, BOOLEAN isMale, DATE birthday, DATE deathday, INT fatherID, INT motherID, INT spouseID, INT religionID, INT cultureID, FLOAT fertility, FLOAT health, FLOAT wealth, INT hostID, FLOAT prestige, FLOAT piety, INT provinceLocationID, INT employerID, INT martial, INT diplomacy, INT stewardship, INT intrigue, INT learning)
+Person(INT id, VARCHAR(63) birthName, INT dynasty, BOOLEAN isMale, DATE birthday, DATE deathday, INT fatherID, INT real_fatherID, INT motherID, INT spouseID, INT religionID, INT cultureID, FLOAT fertility, FLOAT health, FLOAT wealth, INT hostID, FLOAT prestige, FLOAT piety, INT provinceLocationID, INT employerID, INT martial, INT diplomacy, INT stewardship, INT intrigue, INT learning)
 
 Trait(INT personID, INT traitID)
 
@@ -48,7 +48,8 @@ CREATE TABLE Person(
 	isMale BOOLEAN, 
 	birthday DATE, 
 	deathday DATE, 
-	fatherID INT, 
+	fatherID INT,  
+	real_fatherID INT, 
 	motherID INT, 
 	spouseID INT, 
 	religionID INT, 
