@@ -1,2 +1,4 @@
 def get_titles(file):
-	pass
+    x = file.readline()
+    while(x):
+        x = file.readline()

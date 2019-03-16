@@ -1,2 +1,5 @@
 def get_dynasties(file):
-	pass
+	
+    x = file.readline()
+    while(x):
+        x = file.readline()
