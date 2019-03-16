@@ -9,7 +9,7 @@ import get_culture
 import get_traits
 
 # connect and get a cursor
-conn = psycopg2.connect("dbname=postgres user=postgres password=superuser")
+conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
 cur = conn.cursor()
 
 # create the tables
