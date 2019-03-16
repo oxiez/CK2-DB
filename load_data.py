@@ -16,17 +16,13 @@ with open("ck2_make_table.sql") as f:
 # parse the file and fill the tables with data
 with open("Leon1067_02_12.ck2") as f:
 	get_dynasties.get_dynasties(f, cur)
-	get_chars.get_chars(f, cur)
-	get_provs.get_provs(f, cur)
-	get_titles.get_titles(f, cur)
-
-# parse in culture
-
-
-# parse in religion
-
+	#get_chars.get_chars(f, cur)
+	#get_provs.get_provs(f, cur)
+	#get_titles.get_titles(f, cur)
 
 # commit changes made and disconnect from database
 conn.commit()
 cur.close()
 conn.close()
+
+print("All done!")
