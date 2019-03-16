@@ -1,0 +1,31 @@
+
+player
+
+dynasties
+
+character
+
+delayed_event
+
+relation (opinions?
+
+id ????
+
+religion
+
+
+religion_group
+culture culture_group ???
+
+provinces
+
+title
+
+active ambitions and plots
+
+combat
+
+active wars
+
+trade routes, checksum, e.t.c
+
