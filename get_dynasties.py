@@ -7,19 +7,26 @@ def get_dynasties(file,cur):
     while(not done):
         line = file.readline()
         #beginning of dynasties data
-        if line=='\tdynasties\n':
-            #while not the end of the data
-            while line!='\t}':
-                #parse 14 lines 
-                line = line.readline()
+        if line=='\tdynasties=\n':
+            line = file.readline() #get rid of '\t{\n'
+            line = file.readline()
+            #while not the end of the data '\t}\n'
+            while line!='\t}\n':
+                #parse this dynasty
                 #get the id
-                i = line[2:len(line-1)]
-                line = f.readline()
+                i = line[2:len(line)-2]
+                # 1 is bad news ''
+                if i == '1': break
                 #get the name
-                name = line[2:len(line-1)]
+                line = file.readline()
+                line = file.readline()
+                name = line[9:len(line)-2]
                 #add to the database
                 cur.execute('INSERT INTO dynasty Values(%s,%s)',[i,name])
-                #ignore the next 12 lines
-                for i in range(12):
-                    line = line.readline()
+                print(i,name)
+                #ignore the next lines until end of dynasty
+                while(line!='\t\t}\n'):
+                    line = file.readline()
+                # the next line is either a new dynasty or the end of the file
+                line = file.readline()
             done = True
