@@ -25,7 +25,8 @@ CREATE TABLE Person(
 	isMale BOOLEAN, 
 	birthday DATE, 
 	deathday DATE, 
-	fatherID INT, 
+	fatherID INT,  
+	real_fatherID INT, 
 	motherID INT, 
 	spouseID INT, 
 	religionID INT, 
@@ -92,7 +93,6 @@ CREATE TABLE Barony(
 CREATE TABLE Religion(
 	religionID INT PRIMARY KEY, 
 	religionName VARCHAR(63), 
-	moralAuthority FLOAT, 
 	heresy BOOLEAN,  
 	religionGroup VARCHAR(63)
 	
