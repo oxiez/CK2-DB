@@ -15,10 +15,10 @@ with open("ck2_make_table.sql") as f:
 
 # parse the file and fill the tables with data
 with open("Leon1067_02_12.ck2") as f:
-	get_dynasties(f)
-	get_chars(f)
-	get_provs(f)
-	get_titles(f)
+	get_dynasties(f, cur)
+	get_chars(f, cur)
+	get_provs(f, cur)
+	get_titles(f, cur)
 
 # parse in culture
 
