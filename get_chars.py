@@ -23,7 +23,7 @@ def get_rel_ID(str):
 def get_chars(file, cur):
 	# we should start in the right place
 	line = file.readline()
-	print(line) #character=
+	#print(line) #character=
 
 	char_id = None
 	birthName = None
@@ -57,9 +57,9 @@ def get_chars(file, cur):
 
 		line = file.readline()
 		line = line.strip()
-		print(num_brace)
-		print(line)
-		if line == '{':
+		#print(num_brace)
+		#print(line)
+		if line == '{' or (line.find('{')!=-1 and line.find('}')==-1):
 			num_brace += 1
 			continue
 		elif line == '}':
@@ -102,8 +102,9 @@ def get_chars(file, cur):
 		else:
 			if line[0:3] == "bn=":
 				birthName = line[4:-1]
+				print(birthName)
 			elif line[0:4] == "dnt=":
-				dynasty = int(line[5:])
+				dynasty = int(line[4:])
 			elif line == "fem=yes":
 				isMale = False
 			elif line[0:4] == "b_d=":
