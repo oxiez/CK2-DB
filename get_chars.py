@@ -98,45 +98,45 @@ def get_chars(file, cur):
 		elif (num_brace > 2):
 			continue
 		else:
-			if line[0:3] == "bn=":
-				birthName = line[4:-1]
-			elif line[0:4] == "dnt=":
-				birthName = int(line[4:])
+			if line[0:4] == "bn=":
+				birthName = line[5:-1]
+			elif line[0:5] == "dnt=":
+				birthName = int(line[5:])
 			elif line == "fem=yes":
 				isMale = False
-			elif line[0:4] == "b_d=":
-				birthday = make_date(line[5:-1])
-			elif line[0:4] == "d_d=":
-				deathday = make_date(line[5:-1])
-			elif line[0:4] == "fat=":
-				fatherID = int(line[5:])
-				real_fatherID = int(line[5:])
-			elif line[0:5] == "rfat=":
+			elif line[0:5] == "b_d=":
+				birthday = make_date(line[6:-1])
+			elif line[0:5] == "d_d=":
+				deathday = make_date(line[6:-1])
+			elif line[0:5] == "fat=":
+				fatherID = int(line[6:])
 				real_fatherID = int(line[6:])
-			elif line[0:4] == "mot=":
-				motherID = int(line[5:])
-			elif line[0:6] == "spouse=":
-				spouseID = int(line[7:])
-			elif line[0:3] == "rel=":
-				religionID = get_rel_ID(line[5:-1])
-			elif line[0:3] == "cul=":
-				cultureID = get_cul_ID(line[5:-1]) 
-			elif line[0:3] == "fer=":
-				fertility = float(line[4:]) 
-			elif line[0:6] == "health=":
-				health = float(line[7:]) 
-			elif line[0:6] == "wealth=":
-				wealth = float(line[7:])
-			elif line[0:3] == "prs=":
-				prestige = float(line[4:]) 
-			elif line[0:5] == "piety=":
-				piety = float(line[6:])
-			elif line[0:3] == "emp=":
-				employerID = int(line[4:])
-			elif line[0:4] == "host=":
-				hostID = int(line[5:])
-			elif line[0:4 == "att="]:
-				att = line[4:-1]
+			elif line[0:6] == "rfat=":
+				real_fatherID = int(line[:])7
+			elif line[0:5] == "mot=":
+				motherID = int(line[6:])
+			elif line[0:7] == "spouse=":
+				spouseID = int(line[8:])
+			elif line[0:4] == "rel=":
+				religionID = get_rel_ID(line[6:-1])
+			elif line[0:4] == "cul=":
+				cultureID = get_cul_ID(line[6:-1]) 
+			elif line[0:4] == "fer=":
+				fertility = float(line[5:]) 
+			elif line[0:7] == "health=":
+				health = float(line[8:]) 
+			elif line[0:7] == "wealth=":
+				wealth = float(line[8:])
+			elif line[0:4] == "prs=":
+				prestige = float(line[5:]) 
+			elif line[0:6] == "piety=":
+				piety = float(line[7:])
+			elif line[0:4] == "emp=":
+				employerID = int(line[5:])
+			elif line[0:5] == "host=":
+				hostID = int(line[6:])
+			elif line[0:5] == "att=":
+				att = line[6:-1]
 				attributes = att.split()
 
 				diplomacy = int(attributes[0])
@@ -144,8 +144,8 @@ def get_chars(file, cur):
 				stewardship = int(attributes[2])
 				intrigue = int(attributes[3])
 				learning = int(attributes[4])
-			elif line[0:3] == "tr=":
-				tr = line[4:-1]
+			elif line[0:4] == "tr=":
+				tr = line[5:-1]
 				traits = tr.split()
 
 				for t in traits:
