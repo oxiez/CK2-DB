@@ -64,7 +64,7 @@ def get_chars(file, cur):
 			continue
 		elif line == '}':
 			if(num_brace == 2):
-				print('pushing ' + str(birthName))
+				#print('pushing ' + str(birthName))
 				cur.execute('INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [char_id, birthName, dynasty, isMale, birthday, deathday, fatherID, real_fatherID, motherID, spouseID, religionID, cultureID, fertility, health, wealth, hostID, prestige, piety, provinceLocationID, employerID, martial, diplomacy, stewardship, intrigue, learning])
 				char_id = None
 				birthName = None
@@ -102,7 +102,6 @@ def get_chars(file, cur):
 		else:
 			if line[0:3] == "bn=":
 				birthName = line[4:-1]
-				print(birthName)
 			elif line[0:4] == "dnt=":
 				dynasty = int(line[4:])
 			elif line == "fem=yes":
@@ -126,9 +125,9 @@ def get_chars(file, cur):
 				cultureID = get_cul_ID(line[5:-1]) 
 			elif line[0:4] == "fer=":
 				fertility = float(line[4:]) 
-			elif line[0:6] == "health=":
+			elif line[0:7] == "health=":
 				health = float(line[7:]) 
-			elif line[0:6] == "wealth=":
+			elif line[0:7] == "wealth=":
 				wealth = float(line[7:])
 			elif line[0:4] == "prs=":
 				prestige = float(line[4:]) 
