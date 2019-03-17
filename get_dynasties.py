@@ -14,15 +14,31 @@ def get_dynasties(file,cur):
             #while not the end of the data '\t}\n'
             while line!='\t}\n':
                 #parse this dynasty
+                line = line.strip()
                 #get the id
-                i = line[2:len(line)-2]
+                i = line[0:len(line)-1]
                 #get the name
                 line = file.readline()
                 line = file.readline()
-                name = line[9:len(line)-2]
                 #historical dynasties are missing information: name appears as f_arms
-                if name=='f_arms':
-                    name = None
+                name = None                
+                if 'name' in line:
+                    #difficulties in finding and removing " symbols as well as comments (denoted by #)
+                    #  :(
+                    index = line.find('"')
+                    if index==-1:
+                        index = line.find('=')
+                    name = line[index+1:]
+                    name = name.strip()                    
+                    name = name.strip('"')
+                    name = name.rstrip('"')
+                    name = name.strip()
+                    index = name.find('"')
+                    if index!=-1:
+                        name = name[0:index-1]
+                    index = name.find('#')
+                    if index!=-1:
+                        name = name[0:index-2]
                 #add to the database
                 cur.execute('INSERT INTO dynasty Values(%s,%s)',[i,name])
                 #ignore the next lines until end of dynasty
@@ -42,7 +58,20 @@ def get_dynasties(file,cur):
             #get missing name   
             while(line[1:5]!='name'):
                 line = f.readline()
-            name = line[7:len(line)-2]
+            index = line.find('"')
+            if index==-1:
+                index = line.find('=')
+            name = line[index+1:]
+            name = name.strip()
+            name = name.strip('"')
+            name = name.rstrip('"')
+            name = name.strip()
+            index = name.find('"')
+            if index!=-1:
+                name = name[0:index-1]
+            index = name.find('#')
+            if index!=-1:
+                name = name[0:index-2]                
             #move until end of parse block
             while(line!='}\n' and line!='}'):
                 line = f.readline()
