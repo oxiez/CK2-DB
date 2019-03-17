@@ -3,11 +3,13 @@
 		# INT hostID, FLOAT prestige, FLOAT piety, INT provinceLocationID, INT employerID, INT martial, INT diplomacy, INT stewardship,
 		 # INT intrigue, INT learning)
 
+import datetime
+
 def make_date(str):
 	dt_arr = str.split('.')
 	year = int(dt_arr[0])
 	month = int(dt_arr[1])
-	date = int(dt_arr[2])
+	day = int(dt_arr[2])
 
 	result_date = datetime.date(year, month, day)
 	return result_date
@@ -101,7 +103,7 @@ def get_chars(file, cur):
 			if line[0:3] == "bn=":
 				birthName = line[4:-1]
 			elif line[0:4] == "dnt=":
-				birthName = int(line[4:])
+				dynasty = int(line[5:])
 			elif line == "fem=yes":
 				isMale = False
 			elif line[0:4] == "b_d=":
@@ -115,30 +117,29 @@ def get_chars(file, cur):
 				real_fatherID = int(line[6:])
 			elif line[0:4] == "mot=":
 				motherID = int(line[5:])
-			elif line[0:6] == "spouse=":
+			elif line[0:7] == "spouse=":
 				spouseID = int(line[7:])
-			elif line[0:3] == "rel=":
+			elif line[0:4] == "rel=":
 				religionID = get_rel_ID(line[5:-1])
-			elif line[0:3] == "cul=":
+			elif line[0:4] == "cul=":
 				cultureID = get_cul_ID(line[5:-1]) 
-			elif line[0:3] == "fer=":
+			elif line[0:4] == "fer=":
 				fertility = float(line[4:]) 
 			elif line[0:6] == "health=":
 				health = float(line[7:]) 
 			elif line[0:6] == "wealth=":
 				wealth = float(line[7:])
-			elif line[0:3] == "prs=":
+			elif line[0:4] == "prs=":
 				prestige = float(line[4:]) 
-			elif line[0:5] == "piety=":
+			elif line[0:6] == "piety=":
 				piety = float(line[6:])
-			elif line[0:3] == "emp=":
+			elif line[0:4] == "emp=":
 				employerID = int(line[4:])
-			elif line[0:4] == "host=":
+			elif line[0:5] == "host=":
 				hostID = int(line[5:])
-			elif line[0:4 == "att="]:
+			elif line[0:4] == "att=":
 				att = line[4:-1]
-				attributes = att.split()
-
+				attributes = ''.join(att.split('{')).split()
 				diplomacy = int(attributes[0])
 				martial = int(attributes[1])
 				stewardship = int(attributes[2])
