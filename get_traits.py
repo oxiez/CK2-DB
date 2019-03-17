@@ -11,8 +11,9 @@ def add_traits(file,cur,trait_id):
     #open the file and add traits to the traitlookup relation
     with open(file) as f:
         for line in f.readlines():
-            if line.find('=')!=-1 and line.find('{')!=-1 and line.find('\t')==-1:
+            if line.find('=')!=-1 and line.find('{')!=-1 and line[0]!='\t':
                 name = line[0:line.find('=')-1]
+                if name.find('#')!=-1: continue
                 cur.execute('INSERT INTO traitlookup Values(%s,%s)',[trait_id,name])
                 trait_id += 1
     return trait_id
