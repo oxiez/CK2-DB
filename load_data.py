@@ -17,7 +17,7 @@ with open("ck2_make_table.sql") as f:
     cur.execute(f.read())
 
 #read in religion and culture
-#get_religion.get_religion(cur)
+get_religion.get_religion(cur)
 #get_culture.get_culture(cur)
 get_traits.get_traits(cur)
 
