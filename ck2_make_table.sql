@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS BloodLineOwners;
 CREATE TABLE Person(
 	id INT PRIMARY KEY, 
 	birthName VARCHAR(63), 
-	dynasty INT, 
+	dynastyID INT, 
 	isMale BOOLEAN, 
 	birthday DATE, 
 	deathday DATE, 
@@ -58,12 +58,13 @@ CREATE TABLE TraitLookup(
 );
 
 CREATE TABLE Dynasty(
-	id INT PRIMARY KEY, 
-	name VARCHAR(63) 
+	dynastyID INT PRIMARY KEY, 
+	dynastyName VARCHAR(63) 
 );
 
 CREATE TABLE Title(
 	id VARCHAR(63) PRIMARY KEY, 
+	holderid INT,
 	name VARCHAR(63), 
 	level CHAR(1), 
 	deFactoLeige VARCHAR(63), 

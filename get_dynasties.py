@@ -76,7 +76,7 @@ def get_dynasties(file,cur):
             while(line!='}\n' and line!='}'):
                 line = f.readline()
             #add the name to the table
-            cur.execute('UPDATE dynasty SET name = %s WHERE id=%s',[name,i])
+            cur.execute('UPDATE dynasty SET dynastyName = %s WHERE dynastyID=%s',[name,i])
             #move pointer to next integer entry
             line = f.readline()
             #end of file when nextline is nothing
