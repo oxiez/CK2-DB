@@ -25,6 +25,7 @@ get_traits.get_traits(cur)
 with open("Leon1067_02_12.ck2") as f:
 	get_dynasties.get_dynasties(f, cur)
 	get_chars.get_chars(f, cur)
+	get_religion.get_heresies(f, cur)
 	#get_provs.get_provs(f, cur)
 	#get_titles.get_titles(f, cur)
 
