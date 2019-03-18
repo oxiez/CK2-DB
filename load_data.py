@@ -1,5 +1,7 @@
 
 import psycopg2
+import io
+
 import get_dynasties
 import get_chars
 import get_provs
@@ -17,16 +19,16 @@ with open("ck2_make_table.sql") as f:
     cur.execute(f.read())
 
 #read in religion and culture
-get_religion.get_religion(cur)
-get_culture.get_culture(cur)
-get_traits.get_traits(cur)
+#get_religion.get_religion(cur)
+#get_culture.get_culture(cur)
+#get_traits.get_traits(cur)
 
 # parse the file and fill the tables with data
-with open("Leon1067_02_12.ck2") as f:
-	get_dynasties.get_dynasties(f, cur)
-	get_chars.get_chars(f, cur)
-	get_religion.get_heresies(f, cur)
-	#get_provs.get_provs(f, cur)
+with io.open("Leon1067_02_12.ck2", encoding="cp1252") as f:
+	#get_dynasties.get_dynasties(f, cur)
+	#get_chars.get_chars(f, cur)
+	#get_religion.get_heresies(f, cur)
+	get_provs.get_provs(f, cur)
 	#get_titles.get_titles(f, cur)
 
 # commit changes made and disconnect from database
