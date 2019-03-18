@@ -1,32 +1,44 @@
 import io
+import re
 
-province_tags = set(["id",
-                    "culture",
-                    "religion"])
-barony_tags = set(["type"])
+import parser
+
+barony_regex = {"type" : None}
+
+province_regex = {"culture" : None,
+                  "religion" : None,
+                  "name" : None,
+                  "._" : barony_regex}
 
 def get_provs(file, cur):
-    # Jump to beginning of procinces
+    # Jump to beginning of provinces
     x = file.readline().strip()
-    while (x != "provinces="): # Read until provinces= or EOF
+    while (not x[0:len("provinces=")] == "provinces="):
         x = file.readline().strip()
 
+    # Skip to the opening bracket
+    if(not "{" in x):
+        while(x and not x == "{"):
+            x = file.readline().strip()
+        if(not x):
+            raise Exception("ERROR: No opening bracket for Provinces!")
     x = file.readline().strip()
-    if(x != "{"):
-        raise Exception("ERROR: No opening bracket for Provinces!")
-    
-    # Start reading provinces until we get to the same level enclosing bracket or EOF
-    
-    x = file.readline().strip()
-    while(x and x != "}"):
-        province = {}
-        baronies = []
+
+    while(x and not x == "}"):
+        if(not "=" in x):
+            x = file.readline().strip()
+            continue
+        pair = x.split()
         try:
-            province["id"] = int(x[0:-1])
+            id = int(x[0:-1])
         except ValueError:
             raise Exception("ERROR: Province ID is not an int!")
-        get_prov_tags(file, province, baronies)
-        x = file.readline().strip()
+
+        province = parser.getAttr(file, province_regex, x)
+        province["id"] = id
+
+        if("name" in province): # Because we need to apply an operation on it
+            province["name"] = province["name"].replace("\"","")
 
         # Insert the province first
         cur.execute("INSERT INTO province VALUES(%s,%s,%s,%s,%s)",
@@ -37,52 +49,17 @@ def get_provs(file, cur):
                      province.get("religion")]
         )
 
-        # Insert all baronies
-        for barony in baronies:
-            cur.execute("INSERT INTO barony VALUES(%s,%s,%s)",
-                        [barony.get("name"),
-                         barony.get("province"),
-                         barony.get("type")]
-            )
-        
-def get_prov_tags(file, province, baronies):
-    x = file.readline().strip()
-    while(x and x != "}"):
-        statement = x.split("=", 1) # Split up to first =        
-        if(statement[0] in province_tags): # If tag
-            province[statement[0]] = statement[1]
-        elif(statement[0] == "name"): # If name (parse the quotations)
-            province["name"] = statement[1].replace("\"", "")
-        elif(len(statement) > 1 and len(statement[1]) == 0): # Multiline attribute
-            parse_multiline_attr(file, province, baronies, statement[0], 1)
+        for key in province.keys():
+            if(not re.match("._", key) == None):
+                name = key[2].upper() + key[3:len(key)]
+                cur.execute("INSERT INTO barony VALUES(%s, %s, %s)",
+                            [name,
+                             id,
+                             province[key]["type"]])
+  
         x = file.readline().strip()
+            
+    if(not x == "}"):
+        raise Exception("ERROR: No closing bracket for Provinces!")
 
-# level: 0 = unknown, 1 = province_attr
-def parse_multiline_attr(file, province, baronies, tag, level):
-    x = file.readline().strip()
-    if(x and x != "{"):
-        raise Exception("ERROR: No opening bracket for a multiline attributes!")
-    
-    if(len(tag) > 2 and tag[1] == "_" and level == 1): # If barony
-        barony_name = tag[2:]
-        barony_name = barony_name[0].upper() + barony_name[1:]
-        barony = {"name" : barony_name,
-                  "province" : province["id"]
-        }
 
-        while(x and x != "}"):
-            statement = x.split("=", 1) # Split up to first =
-            if(statement[0] in barony_tags):
-                barony[statement[0]] = statement[1]
-            elif(len(statement) > 1 and statement[1] == ""):
-                parse_multiline_attr(file, province, baronies, statement[0], 0)
-            x = file.readline().strip()
-        
-        baronies.append(barony)
-    else:
-        while(x and x != "}"):
-            statement = x.split("=", 1) # Split up to first =
-            if(len(statement) > 1 and statement[1] == ""):
-                parse_multiline_attr(file, province, baronies, "", 0)
-            x = file.readline().strip()
-    
