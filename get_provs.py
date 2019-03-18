@@ -1,3 +1,5 @@
+import io
+
 province_tags = set(["id",
                     "culture",
                     "religion"])

@@ -1,3 +1,4 @@
+import io
 
 def get_traits(cur):
     trait_files = ['00_traits.txt','01_traits.txt',
@@ -9,7 +10,7 @@ def get_traits(cur):
 
 def add_traits(file,cur,trait_id):
     #open the file and add traits to the traitlookup relation
-    with open(file) as f:
+    with io.open(file,encoding="cp1252") as f:
         for line in f.readlines():
             if line.find('=')!=-1 and line.find('{')!=-1 and line[0]!='\t':
                 name = line[0:line.find('=')-1]

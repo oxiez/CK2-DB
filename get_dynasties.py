@@ -1,4 +1,4 @@
-
+import io
 
 def get_dynasties(file,cur):
     # The following code adds in-game dynasties to the game
@@ -49,7 +49,7 @@ def get_dynasties(file,cur):
             done = True
     
     # add information for existant historical dynasties
-    with open('00_dynasties.txt') as f:
+    with io.open('00_dynasties.txt',encoding="cp1252") as f:
         line = f.readline()
         while(line!='}'):
             #line is currently an id
