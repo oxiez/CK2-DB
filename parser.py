@@ -17,13 +17,13 @@ def getAttr(file, regex, attr_line):
     
     # Determine if multiline or single attribute
     pair = attr_line.split("=", 1)
-    tag = pair[0]
+    tag = pair[0].strip()
     val = ""
     if(len(pair) > 1): val = pair[1].strip()
     if(not val == "" and not val == "{"): # single attribute check
         if("}" in pair[1] and not "{" in pair[1]):
             raise Exception("ERROR: No opening bracket for corresponding closing bracket!")
-        return pair[1]
+        return val
 
     # Multiline attributes
     # At this point, we assume that } is on a separate line
@@ -46,6 +46,7 @@ def getAttr(file, regex, attr_line):
             valid = False
             for key in regex.keys():
                 if(not re.match(key, pair[0]) == None):
+                    pair[0] = pair[0].strip()
                     results[pair[0]] = getAttr(file, regex[key], x)
                     valid = True
                     break
