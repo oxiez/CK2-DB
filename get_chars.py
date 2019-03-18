@@ -111,12 +111,12 @@ def get_chars(file, cur):
 			elif line[0:4] == "d_d=":
 				deathday = make_date(line[5:-1])
 			elif line[0:4] == "fat=":
-				fatherID = int(line[5:])
-				real_fatherID = int(line[5:])
+				fatherID = int(line[4:])
+				real_fatherID = int(line[4:])
 			elif line[0:5] == "rfat=":
-				real_fatherID = int(line[6:])
+				real_fatherID = int(line[5:])
 			elif line[0:4] == "mot=":
-				motherID = int(line[5:])
+				motherID = int(line[4:])
 			elif line[0:7] == "spouse=":
 				spouseID = int(line[7:])
 			elif line[0:4] == "rel=":
