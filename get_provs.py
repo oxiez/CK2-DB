@@ -12,25 +12,17 @@ province_regex = {"culture" : None,
 
 def get_provs(file, cur):
     # Jump to beginning of provinces
-    x = file.readline().strip()
-    while (not x[0:len("provinces=")] == "provinces="):
-        x = file.readline().strip()
+    parser.jumpTo(file, "^provinces=")
+    x = file.readline()
+    parsed = x.strip()
 
-    # Skip to the opening bracket
-    if(not "{" in x):
-        while(x and not x == "{"):
-            x = file.readline().strip()
-        if(not x):
-            raise Exception("ERROR: No opening bracket for Provinces!")
-    x = file.readline().strip()
-
-    while(x and not x == "}"):
+    while(x and not parsed == "}"):
         if(not "=" in x):
-            x = file.readline().strip()
+            x = file.readline()
+            parsed = x.strip()
             continue
-        pair = x.split()
         try:
-            id = int(x[0:-1])
+            id = int(parsed[0:-1])
         except ValueError:
             raise Exception("ERROR: Province ID is not an int!")
 
@@ -57,9 +49,10 @@ def get_provs(file, cur):
                              id,
                              province[key]["type"]])
   
-        x = file.readline().strip()
+        x = file.readline()
+        parsed = x.strip()
             
-    if(not x == "}"):
+    if(not x):
         raise Exception("ERROR: No closing bracket for Provinces!")
 
 

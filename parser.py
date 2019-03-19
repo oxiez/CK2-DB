@@ -27,21 +27,27 @@ def getAttr(file, regex, attr_line):
 
     # Multiline attributes
     # At this point, we assume that } is on a separate line
-    x = val
-    while(not x == "{"): # Skip everything until opening bracket
+    x = "insert word here"
+    parsed = val
+    while(x and not parsed == "{"): # Skip everything until opening bracket
         # { must be on the first line or a newline by itself
-        x = file.readline().strip()
+        x = file.readline()
+        parsed = x.strip()
     if(not x):
         raise Exception("ERROR: No opening bracket for attribute {}".format(tag))
 
     results = {} # We can start parsing the tags now
-    x = file.readline().strip()
-    while(x and not x == "}"):
-        if(not "=" in x): # empty line
-            x = file.readline().strip()
-            continue
+    x = file.readline()
+    parsed = x.strip() # We need to separate the two because has newlines
+    while(x and not parsed == "}"):
         # If regex == None, ignore all attributes
         pair = x.split("=", 1)
+
+        if(len(pair) < 2): # No = character
+            x = file.readline()
+            parsed = x.strip()
+            continue
+        
         if(not regex == None):
             valid = False
             for key in regex.keys():
@@ -54,8 +60,28 @@ def getAttr(file, regex, attr_line):
                 getAttr(file, None, x)
         else:
             getAttr(file, None, x)
-        x = file.readline().strip()
-    if(not x == "}"):
+        x = file.readline()
+        parsed = x.strip()
+    if(not x):
         raise Exception("ERROR: No closing bracket for attribute {}".format(tag))
     
     return results
+
+# Takes file pointer and regex string
+# Jumps to line of value(s) (the opening bracket if multiple values)
+def jumpTo(file, regex, multi = True):
+    x = file.readline()
+    parsed = x.strip()
+    while (x and re.match(regex, parsed) == None):
+        x = file.readline()
+        parsed = x.strip()
+        
+    if(not multi): return    
+    
+    # Skip to the opening bracket
+    if(not "{" in x):
+        while(x and not parsed == "{"):
+            x = file.readline()
+            parsed = x.strip()
+        if(not x):
+            raise Exception("ERROR: No opening bracket for {}".format(regex))
