@@ -41,7 +41,7 @@ def getAttr(file, regex, attr_line):
     parsed = x.strip() # We need to separate the two because has newlines
     while(x and not parsed == "}"):
         # If regex == None, ignore all attributes
-        pair = x.split("=", 1)
+        pair = parsed.split("=", 1)
 
         if(len(pair) < 2): # No = character
             x = file.readline()
@@ -53,18 +53,17 @@ def getAttr(file, regex, attr_line):
             for key in regex.keys():
                 if(not re.match(key, pair[0]) == None):
                     pair[0] = pair[0].strip()
-                    results[pair[0]] = getAttr(file, regex[key], x)
+                    results[pair[0]] = getAttr(file, regex[key], parsed)
                     valid = True
                     break
             if(not valid): # skip
-                getAttr(file, None, x)
+                getAttr(file, None, parsed)
         else:
-            getAttr(file, None, x)
+            getAttr(file, None, parsed)
         x = file.readline()
         parsed = x.strip()
     if(not x):
         raise Exception("ERROR: No closing bracket for attribute {}".format(tag))
-    
     return results
 
 # Takes file pointer and regex string
@@ -79,7 +78,7 @@ def jumpTo(file, regex, multi = True):
     if(not multi): return    
     
     # Skip to the opening bracket
-    if(not "{" in x):
+    if(not "{" in parsed):
         while(x and not parsed == "{"):
             x = file.readline()
             parsed = x.strip()
