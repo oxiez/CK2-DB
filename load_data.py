@@ -20,8 +20,11 @@ with open("ck2_make_table.sql") as f:
     cur.execute(f.read())
 
 #read in religion and culture
+print('preloading religion')
 get_religion.get_religion(cur)
+print('preloading culture')
 get_culture.get_culture(cur)
+print('preloading traits')
 get_traits.get_traits(cur)
 
 file_name = "Leon1067_02_12.ck2"
@@ -42,9 +45,13 @@ with io.open(file_name, "rb") as f:
 
 # parse the file and fill the tables with data
 with io.open(file_name, encoding="cp1252") as f:
+	print('getting dynasties')
 	get_dynasties.get_dynasties(f, cur)
+	print('getting characters')
 	get_chars.get_chars(f, cur)
-	#get_religion.get_heresies(f, cur)
+	print('getting religions')
+	get_religion.get_heresies(f, cur)
+	print('getting provinces')
 	get_provs.get_provs(f, cur)
 	#get_titles.get_titles(f, cur)
 
