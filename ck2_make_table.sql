@@ -95,6 +95,7 @@ CREATE TABLE Religion(
 	religionID INT PRIMARY KEY, 
 	religionName VARCHAR(63), 
 	heresy BOOLEAN,  
+	parent VARCHAR(63),
 	religionGroup VARCHAR(63)
 	
 );

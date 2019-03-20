@@ -37,7 +37,7 @@ def get_religion(cur):
                         #make sure this isnt some other parameter
                         if not rel_name in ['male_names','female_names','color','god_names','evil_god_names','alternate_start','interface_skin','unit_modifier','unit_home_modifier']:
                             # insert tuple<id, name,heresy,religiongroup>                          
-                            cur.execute('INSERT INTO religion Values(%s,%s,NULL,%s)',
+                            cur.execute('INSERT INTO religion Values(%s,%s,NULL,NULL,%s)',
                                     [rel_id,rel_name,rel_group])
                             rel_id += 1
                 if '}' in line:
@@ -75,4 +75,6 @@ def get_heresies(file,cur):
                     heresy = False
                 cur.execute('UPDATE religion SET heresy=%s WHERE religionname=%s',
                             [heresy,rel_name])
+                cur.execute('UPDATE religion SET parent=%s WHERE religionname=%s',
+                            [parent,rel_name])
             
