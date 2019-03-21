@@ -2,6 +2,32 @@
 
 import re
 
+# Reads all of the first object at the same level that it was called on
+# Regex is a dict
+# Returns a dict where the name of the object is kept as a val to a key
+# In addition, the dict contains a structure defined by the regex dict
+# I don't suggest calling getCK2Obj on single attr
+# Returns None if there are no more objects at this level
+def getCK2Obj(file, regex, ck2_obj_key = "tag"):    
+    # Jump to the first object it finds
+    x = file.readline()
+    parsed = x.strip()
+    pair = parsed.split("=", 1)
+    while(x and len(pair) < 2):
+        if(parsed == "}"):
+            return None
+        x = file.readline()
+        parsed = x.strip()
+        pair = parsed.split("=", 1)
+    if(not x):
+        raise Exception("ERROR: No statement found!")
+
+    results = getAttr(file, regex, parsed)
+    results[ck2_obj_key] = pair[0].strip()
+    
+    return results
+        
+
 # File, regex dict, line of the attribute that we want to read, i.e. provinces=
 # (where { is on the this/next line) or culture=norweigan.
 def getAttr(file, regex, attr_line):
@@ -37,6 +63,7 @@ def getAttr(file, regex, attr_line):
         raise Exception("ERROR: No opening bracket for attribute {}".format(tag))
 
     results = {} # We can start parsing the tags now
+        
     x = file.readline()
     parsed = x.strip() # We need to separate the two because has newlines
     while(x and not parsed == "}"):
@@ -75,7 +102,7 @@ def jumpTo(file, regex, multi = True):
         x = file.readline()
         parsed = x.strip()
         
-    if(not multi): return    
+    if(not multi): return  
     
     # Skip to the opening bracket
     if(not "{" in parsed):
@@ -84,3 +111,4 @@ def jumpTo(file, regex, multi = True):
             parsed = x.strip()
         if(not x):
             raise Exception("ERROR: No opening bracket for {}".format(regex))
+    
