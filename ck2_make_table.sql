@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS BloodLineOwners;
 
 
 CREATE TABLE Person(
-	id INT PRIMARY KEY, 
+	personID INT PRIMARY KEY, 
 	birthName VARCHAR(63), 
 	dynastyID INT, 
 	isMale BOOLEAN, 
