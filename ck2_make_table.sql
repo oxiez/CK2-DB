@@ -3,6 +3,7 @@
 
 
 DROP TABLE IF EXISTS Person;
+DROP TABLE IF EXISTS Marriage;
 DROP TABLE IF EXISTS Trait;
 DROP TABLE IF EXISTS TraitLookup;
 DROP TABLE IF EXISTS Dynasty;
@@ -27,8 +28,7 @@ CREATE TABLE Person(
 	deathday DATE, 
 	fatherID INT,  
 	real_fatherID INT, 
-	motherID INT, 
-	spouseID INT, 
+	motherID INT,  
 	religionID INT, 
 	cultureID INT, 
 	fertility FLOAT, 
@@ -36,14 +36,19 @@ CREATE TABLE Person(
 	wealth FLOAT, 
 	hostID INT, 
 	prestige FLOAT, 
-	piety FLOAT, 
-	provinceLocationID INT, 
+	piety FLOAT,  
 	employerID INT, 
 	martial INT, 
 	diplomacy INT, 
 	stewardship INT, 
 	intrigue INT, 
 	learning INT
+);
+
+CREATE TABLE Marriage(
+	personID INT,
+	spouseID INT,
+	PRIMARY KEY(personID, spouseID)
 );
 
 CREATE TABLE Trait(

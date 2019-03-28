@@ -19,10 +19,6 @@ def get_provs(file, cur):
 			id = int(obj.get("tag"))
 		except ValueError:
 			raise Exception("ERROR: Province ID is not an int!")
-
-		for key in obj.keys():
-			if(not key == "tag"):
-				obj[key] = obj[key][0]
 		
 		if("name" in obj):
 			obj["name"] = obj["name"].replace("\"", "")

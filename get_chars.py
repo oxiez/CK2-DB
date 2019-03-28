@@ -76,53 +76,70 @@ def get_chars(file, cur):
 		# Integer conversions and list truncation
 		try:
 			id = int(obj.get("tag")) # Person id
-			if("dnt" in  obj): obj["dnt"] = int(obj["dnt"][0])
-			if("fat" in obj): obj["fat"] = int(obj["fat"][0])
-			if("rfat" in obj): obj["rfat"] = int(obj["rfat"][0])
+			if("dnt" in  obj): obj["dnt"] = int(obj["dnt"])
+			if("fat" in obj): obj["fat"] = int(obj["fat"])
+			if("rfat" in obj): obj["rfat"] = int(obj["rfat"])
 			else: obj["rfat"] = obj.get("fat")
-			if("mot" in obj): obj["mot"] = int(obj["mot"][0]) 
-			if("spouse" in obj): obj["spouse"] = int(obj["spouse"][0])
-			if("emp" in obj): obj["emp"] = int(obj["emp"][0])
-			if("host" in obj): obj["host"] = int(obj["host"][0])
+			if("mot" in obj): obj["mot"] = int(obj["mot"]) 
+			if("emp" in obj): obj["emp"] = int(obj["emp"])
+			if("host" in obj): obj["host"] = int(obj["host"])
 			
-			if("fer" in obj): obj["fer"] = float(obj["fer"][0])
-			if("health" in obj): obj["health"] = float(obj["health"][0])
-			if("wealth" in obj): obj["wealth"] = float(obj["wealth"][0])
-			if("prs" in obj): obj["prs"] = float(obj["prs"][0])
-			if("piety" in obj): obj["piety"] = float(obj["piety"][0])
+			if("fer" in obj): obj["fer"] = float(obj["fer"])
+			if("health" in obj): obj["health"] = float(obj["health"])
+			if("wealth" in obj): obj["wealth"] = float(obj["wealth"])
+			if("prs" in obj): obj["prs"] = float(obj["prs"])
+			if("piety" in obj): obj["piety"] = float(obj["piety"])
 
 			if("att" in obj):
-				attributes = make_person_attributes(obj["att"][0])
+				attributes = make_person_attributes(obj["att"])
 
 			if("tr" in obj):
-				traits = make_traits(obj["tr"][0])
+				traits = make_traits(obj["tr"])
 		except ValueError:
 			raise Exception("ERROR: One of the person attributes is not a number!")
 
-		if("rel" in obj): religionID = get_rel_ID(obj["rel"][0].replace("\"", ""))
-		if("cul" in obj): cultureID = get_cul_ID(obj["cul"][0].replace("\"", ""))
-		if("bn" in obj): obj["bn"] = obj["bn"][0].replace("\"", "")
-		if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"][0].replace("\"", ""))
-		if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"][0].replace("\"", ""))
+		if("rel" in obj): religionID = get_rel_ID(obj["rel"].replace("\"", ""))
+		if("cul" in obj): cultureID = get_cul_ID(obj["cul"].replace("\"", ""))
+		if("bn" in obj): obj["bn"] = obj["bn"].replace("\"", "")
+		if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"].replace("\"", ""))
+		if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"].replace("\"", ""))
 		if("fem" in obj): isMale = False
 
 		cur.execute(
-			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
 			[id, obj.get("bn"), obj.get("dnt"), isMale, obj.get("b_d"), obj.get("d_d"), obj.get("fat"),
-			 obj.get("rfat"), obj.get("mot"), obj.get("spouse"), religionID, cultureID, obj.get("fer"),
+			 obj.get("rfat"), obj.get("mot"), religionID, cultureID, obj.get("fer"),
 			 obj.get("health"), obj.get("wealth"), obj.get("host"), obj.get("prs"), obj.get("piety"),
-			 None, obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
+			 obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
 			 attributes.get("steward"), attributes.get("intrigue"), attributes.get("learning")
 		])
 
 		for tr in traits:
 			cur.execute("INSERT INTO trait Values(%s, %s)", [id, int(tr)])
+
+		if("spouse" in obj):
+			if(isinstance(obj["spouse"], list)):
+				for s in obj["spouse"]:
+					cur.execute("INSERT INTO marriage Values(%s, %s)",
+								[id, s])
+			else:
+				cur.execute("INSERT INTO marriage Values(%s, %s)",
+							[id, obj["spouse"]])
 		
 		# Parse claims
 		if("claim" in obj):
-			for d in obj["claim"]:
-				cur.execute("INSERT INTO claim (personid, titleid) Values(%s, %s)",
-							[id, d.get("title")[0]])
+			if(isinstance(obj["claim"], list)):
+				for d in obj["claim"]:
+					cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
+								[id, d.get("title"),
+								 "pressed" in d,
+								 "weak" in d])
+			else:
+				cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
+							[id,
+							 obj["claim"].get("title"),
+							 "pressed" in obj["claim"],
+							 "weak" in obj["claim"]])
 
 		obj = parser.getCK2Obj(file, person_regex);
 
