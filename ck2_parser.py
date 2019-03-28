@@ -37,7 +37,8 @@ def getAttr(file, regex, attr_line):
 	If the attr_line parameter contains the value, returns the value as a string.
 	If the attr_line indicates a multi-line structure, returns a dictionary with the struture:
 	 - key : [value(s)]
-	A list of values will in size depending on how many times a subattribute is repeated.
+	 - A list of values will in size depending on how many times a subattribute is repeated.
+	 - If an attribute only appears once, it is not a list
 
 	The regex rules indicates which pairs are stored and which are ignored.
 
@@ -71,7 +72,7 @@ def getAttr(file, regex, attr_line):
 	parsed = x.strip() # We need to separate the two because has newlines
 	lone_brackets = 0
 	while(x and not (parsed == "}" and lone_brackets == 0)):
-
+		
 		pair = parsed.split("=", 1)
 		valid = True
 		if(parsed == "{"):
@@ -88,15 +89,18 @@ def getAttr(file, regex, attr_line):
 			continue
 
 		valid = False
-		if(not regex == None):
+		if(regex != None):
 			pair[0] = pair[0].strip()
 			for key in regex.keys():
-				if(not re.match(key, pair[0]) == None):
+				if(re.match(key, pair[0]) != None):
 					valid = True
 					if(pair[0] in results):
-						results[pair[0]].append(getAttr(file, regex[key], parsed))
+						if(not isinstance(results[pair[0]], list)):
+							results[pair[0]] = [results[pair[0]], getAttr(file, regex[key], parsed)]
+						else:
+							results[pair[0]].append(getAttr(file, regex[key], parsed))
 					else:
-						results[pair[0]] = [getAttr(file, regex[key], parsed)]
+						results[pair[0]] = getAttr(file, regex[key], parsed)
 					break
 		if(not valid): # Skip over line
 			getAttr(file, None, parsed)

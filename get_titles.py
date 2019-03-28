@@ -17,10 +17,6 @@ def get_titles(file,cur):
 	while(not obj == None):
 		level = obj.get("tag")[0]
 		name = obj.get("tag")[2:]
-
-		for key in obj.keys():
-			if(not key == "tag"):
-				obj[key] = obj[key][0]
 		
 		if(isinstance(obj.get("liege"), dict)):
 			obj["liege"] = obj["liege"]["base_title"] # liege id
