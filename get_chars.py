@@ -4,6 +4,48 @@
 		 # INT intrigue, INT learning)
 
 import datetime
+import ck2_parser as parser
+		 
+claim_regex = {"title" : None,
+			   "pressed" : None,
+			   "weak" : None
+}
+
+person_regex = {"^bn" : None,
+				"^dnt" : None,
+				"^fem" : None,
+				"^b_d" : None,
+				"^d_d" : None,
+				"^fat" : None, # The default for rfat if none specificed
+				"^rfat" : None,
+				"^mot" : None,
+				"^spouse" : None,
+				"^rel" : None,
+				"^cul" : None,
+				"^fer" : None,
+				"^health" : None,
+				"^wealth" : None,
+				"^prs" : None,
+				"^piety" : None,
+				"^emp" : None,
+				"^host" : None,
+				"^att" : None, # This needs to be broken up manually
+				"^tr" : None, # This needs to be broken up manually
+				"^claim" : claim_regex # Repeated
+}
+
+def make_person_attributes(att):
+	attr_list = att[1:-1].strip().split() # Remove brackets
+	attributes = {"diplomacy" : int(attr_list[0]),
+				  "martial" : int(attr_list[1]),
+				  "steward" : int(attr_list[2]),
+				  "intrigue" : int(attr_list[3]),
+				  "learning" : int(attr_list[4])
+	}
+	return attributes
+
+def make_traits(tr):
+	return tr[1:-1].strip().split()
 
 def make_date(str):
 	dt_arr = str.split('.')
@@ -21,6 +63,70 @@ def get_rel_ID(str):
 	return 0
 
 def get_chars(file, cur):
+	parser.jumpTo(file, "^character=")
+
+	obj = parser.getCK2Obj(file, person_regex)
+	while(not obj == None):
+		religionID = None
+		cultureID = None
+		isMale = True
+		attributes = {}
+		traits = []
+		
+		# Integer conversions and list truncation
+		try:
+			id = int(obj.get("tag")) # Person id
+			if("dnt" in  obj): obj["dnt"] = int(obj["dnt"][0])
+			if("fat" in obj): obj["fat"] = int(obj["fat"][0])
+			if("rfat" in obj): obj["rfat"] = int(obj["rfat"][0])
+			else: obj["rfat"] = obj.get("fat")
+			if("mot" in obj): obj["mot"] = int(obj["mot"][0]) 
+			if("spouse" in obj): obj["spouse"] = int(obj["spouse"][0])
+			if("emp" in obj): obj["emp"] = int(obj["emp"][0])
+			if("host" in obj): obj["host"] = int(obj["host"][0])
+			
+			if("fer" in obj): obj["fer"] = float(obj["fer"][0])
+			if("health" in obj): obj["health"] = float(obj["health"][0])
+			if("wealth" in obj): obj["wealth"] = float(obj["wealth"][0])
+			if("prs" in obj): obj["prs"] = float(obj["prs"][0])
+			if("piety" in obj): obj["piety"] = float(obj["piety"][0])
+
+			if("att" in obj):
+				attributes = make_person_attributes(obj["att"][0])
+
+			if("tr" in obj):
+				traits = make_traits(obj["tr"][0])
+		except ValueError:
+			raise Exception("ERROR: One of the person attributes is not a number!")
+
+		if("rel" in obj): religionID = get_rel_ID(obj["rel"][0].replace("\"", ""))
+		if("cul" in obj): cultureID = get_cul_ID(obj["cul"][0].replace("\"", ""))
+		if("bn" in obj): obj["bn"] = obj["bn"][0].replace("\"", "")
+		if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"][0].replace("\"", ""))
+		if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"][0].replace("\"", ""))
+		if("fem" in obj): isMale = False
+
+		cur.execute(
+			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			[id, obj.get("bn"), obj.get("dnt"), isMale, obj.get("b_d"), obj.get("d_d"), obj.get("fat"),
+			 obj.get("rfat"), obj.get("mot"), obj.get("spouse"), religionID, cultureID, obj.get("fer"),
+			 obj.get("health"), obj.get("wealth"), obj.get("host"), obj.get("prs"), obj.get("piety"),
+			 None, obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
+			 attributes.get("steward"), attributes.get("intrigue"), attributes.get("learning")
+		])
+
+		for tr in traits:
+			cur.execute("INSERT INTO trait Values(%s, %s)", [id, int(tr)])
+		
+		# Parse claims
+		if("claim" in obj):
+			for d in obj["claim"]:
+				cur.execute("INSERT INTO claim (personid, titleid) Values(%s, %s)",
+							[id, d.get("title")[0]])
+
+		obj = parser.getCK2Obj(file, person_regex);
+
+def get_chars_old(file, cur):
 	# we should start in the right place
 	line = file.readline()
 	#print(line) #character=

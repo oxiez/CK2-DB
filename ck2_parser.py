@@ -69,11 +69,20 @@ def getAttr(file, regex, attr_line):
 		
 	x = file.readline()
 	parsed = x.strip() # We need to separate the two because has newlines
-	while(x and not parsed == "}"):
-		# If regex == None, ignore all attributes
-		pair = parsed.split("=", 1)
+	lone_brackets = 0
+	while(x and not (parsed == "}" and lone_brackets == 0)):
 
-		if(len(pair) < 2): # No = character
+		pair = parsed.split("=", 1)
+		valid = True
+		if(parsed == "{"):
+			lone_brackets += 1
+			valid = False
+		elif(parsed == "}"):
+			lone_brackets -= 1
+			valid = False
+		elif(len(pair) < 2): # No = character
+			valid = False
+		if(not valid):
 			x = file.readline()
 			parsed = x.strip()
 			continue
@@ -81,15 +90,14 @@ def getAttr(file, regex, attr_line):
 		valid = False
 		if(not regex == None):
 			pair[0] = pair[0].strip()
-			if(pair[0] in results):
-				valid = True
-				results[pair[0]].append(getAttr(file, regex[key], parsed))
-			else:
-				for key in regex.keys():
-					if(not re.match(key, pair[0]) == None):
-						valid = True
+			for key in regex.keys():
+				if(not re.match(key, pair[0]) == None):
+					valid = True
+					if(pair[0] in results):
+						results[pair[0]].append(getAttr(file, regex[key], parsed))
+					else:
 						results[pair[0]] = [getAttr(file, regex[key], parsed)]
-						break
+					break
 		if(not valid): # Skip over line
 			getAttr(file, None, parsed)
 		
