@@ -17,8 +17,13 @@ def get_titles(file,cur):
 	while(not obj == None):
 		level = obj.get("tag")[0]
 		name = obj.get("tag")[2:]
+
+		for key in obj.keys():
+			if(not key == "tag"):
+				obj[key] = obj[key][0]
+		
 		if(isinstance(obj.get("liege"), dict)):
-			obj["liege"] = obj["liege"]["base_title"]
+			obj["liege"] = obj["liege"]["base_title"] # liege id
 		
 		cur.execute("INSERT INTO title VALUES(%s, %s, %s, %s, %s, %s)",
 					[obj.get("tag"),
@@ -26,6 +31,6 @@ def get_titles(file,cur):
 					 name,
 					 level,
 					 obj.get("liege"),
-					obj.get("de_jure_liege")]
+					 obj.get("de_jure_liege")]
 		)
 		obj = parser.getCK2Obj(file, title_regex)
