@@ -74,6 +74,8 @@ CREATE TABLE Title(
 CREATE TABLE Claim(
 	personID INT, 
 	titleID VARCHAR(63),
+	pressed BOOLEAN,
+	weak BOOLEAN,
 	PRIMARY KEY(personID,titleID)
 );
 
