@@ -56,11 +56,13 @@ def make_date(str):
 	result_date = datetime.date(year, month, day)
 	return result_date
 
-def get_cul_ID(str):
-	return 0
+def get_cul_ID(cur,name):
+	cur.execute("SELECT cultureid FROM culture WHERE culturename=%s",[name])
+	return cur.fetchone()
 
-def get_rel_ID(str):
-	return 0
+def get_rel_ID(cur,name):
+	cur.execute("SELECT religionid FROM religion WHERE religionname=%s",[name])
+	return cur.fetchone()
 
 def get_chars(file, cur):
 	parser.jumpTo(file, "^character=")
@@ -98,8 +100,8 @@ def get_chars(file, cur):
 		except ValueError:
 			raise Exception("ERROR: One of the person attributes is not a number!")
 
-		if("rel" in obj): religionID = get_rel_ID(obj["rel"].replace("\"", ""))
-		if("cul" in obj): cultureID = get_cul_ID(obj["cul"].replace("\"", ""))
+		if("rel" in obj): religionID = get_rel_ID(cur,obj["rel"].replace("\"", ""))
+		if("cul" in obj): cultureID = get_cul_ID(cur,obj["cul"].replace("\"", ""))
 		if("bn" in obj): obj["bn"] = obj["bn"].replace("\"", "")
 		if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"].replace("\"", ""))
 		if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"].replace("\"", ""))
