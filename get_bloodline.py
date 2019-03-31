@@ -10,7 +10,7 @@ def get_bloodlines(file, cur):
 	line = file.readline()
 	while line.strip() != "bloodline=":
 		line = file.readline()
-		if(!line):
+		if(not line):
 			return
 	num_brace = 1
 	while num_brace > 0:	#make sure we are still in the characters
