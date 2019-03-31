@@ -21,7 +21,9 @@ def get_dynasties(file,cur):
                 line = file.readline()
                 line = file.readline()
                 #historical dynasties are missing information: name appears as f_arms
-                name = None                
+                name = None         
+                cul = None
+                rel = None
                 if 'name' in line:
                     #difficulties in finding and removing " symbols as well as comments (denoted by #)
                     #  :(
@@ -39,8 +41,21 @@ def get_dynasties(file,cur):
                     index = name.find('#')
                     if index!=-1:
                         name = name[0:index-2]
+                    #next two lines are culture and religion
+                    line = file.readline()
+                    cul = line.split('=')[1]
+                    cul = cul.strip()
+                    cul = cul.strip('"')
+                    cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[cul])
+                    cul = cur.fetchone()[0]
+                    line = file.readline()
+                    rel = line.split('=')[1]
+                    rel = rel.strip()
+                    rel = rel.strip('"')
+                    cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[rel])
+                    rel = cur.fetchone()[0]
                 #add to the database
-                cur.execute('INSERT INTO dynasty Values(%s,%s)',[i,name])
+                cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[i,name,cul,rel])
                 #ignore the next lines until end of dynasty
                 while(line!='\t\t}\n'):
                     line = file.readline()
