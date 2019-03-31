@@ -26,7 +26,7 @@ https://drive.google.com/drive/folders/1hfoggzv6fiiOcrr0wmb0d620AY1ILI5L
 As superuser `postgres` in psql, run `ck2_setup.py` to create the ck2 database.
 This will also create the user `charles` with password `frank`.
 
-Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by default. You can optionally add the name of a different `.ck2` file to load into the database, as opposed to the default. This file should around 60 seconds to run.
+Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by default. You can optionally add the name of a different `.ck2` file to load into the database, as opposed to the default. This file should take around 60 seconds to run.
 
 
 
