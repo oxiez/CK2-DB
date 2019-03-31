@@ -106,7 +106,18 @@ def get_chars(file, cur):
 		if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"].replace("\"", ""))
 		if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"].replace("\"", ""))
 		if("fem" in obj): isMale = False
-
+		
+		#if religion or culture is missing, default to dynasty religion and culture
+		if obj.get('dnt')!=None:
+			if ('rel' not in obj):
+				cur.execute("SELECT religionID FROM dynasty WHERE dynastyID=%s",[obj.get('dnt')])
+				religionID = cur.fetchone()
+				if religionID!=None: religionID=religionID[0]
+			if ('cul' not in obj):
+				cur.execute("SELECT cultureID FROM dynasty WHERE dynastyID=%s",[obj.get('dnt')])
+				cultureID = cur.fetchone()
+				if cultureID!=None: cultureID=cultureID[0]
+		
 		cur.execute(
 			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
 			[id, obj.get("bn"), obj.get("dnt"), isMale, obj.get("b_d"), obj.get("d_d"), obj.get("fat"),
