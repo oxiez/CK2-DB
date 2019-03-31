@@ -10,6 +10,7 @@ import get_titles
 import get_religion
 import get_culture
 import get_traits
+import get_bloodline
 
 # connect and get a cursor
 conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
@@ -20,11 +21,11 @@ with open("ck2_make_table.sql") as f:
 	cur.execute(f.read())
 
 #read in religion and culture
-print('preloading religion...')
+print('Preloading religion...')
 get_religion.get_religion(cur)
-print('preloading culture...')
+print('Preloading culture...')
 get_culture.get_culture(cur)
-print('preloading traits...')
+print('Preloading traits...')
 get_traits.get_traits(cur)
 
 file_name = "Leon1067_02_12.ck2"
@@ -45,19 +46,19 @@ with io.open(file_name, "rb") as f:
 
 # parse the file and fill the tables with data
 with io.open(file_name, encoding="cp1252") as f:
-	print('getting dynasties...')
+	print('Getting dynasties...')
 	get_dynasties.get_dynasties(f, cur)
-	print('getting characters...')
+	print('Getting characters...')
 	get_chars.get_chars(f, cur)
-	print('getting religions...')
+	print('Getting religions...')
 	get_religion.get_heresies(f, cur)
-	print('getting provinces...')
+	print('Getting provinces...')
 	get_provs.get_provs(f, cur)
 	print("Getting titles...")
 	get_titles.get_titles(f, cur)
 	# Handle case for no dlc?
-	#print("Getting bloodlines...")
-	#get_titles.get_bloodline(f, cur)
+	print("Getting bloodlines...")
+	get_bloodline.get_bloodlines(f, cur)
 
 # commit changes made and disconnect from database
 conn.commit()
