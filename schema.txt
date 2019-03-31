@@ -19,7 +19,7 @@ Religion(INT religionID, VARCHAR(63) religionName, FLOAT moralAuthority, BOOLEAN
 Culture(INT cultureID, VARCHAR(63) cultureName, VARCHAR(63) cultureGroup)
 
 *BloodLines(INT bloodLineID, VARCHAR(63) name, INT founderID)
-*BloodLineOwners(INT personID, INT bloodLineID,)
+*BloodLineMembers(INT personID, INT bloodLineID,)
 
 * means that table is from a DLC and so may be empty for some save files
 
@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS Culture;
 DROP TABLE IF EXISTS Religion;
 DROP TABLE IF EXISTS Culture;
 DROP TABLE IF EXISTS BloodLines;
-DROP TABLE IF EXISTS BloodLineOwners;
+DROP TABLE IF EXISTS BloodLineMembers;
 
 
 CREATE TABLE Person(
@@ -128,7 +128,7 @@ CREATE TABLE Culture(
 	cultureGroup VARCHAR(63)
 );
 
-CREATE TABLE BloodLineOwners(
+CREATE TABLE BloodLineMembers(
 	personID INT
 	bloodLineID INT,
 	PRIMARY KEY(personID, bloodLineID)
@@ -136,6 +136,6 @@ CREATE TABLE BloodLineOwners(
 
 CREATE TABLE BloodLines(
 	bloodlineID INT PRIMARY KEY,
-	name VARCHAR(63),
+	bloodlineName VARCHAR(63),
 	founderID INT
 );

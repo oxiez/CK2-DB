@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS Culture;
 DROP TABLE IF EXISTS Religion;
 DROP TABLE IF EXISTS Culture;
 DROP TABLE IF EXISTS BloodLines;
-DROP TABLE IF EXISTS BloodLineOwners;
+DROP TABLE IF EXISTS BloodLineMembers;
 
 
 CREATE TABLE Person(
@@ -115,7 +115,7 @@ CREATE TABLE Culture(
 	cultureGroup VARCHAR(63)
 );
 
-CREATE TABLE BloodLineOwners(
+CREATE TABLE BloodLineMembers(
 	personID INT,
 	bloodLineID INT,
 	PRIMARY KEY(personID, bloodLineID)
@@ -123,6 +123,6 @@ CREATE TABLE BloodLineOwners(
 
 CREATE TABLE BloodLines(
 	bloodlineID INT PRIMARY KEY,
-	name VARCHAR(63),
+	bloodlineName VARCHAR(63),
 	founderID INT
 );

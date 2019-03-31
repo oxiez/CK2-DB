@@ -46,4 +46,4 @@ def get_bloodlines(file, cur):
 				founder_ID = int(line[6:])
 			elif line[0:7] == "member=":
 				holder_ID = line[7:]
-				cur.execute('INSERT INTO BloodLineOwners Values(%s,%s)',[holder_ID,bloodline_ID])
+				cur.execute('INSERT INTO BloodLineMembers Values(%s,%s)',[holder_ID,bloodline_ID])
