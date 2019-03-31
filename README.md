@@ -32,20 +32,21 @@ Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by d
 
 # Relation Meanings
 
-barony					-- A table of tuples that describes a single city, castle, church, or other singular holding
-bloodlineowners			-- A table that maps characters to bloodlines
-bloodlines				-- A table of tuples that describes a blooline by giving it a name and founder
-culture					-- A table of tuples that describes a culture
-claim					-- A table that maps characters to titles they have claims on
-dynasty 				-- A table of tuples that describes a dynasty
-marriage				-- A table of tuples that describes a marrige between two characters  
-person					-- A table of tuples that describes a character
-province				-- A table of tuples that describes a singular province (a section of land)
-religion				-- A table of tuples that describes a religion
-title					-- A table of tuples that describes a title (e.g. county of dorset, duchy of essex, kingdom of england, or empire of britannia)
-trait					-- A table that maps characters to traits
-traitlookup				-- A table of tuples that describes a trait
-
+| Relation Name 			| Meaning |
+| ------------------------- | ------- |
+| barony					| A table of tuples that describes a single city, castle, church, or other singular holding |
+| bloodlineowners			| A table that maps characters to bloodlines |
+| bloodlines				| A table of tuples that describes a bloodline by giving it a name and founder |
+| culture					| A table of tuples that describes a culture |
+| claim					    | A table that maps characters to titles they have claims on |
+| dynasty 				    | A table of tuples that describes a dynasty |
+| marriage				    | A table of tuples that describes a marriage between two characters   |
+| person					| A table of tuples that describes a character |
+| province				    | A table of tuples that describes a singular province (a section of land) |
+| religion				    | A table of tuples that describes a religion |
+| title					    | A table of tuples that describes a title (e.g. county of dorset, duchy of essex, kingdom of england, or empire of britannia) |
+| trait					    | A table that maps characters to traits |
+| traitlookup				| A table of tuples that describes a trait |
 # Basic Queries
 
 ```pgsql
