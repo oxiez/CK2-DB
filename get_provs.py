@@ -11,6 +11,12 @@ province_regex = {"culture" : None,
 				  "._" : barony_regex}
 
 def get_provs(file, cur):
+	province_id_dict = {}
+	with io.open(r'province_id to county_id.txt') as f:
+		for line in f:
+			line = line.split("\n")[0]
+			l = line.split(" ")
+			province_id_dict[int(l[0])] = l[1]
 	parser.jumpTo(file, "^provinces=")
 
 	obj = parser.getCK2Obj(file, province_regex)
@@ -22,11 +28,14 @@ def get_provs(file, cur):
 		
 		if("name" in obj):
 			obj["name"] = obj["name"].replace("\"", "")
-
+		
+		if(id not in province_id_dict):
+			province_id_dict[id] = None
+		
 		cur.execute("INSERT INTO province VALUES(%s,%s,%s,%s,%s)",
 					[id,
 					 obj.get("name"),
-					 None,
+					 province_id_dict[id],
 					 obj.get("culture"),
 					 obj.get("religion")]
 		)
