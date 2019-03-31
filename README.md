@@ -63,3 +63,10 @@ FROM (
  		FROM person NATURAL JOIN dynasty) ppl 
 NATURAL JOIN title;
 ```
+
+```pgsql
+-- Query for the culture and religion for all living, noble people
+SELECT birthname, dynastyname, culturename, religionname
+FROM person NATURAL JOIN dynasty NATURAL JOIN culture NATURAL JOIN religion
+WHERE deathday is NULL;
+```
