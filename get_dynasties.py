@@ -61,7 +61,6 @@ def get_dynasties(file,cur):
 			if dntID=='1061019' or dntID=='105946' or dntID=='1059971': continue
 			#print(dntID,name,cultureID,religionID)
 			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
-			if dntID=='1900040': break
 		
 	#read in the save game dynasties 
 	ck2_parser.jumpTo(file, "^dynasties=")

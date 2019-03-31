@@ -12,7 +12,8 @@ def get_bloodlines(file, cur):
 		line = file.readline()
 		if(not line):
 			return
-	num_brace = 0
+	line = file.readline()
+	num_brace = 1
 	while num_brace > 0:	#make sure we are still in the characters
 
 		line = file.readline()
@@ -39,10 +40,10 @@ def get_bloodlines(file, cur):
 		elif (num_brace > 2):
 			continue
 		else:
-			if line[0:4] == "type=":
-				bloodline_name = line[5:-1]
+			if line[0:5] == "type=":
+				bloodline_name = line[6:-1]
 			elif line[0:6] == "owner=":
 				founder_ID = int(line[6:])
-			elif line[0:6] == "member=":
-				holder_ID = line[6:]
-				cur.execute('INSERT INTO trait BloodLineOwners(%s,%s)',[holder_ID,bloodline_ID])
+			elif line[0:7] == "member=":
+				holder_ID = line[7:]
+				cur.execute('INSERT INTO BloodLineOwners Values(%s,%s)',[holder_ID,bloodline_ID])
