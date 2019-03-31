@@ -1,6 +1,60 @@
 import io
+import ck2_parser
+
+
+dynasty_regex = {'^name':None,'^culture':None,'^religion':None}
 
 def get_dynasties(file,cur):
+	#read in historical dynasties first 
+	with io.open('00_dynasties.txt',encoding="cp1252") as f:
+		obj = ck2_parser.getCK2Obj(f,dynasty_regex)  
+		while obj != None:
+			name = None
+			cultureID = None
+			religionID = None
+			dntID = obj.get('tag')
+			if 'name' in obj:
+				name = obj['name']
+			if 'culture' in obj:
+				cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[obj['culture'].strip().strip('"')])
+				cultureID = cur.fetchone()[0]
+			if 'religion' in obj: 
+				cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[obj['religion'].strip().strip('"')])
+				religionID = cur.fetchone()[0]
+			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+			print(dntID,name,cultureID,religionID)
+			obj = ck2_parser.getCK2Obj(f,dynasty_regex)
+		
+	#read in the save game dynasties 
+	ck2_parser.jumpTo(file, "^dynasties=")
+	obj = ck2_parser.getCK2Obj(file, dynasty_regex)  
+	while obj != None:
+		name = None
+		cultureID = None
+		religionID = None	
+		dntID = obj.get('tag')
+		if 'name' in obj:
+			name = obj['name'].strip().strip('"')
+		if 'culture' in obj:
+			cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[obj['culture'].strip().strip('"')])
+			cultureID = cur.fetchone()[0]
+		if 'religion' in obj: 
+			cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[obj['religion'].strip().strip('"')])
+			religionID = cur.fetchone()[0]
+		cur.execute('SELECT COUNT(*) FROM dynasty WHERE dynastyID=%s',[dntID])
+		count = cur.fetchone()[0]
+		if count > 0:
+			if name != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[name])
+			if cultureID != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[cultureID])
+			if religionID != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[religionID])
+		else:
+			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+		obj = ck2_parser.getCK2Obj(file,dynasty_regex)
+		
+		
+
+#original spaghetti. In a worst case scenario, use this
+def old_get_dynasties(file,cur):
     # The following code adds in-game dynasties to the game
     # read until we hit the dynasties
     line = file.readline()
