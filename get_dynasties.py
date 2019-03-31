@@ -30,14 +30,16 @@ def get_dynasties(file,cur):
 	with io.open('00_dynasties.txt',encoding="cp1252") as f:
 		line = ' '
 		while line:
+			#print(line)
 			line = f.readline()
+			if len(line)==0: break
 			if line == '\n' or line[0]=='#': continue
 			dntID = line[0:line.find('=')].strip()
 			line = f.readline()
 			name = None
 			cultureID = None
 			religionID = None
-			while line != '}\n':
+			while line != '}\n' and line != '}':
 				line = line.strip()
 				index = line.find('=')
 				if index != -1:
@@ -50,7 +52,7 @@ def get_dynasties(file,cur):
 					if key=='culture':
 						cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[value])
 						cultureID = cur.fetchone()[0]
-					if key=='religion' and '}' not in value:
+					if key=='religion' and religionID==None and '}' not in value:
 						cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[value])
 						religionID = cur.fetchone()[0]					
 				line = f.readline()
@@ -59,6 +61,7 @@ def get_dynasties(file,cur):
 			if dntID=='1061019' or dntID=='105946' or dntID=='1059971': continue
 			#print(dntID,name,cultureID,religionID)
 			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+			if dntID=='1900040': break
 		
 	#read in the save game dynasties 
 	ck2_parser.jumpTo(file, "^dynasties=")
