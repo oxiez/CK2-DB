@@ -29,7 +29,6 @@ print('Preloading traits...')
 get_traits.get_traits(cur)
 
 file_name = "Leon1067_02_12.ck2"
-file_name = "Bloodlines2.ck2"
 
 if len(sys.argv) > 1:
 	file_name = sys.argv[1]
