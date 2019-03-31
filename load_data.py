@@ -55,6 +55,9 @@ with io.open(file_name, encoding="cp1252") as f:
 	get_provs.get_provs(f, cur)
 	print("Getting titles...")
 	get_titles.get_titles(f, cur)
+	# Handle case for no dlc?
+	print("Getting bloodlines...")
+	get_titles.get_bloodline(f, cur)
 
 # commit changes made and disconnect from database
 conn.commit()

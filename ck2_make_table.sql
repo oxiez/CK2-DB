@@ -64,7 +64,9 @@ CREATE TABLE TraitLookup(
 
 CREATE TABLE Dynasty(
 	dynastyID INT PRIMARY KEY, 
-	dynastyName VARCHAR(63) 
+	dynastyName VARCHAR(63)
+	cultureID INT
+	religionID INT
 );
 
 CREATE TABLE Title(
