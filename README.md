@@ -1,7 +1,16 @@
 # Instructions
 
-Download all of these files from
-https://drive.google.com/drive/folders/1hfoggzv6fiiOcrr0wmb0d620AY1ILI5L
+You can download all of these files from (either)
+- https://homepages.rpi.edu/~xieo/ck2_data.tar.gz
+- https://homepages.rpi.edu/~xieo/ck2_data.zip
+
+You can get the data from either one of them using
+
+`unzip ck2_data.zip`
+    or
+`tar -zxcf ck2_data.tar.gz`
+
+Both archives contain the following files:
 
 - `00_traits.txt`
 
@@ -21,14 +30,12 @@ https://drive.google.com/drive/folders/1hfoggzv6fiiOcrr0wmb0d620AY1ILI5L
 
 - `Leon1067_02_12.ck2` - This is the standard dataset. Does not contain any bloodlines.
 
-- `bloodlines.ck2` - Alternative dataset that contains bloodlines. This would need to be passed to the `load_data.py` as a parameter (i.e. `python load_data.py bloodlines.ck2`)
+- `Bloodlines.ck2` - Alternative dataset that contains bloodlines. This would need to be passed to the `load_data.py` as a parameter (i.e. `python3 load_data.py Bloodlines.ck2`)
 
 As superuser `postgres` in psql, run `ck2_setup.py` to create the ck2 database.
 This will also create the user `charles` with password `frank`.
 
 Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by default. You can optionally add the name of a different `.ck2` file to load into the database, as opposed to the default. This file should take around 60 seconds to run.
-
-
 
 # Relation Meanings
 

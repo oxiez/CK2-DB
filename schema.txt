@@ -1,20 +1,22 @@
-Person(INT id, VARCHAR(63) birthName, INT dynasty, BOOLEAN isMale, DATE birthday, DATE deathday, INT fatherID, INT real_fatherID, INT motherID, INT spouseID, INT religionID, INT cultureID, FLOAT fertility, FLOAT health, FLOAT wealth, INT hostID, FLOAT prestige, FLOAT piety, INT provinceLocationID, INT employerID, INT martial, INT diplomacy, INT stewardship, INT intrigue, INT learning)
+Person(personID INT, birthName VARCHAR(63), dynastyID INT, isMale BOOLEAN, birthday DATE, deathday DATE, fatherID INT,  real_fatherID INT, motherID INT,  religionID INT, cultureID INT, fertility FLOAT, health FLOAT, wealth FLOAT, hostID INT, prestige FLOAT, piety FLOAT,  employerID INT, martial INT, diplomacy INT, stewardship INT, intrigue INT, learning INT)
+
+Marriage(personID INT, spouseID INT)
 
 Trait(INT personID, INT traitID)
 
 TraitLookup(INT traitID, VARCHAR(63) traitName)
 
-Dynasty(INT id, VARCHAR(63) name)
+Dynasty(dynastyID INT, dynastyName VARCHAR(63), cultureID INT, religionID INT)
 
-Title(VARCHAR(63) id, VARCHAR(63) name, CHAR(1) level, VARCHAR(63) deFactoLeige, VARCHAR(63) deJureLeige)
+Title(id VARCHAR(63), holderid INT, name VARCHAR(63), level CHAR(1), deFactoLeige VARCHAR(63), 	deJureLeige VARCHAR(63))
 
-Claim(INT personID, VARCHAR(63) titleID)
+Claim(personID INT, titleID VARCHAR(63), pressed BOOLEAN, weak BOOLEAN)
 
-Province(INT id, VARCHAR(63) name, VARCHAR(63) countyID, VARCHAR(63) culture, VARCHAR(63) religion)
+Province(INT provinceID, VARCHAR(63) name, VARCHAR(63) countyID, VARCHAR(63) culture, VARCHAR(63) religion)
 
 Barony(INT province, VARCHAR(63) name, VARCHAR(63) type)
 
-Religion(INT religionID, VARCHAR(63) religionName, FLOAT moralAuthority, BOOLEAN heresy,  VARCHAR(63) religionGroup)
+Religion(religionID INT, religionName VARCHAR(63), heresy BOOLEAN, parent VARCHAR(63), religionGroup VARCHAR(63))
 
 Culture(INT cultureID, VARCHAR(63) cultureName, VARCHAR(63) cultureGroup)
 
@@ -26,6 +28,7 @@ Culture(INT cultureID, VARCHAR(63) cultureName, VARCHAR(63) cultureGroup)
 ------------------------------------------------------------
 
 DROP TABLE IF EXISTS Person;
+DROP TABLE IF EXISTS Marriage;
 DROP TABLE IF EXISTS Trait;
 DROP TABLE IF EXISTS TraitLookup;
 DROP TABLE IF EXISTS Dynasty;
@@ -42,16 +45,15 @@ DROP TABLE IF EXISTS BloodLineMembers;
 
 
 CREATE TABLE Person(
-	id INT PRIMARY KEY, 
+	personID INT PRIMARY KEY, 
 	birthName VARCHAR(63), 
-	dynasty INT, 
+	dynastyID INT, 
 	isMale BOOLEAN, 
 	birthday DATE, 
 	deathday DATE, 
 	fatherID INT,  
 	real_fatherID INT, 
-	motherID INT, 
-	spouseID INT, 
+	motherID INT,  
 	religionID INT, 
 	cultureID INT, 
 	fertility FLOAT, 
@@ -59,14 +61,19 @@ CREATE TABLE Person(
 	wealth FLOAT, 
 	hostID INT, 
 	prestige FLOAT, 
-	piety FLOAT, 
-	provinceLocationID INT, 
+	piety FLOAT,  
 	employerID INT, 
 	martial INT, 
 	diplomacy INT, 
 	stewardship INT, 
 	intrigue INT, 
 	learning INT
+);
+
+CREATE TABLE Marriage(
+	personID INT,
+	spouseID INT,
+	PRIMARY KEY(personID, spouseID)
 );
 
 CREATE TABLE Trait(
@@ -81,12 +88,15 @@ CREATE TABLE TraitLookup(
 );
 
 CREATE TABLE Dynasty(
-	id INT PRIMARY KEY, 
-	name VARCHAR(63) 
+	dynastyID INT PRIMARY KEY, 
+	dynastyName VARCHAR(63),
+	cultureID INT,
+	religionID INT
 );
 
 CREATE TABLE Title(
 	id VARCHAR(63) PRIMARY KEY, 
+	holderid INT,
 	name VARCHAR(63), 
 	level CHAR(1), 
 	deFactoLeige VARCHAR(63), 
@@ -96,6 +106,8 @@ CREATE TABLE Title(
 CREATE TABLE Claim(
 	personID INT, 
 	titleID VARCHAR(63),
+	pressed BOOLEAN,
+	weak BOOLEAN,
 	PRIMARY KEY(personID,titleID)
 );
 
@@ -110,14 +122,14 @@ CREATE TABLE Province(
 CREATE TABLE Barony(
 	name VARCHAR(63) PRIMARY KEY,
 	province INT,  
-	type VARCHAR(63),
+	type VARCHAR(63)
 );
 
 CREATE TABLE Religion(
 	religionID INT PRIMARY KEY, 
 	religionName VARCHAR(63), 
-	moralAuthority FLOAT, 
 	heresy BOOLEAN,  
+	parent VARCHAR(63),
 	religionGroup VARCHAR(63)
 	
 );
@@ -129,7 +141,7 @@ CREATE TABLE Culture(
 );
 
 CREATE TABLE BloodLineMembers(
-	personID INT
+	personID INT,
 	bloodLineID INT,
 	PRIMARY KEY(personID, bloodLineID)
 );
