@@ -41,7 +41,7 @@ def load_data(filename):
 			quit()
 
 	# parse the file and fill the tables with data
-	with io.open(file_name, encoding="cp1252") as f:
+	with io.open(filename, encoding="cp1252") as f:
 		print('Getting dynasties...')
 		get_dynasties.get_dynasties(f, cur)
 		print('Getting characters...')
