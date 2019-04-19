@@ -33,9 +33,13 @@ if __name__=='__main__':
 
         if words[0] == 'help':
             print('Commands:')
+            print(' : dynasty <args> [displays information on dynasties]')
+            print(' : title <args> [displays information on titles]')
+            print(' : people <args> [displays information on characters]')
             print(' : help [displays this text]')
             print(' : load <FILENAME> [loads a file]')
             print(' : quit [exits the program]')
+
 
         elif words[0] in {'q','quit','exit'}:
             break
