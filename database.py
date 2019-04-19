@@ -78,12 +78,16 @@ class Data:
         for a,v in zip(args,arg_vals):
             if a=='orderby':
                 orderby = v
-                ex_string = ex_string + ',sum'
-                break
+                if orderby in orderby_sum_vals:
+                    ex_string = ex_string + ',sum'
+                else:
+                    ex_string = ex_string + ',count'
         print(orderby)
         ex_string = ex_string + ' FROM '
-        if orderby!= None:
+        if orderby in orderby_sum_vals:
             ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
+        if orderby in orderby_count_vals:
+            ex_string = ex_string + "(SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN "
         ex_string = ex_string + 'dynasty WHERE TRUE'      
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:
@@ -92,8 +96,10 @@ class Data:
                 arg_vals[i] = '%'+v+'%'
                 ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
         #add the order by term
-        if orderby != None:
+        if orderby in orderby_sum_vals:
             ex_string = ex_string + ' ORDER BY sum DESC'
+        if orderby in orderby_count_vals:
+            ex_string = ex_string + ' ORDER BY count DESC'
         #remove the orderby from the argvals
         for i in range(len(arg_vals)):
             if arg_vals[i]==orderby:
