@@ -37,6 +37,7 @@ if __name__=='__main__':
             print(' : title <args> [displays information on titles]')
             print(' : people <args> [displays information on characters]')
             print(' : help [displays this text]')
+            print(' : num_results <NUM> [changes the number of results displayed to NUM]')
             print(' : load <FILENAME> [loads a file]')
             print(' : quit [exits the program]')
 
@@ -48,7 +49,13 @@ if __name__=='__main__':
             if(len(words) != 2):
                 print('ERROR load takes one argument and one argument only')
             else:
-                load_file(words[1],database) 
+                load_file(words[1],database)
+
+        elif words[0] == 'num_results' :
+            if(len(words) != 2):
+                print('ERROR num_results takes one argument and one argument only')
+            else:
+                ROW_COUNT = int(words[1])
         
         #dynasty queries  
         elif words[0]=='dynasty':
