@@ -135,7 +135,21 @@ if __name__=='__main__':
         
         #culture
         elif words[0]=='culture':
-            pass
+            if len(words) == 1:
+                query_result = database.query_culture()
+            elif len(words) == 2:
+                valid_args = {'members','provinces'}
+                if words[1] not in valid_args:
+                    print('Invalid argument. Try one of:')
+                    print(valid_args)
+                    continue
+                query_result = database.query_culture(words[1])
+            else:
+                print('ERROR: Too many arguments.')
+                continue
+            for i,v in enumerate(query_result):
+                if i > ROW_COUNT: break
+                print(i," ".join([str(x) for x in v]))            
         
         else:
             print('ERROR: Unknown command!')

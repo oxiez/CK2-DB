@@ -118,29 +118,37 @@ class Data:
     
     
     # return set of religions ordered by (name,members,provinces)
-    def query_religion(self,orderby='religionname'):
+    def query_religion(self,orderby='name'):
         cur = self.conn.cursor()
         #alphabetical
         if orderby=='name':
-            cur.execute('SELECT religionname FROM religion ORDER BY religionname DESC')
+            cur.execute('SELECT religionname FROM religion ORDER BY religionname')
         #member count
         elif orderby=='members':
-            cur.execute('SELECT religionname,COUNT(*) FROM person NATURAL JOIN religion GROUP BY religionname ORDER BY count DESC')
+            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) FROM person GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
         #province count
         else:
-            cur.execute('SELECT religionname,COUNT(*) FROM province NATURAL JOIN religion GROUP BY religionname ORDER BY count DESC')
+            cur.execute('SELECT religion,COUNT(*) FROM province GROUP BY religion ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result        
     
     
     #return set of cultures ordered somehow
-    def query_culture(self,orderby='culturename'):
+    def query_culture(self,orderby='name'):
         cur = self.conn.cursor()
-    
+        #alphabetical
+        if orderby=='name':
+            cur.execute('SELECT culturename FROM culture ORDER BY culturename')
+        #member count
+        elif orderby=='members':
+            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')
+        #province count
+        else:
+            cur.execute('SELECT culture,COUNT(*) FROM province GROUP BY culture ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
-        return result        
+        return result            
 
 
     # query for relating people to titles
