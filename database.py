@@ -14,6 +14,14 @@ class Data:
 
 
     # query for a person with a name similar to the given string
+    
+    # 1) check arguments
+    # 2) WHERE true
+    # 3) For Each arg
+    #   a) and ARG = / LIKE %s,
+    #   b) add arg_val to list
+    # 4) execute
+
     def query_person(self,name):
         cur = self.conn.cursor()
         cur.execute("SELECT * FROM person WHERE birthname LIKE %s",['%'+name+'%'])
