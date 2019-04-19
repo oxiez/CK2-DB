@@ -35,8 +35,9 @@ if __name__=='__main__':
             print('Commands:')
             print(' : dynasty <args> [displays information on dynasties]')
             print(' : title <args> [displays information on titles]')
-            print(' : people <args> [displays information on characters]')
+            print(' : person <args> [displays information on characters]')
             print(' : help [displays this text]')
+            print(' : num_results <NUM> [changes the number of results displayed to NUM]')
             print(' : load <FILENAME> [loads a file]')
             print(' : quit [exits the program]')
 
@@ -48,7 +49,13 @@ if __name__=='__main__':
             if(len(words) != 2):
                 print('ERROR load takes one argument and one argument only')
             else:
-                load_file(words[1],database) 
+                load_file(words[1],database)
+
+        elif words[0] == 'num_results' :
+            if(len(words) != 2):
+                print('ERROR num_results takes one argument and one argument only')
+            else:
+                ROW_COUNT = int(words[1])
         
         #dynasty queries  
         elif words[0]=='dynasty':
@@ -135,6 +142,7 @@ if __name__=='__main__':
         
         #culture
         elif words[0]=='culture':
+<<<<<<< HEAD
             if len(words) == 1:
                 query_result = database.query_culture()
             elif len(words) == 2:
@@ -150,6 +158,12 @@ if __name__=='__main__':
             for i,v in enumerate(query_result):
                 if i > ROW_COUNT: break
                 print(i," ".join([str(x) for x in v]))            
+=======
+            pass
+
+        elif words[0]=='bloodline':
+            pass
+>>>>>>> 4c6f966d1ca800b535275639ebf6d68df64669e4
         
         else:
             print('ERROR: Unknown command!')
