@@ -60,8 +60,14 @@ if __name__=='__main__':
                 valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
-                    query_args.append(words[i])
-                    query_arg_vals.append(words[i+1])
+                    valid_vals = {'prestige','piety','wealth','count'}
+                    if words[i]=='orderby' and words[i+1] not in valid_vals:
+                        print('ERROR: ' + words[i+1] + ' is not a valid value to order by. Please use one of:')
+                        print(valid_vals)
+                        valid = False
+                    if valid:
+                        query_args.append(words[i])
+                        query_arg_vals.append(words[i+1])
                 else:
                     print('ERROR: ' + words[i] + ' is not a valid condition, please use one of the following values:')
                     print(allowed_args)

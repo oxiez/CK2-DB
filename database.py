@@ -71,8 +71,11 @@ class Data:
         cur = self.conn.cursor()
         like_args = {'name','religion', 'culture'}
         orderby_sum_vals = {'wealth','prestige','piety'}
-        orderby_count_vals = {'count'}          
+        orderby_count_vals = {'count'}
         ex_string = 'SELECT dynastyid,dynastyname'
+        for a in args:
+            if a!='name' and a in like_args:
+                ex_string = ex_string + ','+a+'name'
         #if we are ordering by something, we want to present that
         orderby = None
         for a,v in zip(args,arg_vals):
@@ -88,11 +91,12 @@ class Data:
             ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
         if orderby in orderby_count_vals:
             ex_string = ex_string + "(SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN "
-        ex_string = ex_string + 'dynasty WHERE TRUE'      
+        ex_string = ex_string + 'dynasty NATURAL JOIN religion NATURAL JOIN culture WHERE TRUE'      
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:
                 #convert user input to columns of relation
                 if a=='name': a = 'dynastyname'
+                else: a+='name'
                 arg_vals[i] = '%'+v+'%'
                 ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
         #add the order by term
