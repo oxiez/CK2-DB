@@ -29,7 +29,7 @@ if __name__=='__main__':
                 if len(words) > 3:
                     print('Too many arguments')
                 elif len(words)==1:
-                    for i,d in enumerate(database.query_dynasty()):
+                    for i,d in enumerate(database.query_dynasties()):
                         if i > 40: break
                         print(d[0])
                 else:
@@ -37,8 +37,16 @@ if __name__=='__main__':
                     if orderby not in {'wealth','prestige','piety'}:
                         print('invalid argument')
                     else:
-                        for i,d in enumerate(database.query_dynasty(orderby)):
+                        for i,d in enumerate(database.query_dynasties(orderby)):
                             if i > 40: break
                             print(d[0],d[1])
+            
+            elif words[0]=='title':
+                if len(words) > 3:
+                    print('Too many arguments')
+                elif len(words)==1:
+                    for i,d in enumerate(database.query_title()):
+                        if i > 40: break
+                        print(d[0],d[1],d[2])
                         
                     
