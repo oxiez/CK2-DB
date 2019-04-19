@@ -10,12 +10,13 @@ if __name__=='__main__':
     
     #load data
     print('\nWelcome to the Database Systems Project\n')
-    file_name = "Leon1067_02_12.ck2"
+    file_name = None
     if len(sys.argv) > 1:
         file_name = sys.argv[1]
-    print('Opening the file '+file_name)
-    database.setup(file_name)
-    print('\n')
+    if(file_name):
+        print('Opening the file '+file_name)
+        database.setup(file_name)
+        print('\n')
     
     
     # main program loop (take commands until quitting)
