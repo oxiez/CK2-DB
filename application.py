@@ -1,5 +1,6 @@
 import database
 import sys
+import texttable
 
 def load_file(file_name,database):
     print('Opening the file '+file_name)
@@ -34,14 +35,17 @@ if __name__=='__main__':
             print('Commands:')
             print(' : help [displays this text]')
             print(' : load <FILENAME> [loads a file]')
-            print(' : quit [exits the program]')  
+            print(' : quit [exits the program]')
+
         elif words[0] in {'q','quit','exit'}:
             break
+
         elif words[0] == 'load' :
             if(len(words[1]) != 2):
                 print('ERROR load takes one argument and one argument only')
             else:
                 load_file(words[1]) 
+                
         elif words[0]=='dynasty':
             if len(words)==1:
                 query_result = database.query_dynasties()
@@ -78,6 +82,7 @@ if __name__=='__main__':
                 for i,d in enumerate(database.query_title()):
                     if i > ROW_COUNT: break
                     print(d[0],d[1],d[2])
+
         elif words[0]=='person':
             if(len(words) %2 != 1):
                 print('ERROR: Please have one argument for each command')
