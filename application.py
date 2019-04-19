@@ -116,6 +116,29 @@ if __name__=='__main__':
                 for i,v in enumerate(query_result):
                     if i > ROW_COUNT: break
                     print(i," ".join([str(x) for x in v[1:]]))
+        
+        #religion
+        elif words[0]=='religion':
+            if len(words) == 1:
+                query_result = database.query_religion()
+            elif len(words) == 2:
+                valid_args = {'members','provinces'}
+                if words[1] not in valid_args:
+                    print('Invalid argument. Try one of:')
+                    print(valid_args)
+                    continue
+                query_result = database.query_religion(words[1])
+            else:
+                print('ERROR: Too many arguments.')
+                continue
+            for i,v in enumerate(query_result):
+                if i > ROW_COUNT: break
+                print(i," ".join([str(x) for x in v]))
+        
+        #culture
+        elif words[0]=='culture':
+            pass
+        
         else:
             print('ERROR: Unknown command!')
             print("For a list of commands, please enter 'help'")

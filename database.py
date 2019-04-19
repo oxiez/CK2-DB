@@ -117,14 +117,30 @@ class Data:
     
     
     
-    # return set of religions ordered somehow
+    # return set of religions ordered by (name,members,provinces)
     def query_religion(self,orderby='religionname'):
         cur = self.conn.cursor()
-        
+        #alphabetical
+        if orderby=='name':
+            cur.execute('SELECT religionname FROM religion ORDER BY religionname DESC')
+        #member count
+        elif orderby=='members':
+            cur.execute('SELECT religionname,COUNT(*) FROM person NATURAL JOIN religion GROUP BY religionname ORDER BY count DESC')
+        #province count
+        else:
+            cur.execute('SELECT religionname,COUNT(*) FROM province NATURAL JOIN religion GROUP BY religionname ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result        
-
+    
+    
+    #return set of cultures ordered somehow
+    def query_culture(self,orderby='culturename'):
+        cur = self.conn.cursor()
+    
+        result = cur.fetchall()
+        cur.close()
+        return result        
 
 
     # query for relating people to titles
@@ -134,6 +150,16 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
+    
+    
+    #returns a list of the direct vassals for a given title
+    def query_direct_vassals(self,titleID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT id FROM title WHERE defactoleige=%s',[titleID])
+        result = cur.fetchall()
+        cur.close()
+        return result
+        
     
     
     #query for getting all of the traits of a specific person
