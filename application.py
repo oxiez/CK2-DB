@@ -42,7 +42,7 @@ if __name__=='__main__':
                             print(d[0],d[1])
             
             elif words[0]=='title':
-                if len(words) > 3:
+                if len(words) > 1:
                     print('Too many arguments')
                 elif len(words)==1:
                     for i,d in enumerate(database.query_title()):
