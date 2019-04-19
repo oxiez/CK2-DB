@@ -109,20 +109,6 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
-        
-
-    # query for dynasties, sorted by optional parameter (default alphabetically)
-    def query_dynasties(self,orderby='dynastyname'):
-        cur = self.conn.cursor()
-        if orderby=='dynastyname':
-            cur.execute('SELECT dynastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
-        elif orderby in {'wealth','prestige','piety'}:
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM('+orderby+') FROM person WHERE '+orderby+' IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
-        elif orderby=='count':
-            cur.execute('SELECT dynastyid,dynastyname,count FROM (SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY count DESC')
-        result = cur.fetchall()
-        cur.close()
-        return result
     
     
     # return set of religions ordered somehow
