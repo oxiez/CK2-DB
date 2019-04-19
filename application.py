@@ -6,6 +6,8 @@ def load_file(file_name,database):
     database.setup(file_name)
     print('\n')
 
+#how many rows every query will return
+ROW_COUNT = 40
 
 #main function
 if __name__=='__main__':
@@ -41,22 +43,32 @@ if __name__=='__main__':
             else:
                 load_file(words[1]) 
         elif words[0]=='dynasty':
-            if len(words) > 3:
-                print('Too many arguments')
-            elif len(words)==1:
+            if len(words)==1:
                 query_result = database.query_dynasties()
                 for i,d in enumerate(query_result):
-                    if i > 40: break
+                    if i > ROW_COUNT: break
                     print(i,d[1])
             else:
-                orderby = words[1]
-                if orderby not in {'wealth','prestige','piety','count'}:
-                    print('invalid argument')
+                query_args = []
+                query_arg_vals = []
+                i = 1
+                allowed_args = {'name', 'orderby', 'religion', 'culture'}
+                valid = True
+            while i < len(words):
+                if(words[i] in allowed_args):
+                    query_args.append(words[i])
+                    query_arg_vals.append(words[i+1])
                 else:
-                    query_result = database.query_dynasties(orderby)
-                    for i,d in enumerate(query_result):
-                        if i > 40: break
-                        print(i,d[1],d[2])
+                    print('ERROR: ' + words[i] + ' is not a valid condition, please use one of the following values:')
+                    print(allowed_args)
+                    valid = False
+                i += 2
+            #get person with these conditions
+            if valid:
+                query_result = database.query_dynasty(query_args,query_arg_vals)
+                for i,v in enumerate(query_result):
+                    if i > ROW_COUNT: break
+                    print(i," ".join([str(x) for x in v[1:]]))
         
         elif words[0]=='title':
             if len(words) > 1:
@@ -64,7 +76,7 @@ if __name__=='__main__':
                 continue
             elif len(words)==1:
                 for i,d in enumerate(database.query_title()):
-                    if i > 40: break
+                    if i > ROW_COUNT: break
                     print(d[0],d[1],d[2])
         elif words[0]=='person':
             if(len(words) %2 != 1):
@@ -73,7 +85,8 @@ if __name__=='__main__':
             query_args = []
             query_arg_vals = []
             i = 1
-            allowed_args = {'name', 'dynasty', 'is_male', 'birthday', 'deathday', 'father', 'real_father', 'mother', 'religion', 'culture','fertility','health','wealth','prestige','piety'}
+            allowed_args = {'name', 'dynasty', 'ismale', 'birthday', 'deathday', 'father', 'real_father', 'mother', 'religion', 'culture','fertility','health','wealth','prestige','piety'}
+            valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
                     query_args.append(words[i])
@@ -81,11 +94,14 @@ if __name__=='__main__':
                 else:
                     print('ERROR: ' + words[i] + ' is not a valid condition, please use one of the following values:')
                     print(allowed_args)
+                    valid = False
                 i += 2
             #get person with these conditions
-            query_result = database.query_person(query_args,query_arg_vals)
-            for i,v in enumerate(query_result):
-                print(i," ".join([str(x) for x in v[1:]]))
+            if valid:
+                query_result = database.query_person(query_args,query_arg_vals)
+                for i,v in enumerate(query_result):
+                    if i > ROW_COUNT: break
+                    print(i," ".join([str(x) for x in v[1:]]))
         else:
             print('ERROR: Unknown command!')
             print("For a list of commands, please enter 'help'")

@@ -13,8 +13,7 @@ class Data:
         load_data.load_data(filename)
 
 
-    # query for a person with a name similar to the given string
-    
+   
     # 1) check arguments (done in application.py)
     # 2) WHERE true
     # 3) For Each arg
@@ -28,6 +27,7 @@ class Data:
         geq_args = {'culture','fertility','health','wealth','prestige','piety'}
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:    # Strings TODO: add dynasty to this (via a join)
+                #convert user input to columns of relation
                 if a=='dynasty': a = 'dynastyname'
                 if a=='name': a = 'birthname'
                 arg_vals[i] = '%'+v+'%'
@@ -64,10 +64,40 @@ class Data:
         return result
     
     
-    # search for dynasties that are similar to a string
-    def query_dynastyname(self,name):
+    # similar to query person; ONLY ALLOW ONE ORDERBY TERM (code is built on that assumption)
+    def query_dynasty(self,args,arg_vals):
         cur = self.conn.cursor()
-        cur.execute("SELECT birthname FROM person NATURAL JOIN dynasty WHERE dynastyname LIKE %s",['%'+name+'%'])
+        like_args = {'name','religion', 'culture'}
+        orderby_sum_vals = {'wealth','prestige','piety'}
+        orderby_count_vals = {'count'}          
+        ex_string = 'SELECT dynastyid,dynastyname'
+        #if we are ordering by something, we want to present that
+        orderby = None
+        for a,v in zip(args,arg_vals):
+            if a=='orderby':
+                orderby = v
+                ex_string = ex_string + ',sum'
+                break
+        print(orderby)
+        ex_string = ex_string + ' FROM '
+        if orderby!= None:
+            ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
+        ex_string = ex_string + 'dynasty WHERE TRUE'      
+        for i,(a,v) in enumerate(zip(args,arg_vals)):
+            if a in like_args:
+                #convert user input to columns of relation
+                if a=='name': a = 'dynastyname'
+                arg_vals[i] = '%'+v+'%'
+                ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
+        #add the order by term
+        if orderby != None:
+            ex_string = ex_string + ' ORDER BY sum DESC'
+        #remove the orderby from the argvals
+        for i in range(len(arg_vals)):
+            if arg_vals[i]==orderby:
+                arg_vals.pop(i)
+                break
+        cur.execute(ex_string,arg_vals)
         result = cur.fetchall()
         cur.close()
         return result
