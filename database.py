@@ -36,12 +36,8 @@ class Data:
         cur = self.conn.cursor()
         if orderby=='name':
             cur.execute("SELECT personid,birthname FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY birthname",[ID])
-        elif orderby=='wealth':
-            cur.execute("SELECT personid,birthname,wealth FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY wealth",[ID])
-        elif orderby=='prestige':
-            cur.execute("SELECT personid,birthname,prestige FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY pretige DESC",[ID])    
-        elif orderby=='piety':
-            cur.execute("SELECT personid,birthname,piety FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY piety DESC",[ID])
+        elif orderby in {'wealth','prestige','piety'}:
+            cur.execute('SELECT personid,birthname,'+orderby+' FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY '+orderby,[ID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -59,20 +55,24 @@ class Data:
     # query for dynasties, sorted by optional parameter (default alphabetically)
     def query_dynasties(self,orderby='dynastyname'):
         cur = self.conn.cursor()
-    
         if orderby=='dynastyname':
             cur.execute('SELECT dynastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
-        elif orderby=='wealth':
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(wealth) FROM person WHERE wealth IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
-        elif orderby=='prestige':
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(prestige) FROM person WHERE prestige IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
-        elif orderby=='piety':
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(piety) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+        elif orderby in {'wealth','prestige','piety'}:
+            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM('+orderby+') FROM person WHERE '+orderby+' IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
         elif orderby=='count':
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,COUNT(*) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY count DESC')
+            cur.execute('SELECT dynastyid,dynastyname,count FROM (SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result
+    
+    
+    # return set of religions ordered somehow
+    def query_religion(self,orderby='religionname'):
+        cur = self.conn.cursor()
+        
+        result = cur.fetchall()
+        cur.close()
+        return result        
 
 
     # query for relating people to titles
@@ -84,3 +84,4 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
+    
