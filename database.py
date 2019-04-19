@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2.extras import DictCursor
 import io
 import sys
 import load_data
@@ -20,7 +21,8 @@ class Data:
     #   a) and ARG = / LIKE %s,
     #   b) add arg_val to list
     # 4) execute
-
+    
+    # returns a list of dictionaries (easier to deal with than indexing huge list of values)
     def query_person(self, args, arg_vals):
         ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
         like_args = {'name','dynasty','religion', 'culture'}
@@ -36,7 +38,7 @@ class Data:
                 ex_string = ex_string + ' AND ' + a + ' >= %s'
             else:
                 ex_string = ex_string + ' AND ' + a + '=%s'
-        cur = self.conn.cursor()
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute(ex_string, arg_vals)
         result = cur.fetchall()
         cur.close()
