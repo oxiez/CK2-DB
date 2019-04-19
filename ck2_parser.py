@@ -26,7 +26,19 @@ def getCK2Obj(file, regex, ck2_obj_key = "tag"):
 	results[ck2_obj_key] = pair[0].strip()
 	
 	return results
-		
+
+def readList(file, first_line):
+	""" Reads in a multiline attribute that does not contain a substructure, but
+	rather is made up of space separated values. Returns a list of those values """
+	l = first_line.split()
+	x = file.readline()
+	parsed = x.strip()
+	while(x and not (parsed == "}")):
+		l = l + parsed.split()
+		x = file.readline()
+		parsed = x.strip()
+
+	return l
 
 # File, regex dict, line of the attribute that we want to read, i.e. provinces=
 # (where { is on the this/next line) or culture=norweigan.
@@ -81,8 +93,11 @@ def getAttr(file, regex, attr_line):
 		elif(parsed == "}"):
 			lone_brackets -= 1
 			valid = False
-		elif(len(pair) < 2): # No = character
-			valid = False
+		elif(len(pair) < 2): # No = character, either a empty line or a list of something
+			if(parsed == ""): # Empty line
+				valid = False
+			else: # Lists
+				return readList(file, parsed)
 		if(not valid):
 			x = file.readline()
 			parsed = x.strip()
