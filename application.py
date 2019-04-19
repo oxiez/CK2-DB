@@ -1,7 +1,7 @@
 import database
 import sys
 
-def load_file(file_name):
+def load_file(file_name,database):
     print('Opening the file '+file_name)
     database.setup(file_name)
     print('\n')
@@ -16,7 +16,7 @@ if __name__=='__main__':
     print('\nWelcome to the Database Systems Project\n')
     if len(sys.argv) > 1:
         file_name = sys.argv[1]
-        load_file(file_name)
+        load_file(file_name,database)
     
     # main program loop (take commands until quitting)
     print("Type 'help' for help with commands, and 'quit' to exit.")
