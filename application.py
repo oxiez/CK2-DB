@@ -35,7 +35,7 @@ if __name__=='__main__':
             print('Commands:')
             print(' : dynasty <args> [displays information on dynasties]')
             print(' : title <args> [displays information on titles]')
-            print(' : people <args> [displays information on characters]')
+            print(' : person <args> [displays information on characters]')
             print(' : help [displays this text]')
             print(' : num_results <NUM> [changes the number of results displayed to NUM]')
             print(' : load <FILENAME> [loads a file]')
