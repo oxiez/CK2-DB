@@ -15,6 +15,7 @@ import get_bloodline
 def load_data(filename):
 	# connect and get a cursor
 	conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
+	conn.autocommit = False
 	cur = conn.cursor()
 
 	# create the tables
