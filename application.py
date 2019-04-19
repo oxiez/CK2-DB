@@ -35,7 +35,7 @@ if __name__=='__main__':
                 elif len(words)==1:
                     for i,d in enumerate(database.query_dynasties()):
                         if i > 40: break
-                        print(d[0])
+                        print(i,d[1])
                 else:
                     orderby = words[1]
                     if orderby not in {'wealth','prestige','piety'}:
@@ -43,7 +43,7 @@ if __name__=='__main__':
                     else:
                         for i,d in enumerate(database.query_dynasties(orderby)):
                             if i > 40: break
-                            print(d[0],d[1])
+                            print(i,d[1],d[2])
             
             elif words[0]=='title':
                 if len(words) > 1:

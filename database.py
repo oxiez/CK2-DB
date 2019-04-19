@@ -20,19 +20,38 @@ class Data:
         #code here
     
         cur.close()
+    
+    
+    # query for everyone in a specific dynasty
+    def query_dynastyid(self,ID):
+        cur = self.conn.cursor()
+        cur.execute("SELECT birthname FROM person NATURAL JOIN dynasty WHERE dynastyid=%s",[ID])
+        result = cur.fetchall()
+        cur.close()
+        return result
+    
+    
+    # search for dynasties that are similar to a string
+    def query_dynastyname(self,name):
+        cur = self.conn.cursor()
+        cur.execute("SELECT birthname FROM person NATURAL JOIN dynasty WHERE dynastyname LIKE %s",['%'+name'%'])
+        result = cur.fetchall()
+        cur.close()
+        return result
+        
 
     # query for dynasties, sorted by optional parameter (default alphabetically)
     def query_dynasties(self,orderby='dynastyname'):
         cur = self.conn.cursor()
     
         if orderby=='dynastyname':
-            cur.execute('SELECT dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
+            cur.execute('SELECT dyanastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
         elif orderby=='wealth':
-            cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(wealth) FROM person WHERE wealth IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(wealth) FROM person WHERE wealth IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
         elif orderby=='prestige':
-            cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(prestige) FROM person WHERE prestige IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(prestige) FROM person WHERE prestige IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
         elif orderby=='piety':
-            cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(piety) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(piety) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
     
         result = cur.fetchall()
         cur.close()
