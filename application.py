@@ -45,7 +45,7 @@ if __name__=='__main__':
                         print(i,d[1])
                 else:
                     orderby = words[1]
-                    if orderby not in {'wealth','prestige','piety'}:
+                    if orderby not in {'wealth','prestige','piety','count'}:
                         print('invalid argument')
                     else:
                         for i,d in enumerate(database.query_dynasties(orderby)):

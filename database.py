@@ -53,7 +53,7 @@ class Data:
         
 
     # query for dynasties, sorted by optional parameter (default alphabetically)
-    def query_dynasties(self,orderby='dynastyname'):
+    def query_dynasties(self,orderby='dynastyname',living):
         cur = self.conn.cursor()
         if orderby=='dynastyname':
             cur.execute('SELECT dynastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
