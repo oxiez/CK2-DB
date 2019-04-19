@@ -24,10 +24,13 @@ class Data:
 
     def query_person(self, args, arg_vals):
         ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
+        like_args = {'name','dynasty','religion', 'culture'}
+        geq_args = {'culture','fertility','health','wealth','prestige','piety'}
         for a in args:
-            if(a ==  'birthName'):    # Strings TODO: add dynasty to this (via a join)
+            if a in like_args:    # Strings TODO: add dynasty to this (via a join)
                 ex_string = ex_string + ' AND ' + a + 'LIKE %s'
-            # elif (a == ....)        # Things that should be greater than (wealth health fetility etc.)
+            elif a in geq_args:
+                ex_string = ex_string + ' AND ' + a + ' >= %s'
             else:
                 ex_string = ex_string + ' AND ' + a + '=%s'
         cur = self.conn.cursor()
@@ -68,7 +71,7 @@ class Data:
         
 
     # query for dynasties, sorted by optional parameter (default alphabetically)
-    def query_dynasties(self,orderby='dynastyname',living):
+    def query_dynasties(self,orderby='dynastyname'):
         cur = self.conn.cursor()
         if orderby=='dynastyname':
             cur.execute('SELECT dynastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
