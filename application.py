@@ -1,6 +1,10 @@
 import database
 import sys
 
+def load_file(file_name):
+    print('Opening the file '+file_name)
+    database.setup(file_name)
+    print('\n')
 
 
 #main function
@@ -10,14 +14,9 @@ if __name__=='__main__':
     
     #load data
     print('\nWelcome to the Database Systems Project\n')
-    file_name = None
     if len(sys.argv) > 1:
         file_name = sys.argv[1]
-    if(file_name):
-        print('Opening the file '+file_name)
-        database.setup(file_name)
-        print('\n')
-    
+        load_file(file_name)
     
     # main program loop (take commands until quitting)
     print("Type 'help' for help with commands, and 'quit' to exit.")
@@ -27,7 +26,14 @@ if __name__=='__main__':
         if command == 'help':
             print('Commands:')
             print(' : help [displays this text]')
-            print(' : quit [exits the program]')            
+            print(' : load <FILENAME> [loads a file]')
+            print(' : quit [exits the program]')  
+        elif command[0:3] == 'load' :
+            c = command.split()
+            if(len(c) != 2):
+                print('ERROR load takes one argument and one argument only')
+            else:
+                load_file(c[1])          
         else:
             words = command.split()
             if words[0]=='dynasty':
