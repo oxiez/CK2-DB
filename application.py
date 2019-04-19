@@ -59,17 +59,11 @@ if __name__=='__main__':
         
         #dynasty queries  
         elif words[0]=='dynasty':
-            if len(words)==1:
-                query_result = database.query_dynasties()
-                for i,d in enumerate(query_result):
-                    if i > ROW_COUNT: break
-                    print(i,d[1])
-            else:
-                query_args = []
-                query_arg_vals = []
-                i = 1
-                allowed_args = {'name', 'orderby', 'religion', 'culture'}
-                valid = True
+            query_args = []
+            query_arg_vals = []
+            i = 1
+            allowed_args = {'name', 'orderby', 'religion', 'culture'}
+            valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
                     valid_vals = {'prestige','piety','wealth','count'}
