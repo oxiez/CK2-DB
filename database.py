@@ -85,7 +85,6 @@ class Data:
                     ex_string = ex_string + ',sum'
                 else:
                     ex_string = ex_string + ',count'
-        print(orderby)
         ex_string = ex_string + ' FROM '
         if orderby in orderby_sum_vals:
             ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
