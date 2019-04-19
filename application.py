@@ -142,7 +142,6 @@ if __name__=='__main__':
         
         #culture
         elif words[0]=='culture':
-<<<<<<< HEAD
             if len(words) == 1:
                 query_result = database.query_culture()
             elif len(words) == 2:
@@ -157,13 +156,12 @@ if __name__=='__main__':
                 continue
             for i,v in enumerate(query_result):
                 if i > ROW_COUNT: break
-                print(i," ".join([str(x) for x in v]))            
-=======
+                print(i," ".join([str(x) for x in v]))      
             pass
 
+        #bloodlines
         elif words[0]=='bloodline':
             pass
->>>>>>> 4c6f966d1ca800b535275639ebf6d68df64669e4
         
         else:
             print('ERROR: Unknown command!')
