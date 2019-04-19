@@ -34,7 +34,7 @@ class Data:
     # search for dynasties that are similar to a string
     def query_dynastyname(self,name):
         cur = self.conn.cursor()
-        cur.execute("SELECT birthname FROM person NATURAL JOIN dynasty WHERE dynastyname LIKE %s",['%'+name'%'])
+        cur.execute("SELECT birthname FROM person NATURAL JOIN dynasty WHERE dynastyname LIKE %s",['%'+name+'%'])
         result = cur.fetchall()
         cur.close()
         return result
