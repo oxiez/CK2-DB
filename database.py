@@ -14,9 +14,23 @@ class Data:
 
 
     # query for a person with a name similar to the given string
-    def query_person(self,name):
+    
+    # 1) check arguments (done in application.py)
+    # 2) WHERE true
+    # 3) For Each arg
+    #   a) and ARG = / LIKE %s,
+    #   b) add arg_val to list
+    # 4) execute
+
+    def query_person(self, args, arg_vals):
+        ex_string = "SELECT * FROM person WHERE TRUE"
+        for a in args:
+            if(a ==  'birthName'):
+                ex_string = ex_string + ' AND ' + a + 'LIKE %s'
+            else:
+                ex_string = ex_string + ' AND ' + a + '=%s'
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM person WHERE birthname LIKE %s",['%'+name+'%'])
+        cur.execute(ex_string, arg_vals)
         result = cur.fetchall()
         cur.close()
         return result
