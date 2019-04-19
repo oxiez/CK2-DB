@@ -68,7 +68,8 @@ class Data:
             cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(prestige) FROM person WHERE prestige IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
         elif orderby=='piety':
             cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM(piety) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
-    
+        elif orderby=='count':
+            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,COUNT(*) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result
