@@ -24,7 +24,7 @@ class Data:
     
     # returns a list of dictionaries (easier to deal with than indexing huge list of values)
     def query_person(self, args, arg_vals):
-        ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
+        ex_string = "SELECT * FROM person NATURAL JOIN culture NATURAL JOIN religion WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
         like_args = {'name','dynasty','religion', 'culture'}
         geq_args = {'culture','fertility','health','wealth','prestige','piety'}
         for i,(a,v) in enumerate(zip(args,arg_vals)):
@@ -32,6 +32,8 @@ class Data:
                 #convert user input to columns of relation
                 if a=='dynasty': a = 'dynastyname'
                 if a=='name': a = 'birthname'
+                if a=='culture': a = 'culturename'
+                if a== 'religion': a= 'religionname'
                 arg_vals[i] = '%'+v+'%'
                 ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
             elif a in geq_args:
@@ -71,8 +73,11 @@ class Data:
         cur = self.conn.cursor()
         like_args = {'name','religion', 'culture'}
         orderby_sum_vals = {'wealth','prestige','piety'}
-        orderby_count_vals = {'count'}          
+        orderby_count_vals = {'count'}
         ex_string = 'SELECT dynastyid,dynastyname'
+        for a in args:
+            if a!='name' and a in like_args:
+                ex_string = ex_string + ','+a+'name'
         #if we are ordering by something, we want to present that
         orderby = None
         for a,v in zip(args,arg_vals):
@@ -82,17 +87,17 @@ class Data:
                     ex_string = ex_string + ',sum'
                 else:
                     ex_string = ex_string + ',count'
-        print(orderby)
         ex_string = ex_string + ' FROM '
         if orderby in orderby_sum_vals:
             ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
         if orderby in orderby_count_vals:
             ex_string = ex_string + "(SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN "
-        ex_string = ex_string + 'dynasty WHERE TRUE'      
+        ex_string = ex_string + 'dynasty NATURAL JOIN religion NATURAL JOIN culture WHERE TRUE'      
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:
                 #convert user input to columns of relation
                 if a=='name': a = 'dynastyname'
+                else: a+='name'
                 arg_vals[i] = '%'+v+'%'
                 ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
         #add the order by term
@@ -106,20 +111,6 @@ class Data:
                 arg_vals.pop(i)
                 break
         cur.execute(ex_string,arg_vals)
-        result = cur.fetchall()
-        cur.close()
-        return result
-        
-
-    # query for dynasties, sorted by optional parameter (default alphabetically)
-    def query_dynasties(self,orderby='dynastyname'):
-        cur = self.conn.cursor()
-        if orderby=='dynastyname':
-            cur.execute('SELECT dynastyid,dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
-        elif orderby in {'wealth','prestige','piety'}:
-            cur.execute('SELECT dynastyid,dynastyname,sum FROM (SELECT dynastyid,SUM('+orderby+') FROM person WHERE '+orderby+' IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
-        elif orderby=='count':
-            cur.execute('SELECT dynastyid,dynastyname,count FROM (SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result
