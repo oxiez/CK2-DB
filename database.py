@@ -14,6 +14,14 @@ class Data:
         load_data.load_data(filename)
 
 
+    #find a specific person by their personid
+    def query_personid(self,ID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT * FROM person WHERE personid=%s',[ID])
+        result = cur.fetchall()
+        cur.close()
+        return result
+
    
     # 1) check arguments (done in application.py)
     # 2) WHERE true
@@ -46,14 +54,6 @@ class Data:
         cur.close()
         return result
     
-    
-    #find a specific person by their personid
-    def query_personid(self,ID):
-        cur = self.conn.cursor()
-        cur.execute('SELECT * FROM person WHERE personid=%s',[ID])
-        result = cur.fetchall()
-        cur.close()
-        return result
     
     
     # query for everyone in a specific dynasty
@@ -116,6 +116,7 @@ class Data:
         return result
     
     
+    
     # return set of religions ordered somehow
     def query_religion(self,orderby='religionname'):
         cur = self.conn.cursor()
@@ -123,6 +124,7 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result        
+
 
 
     # query for relating people to titles
