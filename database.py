@@ -23,10 +23,11 @@ class Data:
     # 4) execute
 
     def query_person(self, args, arg_vals):
-        ex_string = "SELECT * FROM person WHERE TRUE"
+        ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
         for a in args:
-            if(a ==  'birthName'):
+            if(a ==  'birthName'):    # Strings TODO: add dynasty to this (via a join)
                 ex_string = ex_string + ' AND ' + a + 'LIKE %s'
+            # elif (a == ....)        # Things that should be greater than (wealth health fetility etc.)
             else:
                 ex_string = ex_string + ' AND ' + a + '=%s'
         cur = self.conn.cursor()
