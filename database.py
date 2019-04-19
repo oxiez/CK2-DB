@@ -16,4 +16,23 @@ def query_person(name):
     #code here
     
     cur.close()
-    conn.close()    
+    conn.close()
+
+# query for dynasties, sorted by optional parameter (default alphabetically)
+def query_dynasty(orderby='dynastyname'):
+    conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
+    cur = conn.cursor()
+    
+    if orderby=='dynastyname':
+        cur.execute('SELECT dynastyname FROM dynasty WHERE dynastyname IS NOT NULL ORDER BY dynastyname')
+    elif orderby=='wealth':
+        cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(wealth) FROM person WHERE wealth IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+    elif orderby=='prestige':
+        cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(prestige) FROM person WHERE prestige IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+    elif orderby=='piety':
+        cur.execute('SELECT dynastyname,sum FROM (SELECT dynastyid,SUM(piety) FROM person WHERE piety IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN dynasty ORDER BY sum DESC')
+    
+    result = cur.fetchall()
+    cur.close()
+    conn.close()
+    return result

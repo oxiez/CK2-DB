@@ -14,7 +14,8 @@ if __name__=='__main__':
     print('\n')
     
     print("Type 'help' for help with commands, and 'quit' to exit.")
-    #
+    
+    # main program loop (take commands until quitting)
     command = ''
     while command not in {'q','quit','exit'}:
         command = input(' : ')
@@ -23,4 +24,21 @@ if __name__=='__main__':
             print(' : help [displays this text]')
             print(' : quit [exits the program]')            
         else:
-            pass
+            words = command.split()
+            if words[0]=='dynasty':
+                if len(words) > 3:
+                    print('Too many arguments')
+                elif len(words)==1:
+                    for i,d in enumerate(database.query_dynasty()):
+                        if i > 40: break
+                        print(d[0])
+                else:
+                    orderby = words[1]
+                    if orderby not in {'wealth','prestige','piety'}:
+                        print('invalid argument')
+                    else:
+                        for i,d in enumerate(database.query_dynasty(orderby)):
+                            if i > 40: break
+                            print(d[0],d[1])
+                        
+                    
