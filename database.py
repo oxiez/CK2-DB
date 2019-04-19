@@ -137,3 +137,13 @@ class Data:
         cur.close()
         return result
     
+    
+    #query for getting all of the traits of a specific person
+    def query_traits(self,personID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT traitname FROM person NATURAL JOIN trait NATURAL JOIN traitlookup WHERE personid=%s',[personID])
+        result = cur.fetchall()
+        cur.close()
+        return result
+    
+    
