@@ -142,6 +142,9 @@ if __name__=='__main__':
         #culture
         elif words[0]=='culture':
             pass
+
+        elif words[0]=='bloodline':
+            pass
         
         else:
             print('ERROR: Unknown command!')
