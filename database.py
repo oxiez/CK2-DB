@@ -130,9 +130,7 @@ class Data:
     # query for relating people to titles
     def query_title(self,personID):
         cur = self.conn.cursor()
-    
         cur.execute('SELECT birthname,dynastyname,name FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl NATURAL JOIN dynasty NATURAL JOIN title')
-    
         result = cur.fetchall()
         cur.close()
         return result
@@ -145,5 +143,6 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
+    
     
     
