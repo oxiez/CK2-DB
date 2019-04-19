@@ -21,6 +21,7 @@ if __name__=='__main__':
     # main program loop (take commands until quitting)
     print("Type 'help' for help with commands, and 'quit' to exit.")
     command = ''
+    query_result = []
     while command not in {'q','quit','exit'}:
         command = input(' : ')     
         if(len(command) == 0):
@@ -43,7 +44,8 @@ if __name__=='__main__':
             if len(words) > 3:
                 print('Too many arguments')
             elif len(words)==1:
-                for i,d in enumerate(database.query_dynasties()):
+                query_result = database.query_dynasties()
+                for i,d in enumerate(query_result):
                     if i > 40: break
                     print(i,d[1])
             else:
@@ -51,7 +53,8 @@ if __name__=='__main__':
                 if orderby not in {'wealth','prestige','piety','count'}:
                     print('invalid argument')
                 else:
-                    for i,d in enumerate(database.query_dynasties(orderby)):
+                    query_result = database.query_dynasties(orderby)
+                    for i,d in enumerate(query_result):
                         if i > 40: break
                         print(i,d[1],d[2])
         
@@ -80,8 +83,8 @@ if __name__=='__main__':
                     print(allowed_args)
                 i += 2
             #get person with these conditions
-            people = database.query_person(query_args,query_arg_vals)
-            for i,v in enumerate(people):
+            query_result = database.query_person(query_args,query_arg_vals)
+            for i,v in enumerate(query_result):
                 print(i," ".join([str(x) for x in v[1:]]))
         else:
             print('ERROR: Unknown command!')

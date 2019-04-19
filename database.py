@@ -26,9 +26,12 @@ class Data:
         ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
         like_args = {'name','dynasty','religion', 'culture'}
         geq_args = {'culture','fertility','health','wealth','prestige','piety'}
-        for a in args:
+        for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:    # Strings TODO: add dynasty to this (via a join)
-                ex_string = ex_string + ' AND ' + a + 'LIKE %s'
+                if a=='dynasty': a = 'dynastyname'
+                if a=='name': a = 'birthname'
+                arg_vals[i] = '%'+v+'%'
+                ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
             elif a in geq_args:
                 ex_string = ex_string + ' AND ' + a + ' >= %s'
             else:
