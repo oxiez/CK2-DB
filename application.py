@@ -41,11 +41,12 @@ if __name__=='__main__':
             break
 
         elif words[0] == 'load' :
-            if(len(words[1]) != 2):
+            if(len(words) != 2):
                 print('ERROR load takes one argument and one argument only')
             else:
-                load_file(words[1]) 
-                
+                load_file(words[1],database) 
+        
+        #dynasty queries  
         elif words[0]=='dynasty':
             if len(words)==1:
                 query_result = database.query_dynasties()
@@ -80,6 +81,7 @@ if __name__=='__main__':
                     if i > ROW_COUNT: break
                     print(i," ".join([str(x) for x in v[1:]]))
         
+        #title queries
         elif words[0]=='title':
             if len(words) > 1:
                 print('Too many arguments')
@@ -88,7 +90,8 @@ if __name__=='__main__':
                 for i,d in enumerate(database.query_title()):
                     if i > ROW_COUNT: break
                     print(d[0],d[1],d[2])
-
+        
+        #person queries
         elif words[0]=='person':
             if(len(words) %2 != 1):
                 print('ERROR: Please have one argument for each command')
