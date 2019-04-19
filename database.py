@@ -24,7 +24,7 @@ class Data:
     
     # returns a list of dictionaries (easier to deal with than indexing huge list of values)
     def query_person(self, args, arg_vals):
-        ex_string = "SELECT * FROM person WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
+        ex_string = "SELECT * FROM person NATURAL JOIN culture NATURAL JOIN religion WHERE TRUE"   # TODO: Make this a join with dynasty and make it select only interesting things (no dynasty id)
         like_args = {'name','dynasty','religion', 'culture'}
         geq_args = {'culture','fertility','health','wealth','prestige','piety'}
         for i,(a,v) in enumerate(zip(args,arg_vals)):
@@ -32,6 +32,8 @@ class Data:
                 #convert user input to columns of relation
                 if a=='dynasty': a = 'dynastyname'
                 if a=='name': a = 'birthname'
+                if a=='culture': a = 'culturename'
+                if a== 'religion': a= 'religionname'
                 arg_vals[i] = '%'+v+'%'
                 ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
             elif a in geq_args:
