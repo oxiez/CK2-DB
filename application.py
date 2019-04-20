@@ -126,6 +126,7 @@ if __name__=='__main__':
             # title id returns all titles of the given personid
             elif len(words)==2:
                 query_result = database.query_title(words[1])
+                headings = ['Person ID', 'Name', 'Dynasty', 'Title Name', 'Title ID']
             # we are looking for personID(s) given a certain title
             elif len(words)==3:
                 #rulers
