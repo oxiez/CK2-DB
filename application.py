@@ -121,6 +121,7 @@ if __name__=='__main__':
             headings = None
             # title on its own returns ???
             if len(words)==1:
+                print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
                 continue
             # title id returns all titles of the given personid
             elif len(words)==2:
