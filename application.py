@@ -123,7 +123,7 @@ if __name__=='__main__':
             query_args = []
             query_arg_vals = []
             i = 1
-            allowed_args = {'name', 'dynasty', 'ismale', 'birthday', 'deathday', 'father', 'real_father', 'mother', 'religion', 'culture','fertility','health','wealth','prestige','piety'}
+            allowed_args = {'name', 'dynasty', 'ismale', 'birthday', 'deathday', 'father', 'real_father', 'mother', 'religion', 'culture', 'fertility', 'health', 'wealth', 'prestige', 'piety'}
             valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
