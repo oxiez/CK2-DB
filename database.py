@@ -161,7 +161,7 @@ class Data:
     # query for relating people to titles
     def query_title(self,personID):
         cur = self.conn.cursor()
-        cur.execute('SELECT ppl.holderid,birthname,dynastyname,name,titleid FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN title WHERE holderid=%s',[personID])
+        cur.execute('SELECT rlr.personid,birthname,dynastyname,name,rlr.titleid FROM (SELECT personid,birthname,dynastyname,titleid FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=%s) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN rulers) rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=%s',[personID, personID])
         result = cur.fetchall()
         cur.close()
         return result
