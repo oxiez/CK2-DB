@@ -161,18 +161,26 @@ class Data:
     # query for relating people to titles
     def query_title(self,personID):
         cur = self.conn.cursor()
-        cur.execute('SELECT ppl.holderid,birthname,dynastyname,name FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN title WHERE holderid=%s',[personID])
+        cur.execute('SELECT ppl.holderid,birthname,dynastyname,name,titleid FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN title WHERE holderid=%s',[personID])
         result = cur.fetchall()
         cur.close()
         return result
     
     
-    # query returning all of the past rulers of a given title (BORKED, NEEDS FIXING)
+    # query returning all of the past rulers of a given title
     def query_rulers(self,titleID):
         cur = self.conn.cursor()
-        #full info
+        #returns personid,name,dynasty,birthdate,deathdate of every historical ruler of the title
         cur.execute('SELECT rul.holderid,birthname,dynastyname,birthday,deathday FROM (SELECT personid AS holderid,titleid,birthname,dynastyname,birthday,deathday FROM rulers NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=%s',[titleID])
-        
+        result = cur.fetchall()
+        cur.close()
+        return result
+    
+    
+    #query returning the current ruler of a given title
+    def query_ruler(self,titleID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT holderid,birthname,dynastyname FROM (SELECT personid AS holderid,birthname,dynastyname FROM person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) ppl NATURAL JOIN title WHERE titleid=%s',[titleID])
         result = cur.fetchall()
         cur.close()
         return result

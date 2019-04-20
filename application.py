@@ -109,8 +109,8 @@ if __name__=='__main__':
         
         #title queries
         elif words[0]=='title':
-            if len(words) > 3 or len(words) <=1:
-                print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
+            # title on its own returns ???
+            if len(words)==1:
                 continue
             # title id returns all titles of the given personid
             elif len(words)==2:
@@ -121,8 +121,14 @@ if __name__=='__main__':
                 if words[1]=='rulers':
                     query_results = database.query_rulers(words[2])
                 #current
-                if words[1]=='current':
-                    query_results = database.query_rulers(words[2])
+                elif words[1]=='current':
+                    query_results = database.query_ruler(words[2])
+                else:
+                    print("Queries should be of the form 'title (rulers|current) titleid.'")
+                    continue
+            else:
+                print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
+                continue                
             for i,d in enumerate(query_results):
                 if i > ROW_COUNT: break
                 print(' '.join([str(x) for x in d]))            
