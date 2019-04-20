@@ -189,7 +189,8 @@ class Data:
     #queries for getting bloodlines
     def query_bloodline_members(self, b_id):
         cur = self.conn.cursor()
-        cur.execute("SELECT birthname, dynastyname FROM person NATURAL JOIN dynasty NATURAL JOIN BloodLineMembers where bloodLineID = %s", [b_id])result = cur.fetchall()
+        cur.execute("SELECT birthname, dynastyname FROM person NATURAL JOIN dynasty NATURAL JOIN BloodLineMembers where bloodLineID = %s", [b_id])
+        result = cur.fetchall()
         cur.close()
         return result
     
