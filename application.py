@@ -161,8 +161,7 @@ if __name__=='__main__':
 
         #bloodlines
         elif words[0]=='bloodline':
-            if len(words != 3):
-                
+            pass
         
         else:
             print('ERROR: Unknown command!')
