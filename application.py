@@ -119,7 +119,10 @@ if __name__=='__main__':
             elif len(words)==3:
                 #rulers
                 if words[1]=='rulers':
-                    query_results = None
+                    query_results = database.query_rulers(words[2])
+                    for i,d in enumerate(query_results):
+                        if i > ROW_COUNT: break
+                        print(' '.join([str(x) for x in d]))                    
                 #current
                 if words[1]=='current':
                     for i,d in enumerate(database.query_rulers()):
