@@ -161,11 +161,20 @@ class Data:
     # query for relating people to titles
     def query_title(self,personID):
         cur = self.conn.cursor()
-        cur.execute('SELECT birthname,dynastyname,name FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl NATURAL JOIN dynasty NATURAL JOIN title')
+        cur.execute('SELECT birthname,dynastyname,name FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl LEFT OUTER JOIN dynasty NATURAL JOIN title')
         result = cur.fetchall()
         cur.close()
         return result
     
+    
+    # query returning all of the past rulers of a given title
+    def query_rulers(self,titleID):
+        cur = self.conn.cursor()
+        cur.execute('SELECT birthname,dynastyname,name FROM (SELECT personid as holderid,birthname,dynastyid FROM rulers NATURAL JOIN person) ppl LEFT OUTER JOIN dynasty NATURAL JOIN title')
+        result = cur.fetchall()
+        cur.close()
+        return result
+  
     
     #returns a list of the direct vassals for a given title
     def query_direct_vassals(self,titleID):
