@@ -64,13 +64,20 @@ if __name__=='__main__':
             i = 1
             allowed_args = {'name', 'orderby', 'religion', 'culture'}
             valid = True
+            has_orderby = False
             while i < len(words):
                 if(words[i] in allowed_args):
                     valid_vals = {'prestige','piety','wealth','count'}
-                    if words[i]=='orderby' and words[i+1] not in valid_vals:
-                        print('ERROR: ' + words[i+1] + ' is not a valid value to order by. Please use one of:')
-                        print(valid_vals)
-                        valid = False
+                    if words[i]=='orderby':
+                        if has_orderby:
+                            valid = False
+                            print('ERROR: Query contained a second orderby term. Queries should contain zero or one orderby term.')
+                            break
+                        has_orderby = True
+                        if words[i+1] not in valid_vals:
+                            print('ERROR: ' + words[i+1] + ' is not a valid value to order by. Please use one of:')
+                            print(valid_vals)
+                            valid = False
                     if valid:
                         query_args.append(words[i])
                         query_arg_vals.append(words[i+1])
