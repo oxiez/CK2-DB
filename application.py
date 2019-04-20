@@ -115,21 +115,17 @@ if __name__=='__main__':
             # title id returns all titles of the given personid
             elif len(words)==2:
                 query_results = database.query_title(words[1])
-                for i,d in enumerate(query_results):
-                    if i > ROW_COUNT: break
-                    print(' '.join([str(x) for x in d]))
+            # we are looking for personID(s) given a certain title
             elif len(words)==3:
                 #rulers
                 if words[1]=='rulers':
                     query_results = database.query_rulers(words[2])
-                    for i,d in enumerate(query_results):
-                        if i > ROW_COUNT: break
-                        print(' '.join([str(x) for x in d]))                    
                 #current
                 if words[1]=='current':
-                    for i,d in enumerate(database.query_rulers()):
-                        if i > ROW_COUNT: break
-                        print(' '.join([str(x) for x in d]))
+                    query_results = database.query_rulers(words[2])
+            for i,d in enumerate(query_results):
+                if i > ROW_COUNT: break
+                print(' '.join([str(x) for x in d]))            
         
         #person queries
         elif words[0]=='person':

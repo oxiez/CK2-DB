@@ -170,7 +170,9 @@ class Data:
     # query returning all of the past rulers of a given title (BORKED, NEEDS FIXING)
     def query_rulers(self,titleID):
         cur = self.conn.cursor()
-        cur.execute('SELECT ppl.holderid,birthname,dynastyname,name FROM (SELECT personid as holderid,name FROM rulers NATURAL JOIN title WHERE id =%s) ppl NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid',[titleID])
+        #full info
+        cur.execute('SELECT rul.holderid,birthname,dynastyname,birthday,deathday FROM (SELECT personid AS holderid,titleid,birthname,dynastyname,birthday,deathday FROM rulers NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=%s',[titleID])
+        
         result = cur.fetchall()
         cur.close()
         return result
@@ -179,7 +181,7 @@ class Data:
     #returns a list of the direct vassals for a given title
     def query_direct_vassals(self,titleID):
         cur = self.conn.cursor()
-        cur.execute('SELECT id FROM title WHERE defactoleige=%s',[titleID])
+        cur.execute('SELECT titleid FROM title WHERE defactoleige=%s',[titleID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -203,6 +205,7 @@ class Data:
         cur.close()
         return result
     
+    
     def query_bloodline(self, args, arg_vals):
         ex_string = "SELECT bloodlineID, bloodlineName, founderID FROM BloodLines WHERE TRUE"
         for i,(a,v) in enumerate(zip(args,arg_vals)):
@@ -212,6 +215,7 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
+
 
     # Uses CTEs to query multiple times
     def descendant_tree(self, person, levels=0):
