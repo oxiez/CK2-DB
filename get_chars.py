@@ -122,8 +122,8 @@ def get_chars(file, cur):
 			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
 			[id, obj.get("bn"), obj.get("dnt"), isMale, obj.get("b_d"), obj.get("d_d"), obj.get("fat"),
 			 obj.get("rfat"), obj.get("mot"), religionID, cultureID, obj.get("fer"),
-			 obj.get("health"), obj.get("wealth"), obj.get("host"), obj.get("prs"), obj.get("piety"),
-			 obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
+			 obj.get("health"), obj.get("wealth"), obj.get("prs"), obj.get("piety"),
+			 obj.get("host"), obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
 			 attributes.get("steward"), attributes.get("intrigue"), attributes.get("learning")
 		])
 
