@@ -100,7 +100,7 @@ if __name__=='__main__':
                     if i > ROW_COUNT: break
                     row = []
                     row.append(i)
-                    row = row + [str(x) for x in v[1:]]
+                    row = row + [str(x) for x in v]
                     table.add_row(row)
                 t = table.draw()
                 print(t)
