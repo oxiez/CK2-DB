@@ -200,7 +200,7 @@ class Data:
         result = cur.fetchall()
         cur.close()
         return result
-
+        
     # Uses CTEs to query multiple times
     def descendant_tree(self, person, levels=0):
         cur = self.conn.cursor()
@@ -211,11 +211,11 @@ class Data:
             is_id = True
         except ValueError:
             person = "%" + "%".join(person.split()) + "%"
-
+            
         personid = None
         birthname = None
         dynastyname = None
-
+        
         if not is_id:
             cur.execute(
                 """ SELECT personid, birthname, dynastyname
@@ -237,7 +237,7 @@ class Data:
             personid = result[0]
             birthname = result[1]
             dynastyname = result[2]
-
+            
         # Start the recursive query!
         cur.execute(
             """ WITH RECURSIVE children AS (
@@ -258,11 +258,11 @@ class Data:
             INNER JOIN children c ON (c.personid = p.motherid OR c.personid = p.real_fatherid)
             )
             SELECT * FROM children """, [personid, personid])
-
+        
         result = cur.fetchall()
-
+        
         person = [(personid, birthname, dynastyname)]
         
         cur.close()
-
+        
         return person, result
