@@ -173,8 +173,10 @@ if __name__=='__main__':
         #religion
         elif words[0]=='religion':
             if len(words) == 1:
+                headings = ['Religion']
                 query_result = database.query_religion()
             elif len(words) == 2:
+                headings = ['Religion', 'Number']
                 valid_args = {'allmembers','alivemembers','provinces'}
                 if words[1] not in valid_args:
                     print('Invalid argument. Try one of:')
@@ -184,13 +186,15 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
-            table_print(query_result)
+            table_print(query_result, headings)
         
         #culture
         elif words[0]=='culture':
             if len(words) == 1:
+                headings = ['Culture']
                 query_result = database.query_culture()
             elif len(words) == 2:
+                headings = ['Culture', 'Number']
                 valid_args = {'allmembers','alivemembers','provinces'}
                 if words[1] not in valid_args:
                     print('Invalid argument. Try one of:')
@@ -200,7 +204,7 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
-            table_print(query_data)
+            table_print(query_result, headings)
 
         #bloodlines
         elif words[0]=='bloodline':
