@@ -161,7 +161,16 @@ class Data:
     # query for relating people to titles
     def query_title(self,personID):
         cur = self.conn.cursor()
-        cur.execute('SELECT rlr.personid,birthname,dynastyname,name,rlr.titleid FROM (SELECT personid,birthname,dynastyname,titleid FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=%s) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN rulers) rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=%s UNION SELECT ppl.holderid,birthname,dynastyname,name,titleid FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN title WHERE holderid=%s',[personID, personID, personID])
+        cur.execute(
+            """SELECT rlr.personid,birthname,dynastyname,name,rlr.titleid
+            FROM (SELECT personid,birthname,dynastyname,titleid
+            FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=%s) ppl
+            LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN rulers)
+            rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=%s
+            UNION SELECT ppl.holderid,birthname,dynastyname,name,titleid
+            FROM (SELECT personid as holderid,birthname,dynastyid FROM person) ppl
+            LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN title
+            WHERE holderid=%s""", [personID, personID, personID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -171,7 +180,8 @@ class Data:
     def query_rulers(self,titleID):
         cur = self.conn.cursor()
         #returns personid,name,dynasty,birthdate,deathdate of every historical ruler of the title
-        cur.execute('SELECT rul.holderid,birthname,dynastyname,birthday,deathday FROM (SELECT personid AS holderid,titleid,birthname,dynastyname,birthday,deathday FROM rulers NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=%s',[titleID])
+        cur.execute(
+            'SELECT rul.holderid,birthname,dynastyname,birthday,deathday FROM (SELECT personid AS holderid,titleid,birthname,dynastyname,birthday,deathday FROM rulers NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=%s',[titleID])
         result = cur.fetchall()
         cur.close()
         return result
