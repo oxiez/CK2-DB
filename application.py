@@ -2,13 +2,31 @@ import database
 import sys
 import texttable
 
+# loads the given file name using a database object
 def load_file(file_name,database):
     print('Opening the file '+file_name)
     database.setup(file_name)
     print('\n')
 
+
+    
 #how many rows every query will return
 ROW_COUNT = 40
+
+# helper function for printing tables of data
+def table_print(data,headings=None):
+    table = texttable.Texttable()
+    if headings!=None:
+        table.header(headings)
+    table.set_max_width(210)
+    for i,v in enumerate(query_result):
+        if i >= ROW_COUNT: break
+        row = []
+        row = row + [str(x) for x in v]
+        table.add_row(row)
+    t = table.draw()
+    print(t)    
+    
 
 #main function
 if __name__=='__main__':
@@ -96,21 +114,11 @@ if __name__=='__main__':
             #get person with these conditions
             if valid:
                 query_result = database.query_dynasty(query_args,query_arg_vals)
-                table = texttable.Texttable()
-                table.set_max_width(210)
-                for i,v in enumerate(query_result):
-                    if i > ROW_COUNT: break
-                    row = []
-                    row.append(i)
-                    row = row + [str(x) for x in v]
-                    table.add_row(row)
-                t = table.draw()
-                print(t)
+                table_print(query_result)
         
         #title queries
         elif words[0]=='title':
-            table = texttable.Texttable()
-            table.set_max_width(210)            
+            headings = None
             # title on its own returns ???
             if len(words)==1:
                 continue
@@ -122,27 +130,18 @@ if __name__=='__main__':
                 #rulers
                 if words[1]=='rulers':
                     query_result = database.query_rulers(words[2])
-                    table.add_row(['personid','Name','Dynasty','Date of Birth','Date of Death'])
+                    headings = ['personid','Name','Dynasty','Date of Birth','Date of Death']
                 #current
                 elif words[1]=='current':
                     query_result = database.query_ruler(words[2])
-                    table.add_row(['personid','Name','Dynasty'])
+                    headings = ['personid','Name','Dynasty']
                 else:
                     print("Queries should be of the form 'title (rulers|current) titleid.'")
                     continue
             else:
                 print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
                 continue                
-            for i,v in enumerate(query_result):
-                if i > ROW_COUNT: break
-                row = []
-                row = row + [str(x) for x in v]
-                table.add_row(row)
-            t = table.draw()
-            print(t)            
-            #for i,d in enumerate(query_results):
-            #    if i > ROW_COUNT: break
-            #    print(' '.join([str(x) for x in d]))     
+            table_print(query_result,headings)   
         
         #person queries
         elif words[0]=='person':
@@ -165,19 +164,9 @@ if __name__=='__main__':
                 i += 2
             #get person with these conditions
             if valid:
-                table = texttable.Texttable()
                 headings = ['#', 'Name', 'Dynasty', 'is Male', 'Birthday', 'Deathday', 'Father', 'Real Father', 'Mother', 'Religion', 'Culture', 'Fertility', 'Health', 'Wealth', 'Prestige', 'Piety']
-                table.header(headings)
-                table.set_max_width(210)
                 query_result = database.query_person(query_args,query_arg_vals)
-                for i,v in enumerate(query_result):
-                    if i > ROW_COUNT: break
-                    row = []
-                    row.append(i)
-                    row = row + [str(x) for x in v[1:]]
-                    table.add_row(row)
-                t = table.draw()
-                print(t)
+                table_print(query_result,headings)
         
         #religion
         elif words[0]=='religion':
@@ -193,16 +182,7 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
-            table = texttable.Texttable()
-            table.set_max_width(210)    
-            for i,v in enumerate(query_result):
-                if i > ROW_COUNT: break
-                row = []
-                row.append(i)
-                row = row + [str(x) for x in v]
-                table.add_row(row)
-            t = table.draw()
-            print(t)
+            table_print(query_result)
         
         #culture
         elif words[0]=='culture':
@@ -218,16 +198,7 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
-            table = texttable.Texttable()
-            table.set_max_width(210)
-            for i,v in enumerate(query_result):
-                if i > ROW_COUNT: break
-                row = []
-                row.append(i)
-                row = row + [str(x) for x in v]
-                table.add_row(row)
-            t = table.draw()
-            print(t) 
+            table_print(query_data)
 
         #bloodlines
         elif words[0]=='bloodline':
@@ -249,37 +220,17 @@ if __name__=='__main__':
                     valid = False
                 i += 2
             if valid:
-                table = texttable.Texttable()
                 headings = ['#', 'ID', 'Type', 'Founder']
-                table.header(headings)
-                table.set_max_width(210)
                 query_result = database.query_bloodline(query_args,query_arg_vals)
-                for i,v in enumerate(query_result):
-                    if i > ROW_COUNT: break
-                    row = []
-                    row.append(i)
-                    row = row + [str(x) for x in v]
-                    table.add_row(row)
-                t = table.draw()
-                print(t)
+                table_print(query_result,headings)
 
         elif words[0]=='bloodline_members':
             if(len(words) != 2):
                 print('ERROR bloodline_members takes one argument (the id of the bloodline) and one argument only')
             else:
-                table = texttable.Texttable()
                 headings = ['#', 'Name', 'Dynasty']
-                table.header(headings)
-                table.set_max_width(210)
                 query_result = database.query_bloodline_members(words[1])
-                for i,v in enumerate(query_result):
-                    if i > ROW_COUNT: break
-                    row = []
-                    row.append(i)
-                    row = row + [str(x) for x in v]
-                    table.add_row(row)
-                t = table.draw()
-                print(t)
+                table_print(query_result)
             
         else:
             print('ERROR: Unknown command!')
