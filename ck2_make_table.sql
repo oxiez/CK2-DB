@@ -71,8 +71,8 @@ CREATE TABLE Dynasty(
 );
 
 CREATE TABLE Title(
-	id VARCHAR(63) PRIMARY KEY, 
-	holderid INT,
+	titleID VARCHAR(63) PRIMARY KEY, 
+	holderID INT,
 	name VARCHAR(63), 
 	level CHAR(1), 
 	deFactoLeige VARCHAR(63), 
