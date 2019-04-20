@@ -254,7 +254,7 @@ class Data:
 
         result = cur.fetchall()
 
-        person = (personid, birthname, dynastyname)
+        person = [(personid, birthname, dynastyname)]
         
         cur.close()
 
