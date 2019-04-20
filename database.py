@@ -145,7 +145,7 @@ class Data:
         if orderby=='name':
             cur.execute('SELECT culturename FROM culture ORDER BY culturename')
         #total member count
-        elif orderby=='members':
+        elif orderby=='allmembers':
             cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')
         #living member count
         elif orderby=='alivemembers':
