@@ -102,20 +102,34 @@ if __name__=='__main__':
                     if i > ROW_COUNT: break
                     row = []
                     row.append(i)
-                    row = row + [str(x) for x in v[1:]]
+                    row = row + [str(x) for x in v]
                     table.add_row(row)
                 t = table.draw()
                 print(t)
         
         #title queries
         elif words[0]=='title':
-            if len(words) > 1:
-                print('Too many arguments')
+            if len(words) > 3 or len(words) <=1:
+                print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
                 continue
-            elif len(words)==1:
-                for i,d in enumerate(database.query_title()):
+            # title id returns all titles of the given personid
+            elif len(words)==2:
+                query_results = database.query_title(words[1])
+                for i,d in enumerate(query_results):
                     if i > ROW_COUNT: break
-                    print(d[0],d[1],d[2])
+                    print(' '.join([str(x) for x in d]))
+            elif len(words)==3:
+                #rulers
+                if words[1]=='rulers':
+                    query_results = database.query_rulers(words[2])
+                    for i,d in enumerate(query_results):
+                        if i > ROW_COUNT: break
+                        print(' '.join([str(x) for x in d]))                    
+                #current
+                if words[1]=='current':
+                    for i,d in enumerate(database.query_rulers()):
+                        if i > ROW_COUNT: break
+                        print(' '.join([str(x) for x in d]))
         
         #person queries
         elif words[0]=='person':
