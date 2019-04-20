@@ -222,7 +222,7 @@ if __name__=='__main__':
                 continue
             query_arg_vals = []
             i = 1
-            allowed_args = {'name', 'founder_id'}
+            allowed_args = {'bloodlinename', 'founderID'}
             valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
@@ -238,7 +238,25 @@ if __name__=='__main__':
                 headings = ['#', 'ID', 'Type', 'Founder']
                 table.header(headings)
                 table.set_max_width(210)
-                query_result = database.query_bloodline_members(query_args,query_arg_vals)
+                query_result = database.query_bloodline(query_args,query_arg_vals)
+                for i,v in enumerate(query_result):
+                    if i > ROW_COUNT: break
+                    row = []
+                    row.append(i)
+                    row = row + [str(x) for x in v]
+                    table.add_row(row)
+                t = table.draw()
+                print(t)
+
+        elif words[0]=='bloodline_members':
+            if(len(words) != 2):
+                print('ERROR bloodline_members takes one argument (the id of the bloodline) and one argument only')
+            else:
+                table = texttable.Texttable()
+                headings = ['#', 'Name', 'Dynasty']
+                table.header(headings)
+                table.set_max_width(210)
+                query_result = database.query_bloodline_members(words[1])
                 for i,v in enumerate(query_result):
                     if i > ROW_COUNT: break
                     row = []
