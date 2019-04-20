@@ -123,9 +123,12 @@ class Data:
         #alphabetical
         if orderby=='name':
             cur.execute('SELECT religionname FROM religion ORDER BY religionname')
-        #member count
-        elif orderby=='members':
+        #total member count
+        elif orderby=='allmembers':
             cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) FROM person GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
+        #living member count
+        elif orderby=='alivemembers':
+            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) FROM person WHERE deathday IS NULL GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
         #province count
         else:
             cur.execute('SELECT religion,COUNT(*) FROM province GROUP BY religion ORDER BY count DESC')
@@ -140,9 +143,12 @@ class Data:
         #alphabetical
         if orderby=='name':
             cur.execute('SELECT culturename FROM culture ORDER BY culturename')
-        #member count
+        #total member count
         elif orderby=='members':
             cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')
+        #living member count
+        elif orderby=='alivemembers':
+            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person WHERE deathday IS NULL GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')        
         #province count
         else:
             cur.execute('SELECT culture,COUNT(*) FROM province GROUP BY culture ORDER BY count DESC')

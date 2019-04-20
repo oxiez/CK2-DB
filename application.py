@@ -133,7 +133,7 @@ if __name__=='__main__':
             if len(words) == 1:
                 query_result = database.query_religion()
             elif len(words) == 2:
-                valid_args = {'members','provinces'}
+                valid_args = {'allmembers','alivemembers','provinces'}
                 if words[1] not in valid_args:
                     print('Invalid argument. Try one of:')
                     print(valid_args)
@@ -151,7 +151,7 @@ if __name__=='__main__':
             if len(words) == 1:
                 query_result = database.query_culture()
             elif len(words) == 2:
-                valid_args = {'members','provinces'}
+                valid_args = {'allmembers','alivemembers','provinces'}
                 if words[1] not in valid_args:
                     print('Invalid argument. Try one of:')
                     print(valid_args)
