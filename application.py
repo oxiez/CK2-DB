@@ -110,10 +110,15 @@ if __name__=='__main__':
             if len(words) > 1:
                 print('Too many arguments')
                 continue
-            elif len(words)==1:
-                for i,d in enumerate(database.query_title()):
+            # title id returns all titles of the given personid
+            elif len(words)==2:
+                for i,d in enumerate(database.query_title(words[1])):
                     if i > ROW_COUNT: break
                     print(d[0],d[1],d[2])
+            elif len(words)==3:
+                for i,d in enumerate(database.query_rulers()):
+                    if i > ROW_COUNT: break
+                    print(' '.join([str(x) for x in d]))
         
         #person queries
         elif words[0]=='person':
