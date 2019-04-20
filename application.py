@@ -201,7 +201,8 @@ if __name__=='__main__':
             print(t) 
 
         #bloodlines
-        elif words[0]=='bloodline':query_args = []
+        elif words[0]=='bloodline':
+            query_args = []
             if(len(words) %2 != 1):
                 print('ERROR: Please have one argument for each command')
                 continue
