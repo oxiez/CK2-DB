@@ -38,6 +38,8 @@ if __name__=='__main__':
             print(' : person <args> [displays information on characters]')
             print(' : religion <arg> [displays information on religions]')
             print(' : culture <arg> [displays information on cultures]')
+            print(' : bloodline <arg> [displays information on bloodlines]')
+            print(' : bloodline_members <ID> [displays characters with bloodline of ID ID]')
             print(' : help [displays this text]')
             print(' : num_results <NUM> [changes the number of results displayed to NUM]')
             print(' : load <FILENAME> [loads a file]')
