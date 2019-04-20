@@ -185,4 +185,12 @@ class Data:
         return result
     
     
+    #queries for getting bloodlines
+    def query_bloodline(self,):
+        cur = self.conn.cursor()
+        cur.execute("SELECT bloodlinename, FROM bloodlines")
+    
+    def query_bloodline_members(self,bloodlineID):
+        pass
+    
     
