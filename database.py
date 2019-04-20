@@ -202,5 +202,69 @@ class Data:
     
     def query_bloodline_members(self,bloodlineID):
         pass
-    
-    
+
+	# Uses CTEs to query multiple times
+    def descendant_tree(self, person, levels=0):
+        cur = self.conn.cursor()
+        is_id = False
+        
+        try:
+            person = int(person)
+            is_id = True
+        except ValueError:
+            person = "%" + "%".join(person.split()) + "%"
+
+        personid = None
+        birthname = None
+        dynastyname = None
+
+        if not is_id:
+            cur.execute(
+                """ SELECT personid, birthname, dynastyname
+                FROM person LEFT JOIN dynasty ON person.dynastyid = dynasty.dynastyid
+                WHERE CONCAT(birthname, COALESCE( ' ' || dynastyname, ''))
+                ILIKE %s """, [person])
+            result = cur.fetchall()
+            if(len(result) > 1 or len(result) == 0):
+                return result # Prompt user to choose person by id, and show choices
+            personid = result[0][0]
+            birthname = result[0][1]
+            dynastyname = result[0][2]
+        else:
+            cur.execute("SELECT personid, birthname, dynastyname FROM person LEFT JOIN \
+            dynasty ON person.dynastyid = dynasty.dynastyid WHERE personid = %s", [person])
+            result = cur.fetchone()
+            if(result == None):
+                return []
+            personid = result[0]
+            birthname = result[1]
+            dynastyname = result[2]
+
+        # Start the recursive query!
+        cur.execute(
+            """ WITH RECURSIVE children AS (
+            SELECT p.personid, p.birthname, d.dynastyname, p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')) mother, 
+            p.real_fatherid, CONCAT(dad.birthname, COALESCE( ' ' || dad_d.dynastyname, '')) father
+            FROM person p
+            LEFT JOIN person mot ON mot.personid = p.motherid LEFT JOIN dynasty mot_d ON mot.dynastyid = mot_d.dynastyid
+            LEFT JOIN person dad ON dad.personid = p.real_fatherid LEFT JOIN dynasty dad_d ON dad.dynastyid = dad_d.dynastyid
+            LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
+            WHERE (p.motherid = %s OR p.real_fatherid = %s)
+            UNION
+            SELECT p.personid, p.birthname, d.dynastyname, p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')), 
+            p.real_fatherid, CONCAT(dad.birthname, COALESCE( ' ' || dad_d.dynastyname, ''))
+            FROM person p
+            LEFT JOIN person mot ON mot.personid = p.motherid LEFT JOIN dynasty mot_d ON mot.dynastyid = mot_d.dynastyid
+            LEFT JOIN person dad ON dad.personid = p.real_fatherid LEFT JOIN dynasty dad_d ON dad.dynastyid = dad_d.dynastyid
+            LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
+            INNER JOIN children c ON (c.personid = p.motherid OR c.personid = p.real_fatherid)
+            )
+            SELECT * FROM children """, [personid, personid])
+
+        result = cur.fetchall()
+
+        person = (personid, birthname, dynastyname)
+        
+        cur.close()
+
+        return person, result
