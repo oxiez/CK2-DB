@@ -208,7 +208,7 @@ if __name__=='__main__':
                 continue
             query_arg_vals = []
             i = 1
-            allowed_args = {'name', 'founder_id'}
+            allowed_args = {'bloodlinename', 'founderID'}
             valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
