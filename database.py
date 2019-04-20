@@ -196,14 +196,21 @@ class Data:
     
     
     #queries for getting bloodlines
-    def query_bloodline(self,):
+    def query_bloodline(self):
         cur = self.conn.cursor()
         cur.execute("SELECT bloodlinename, FROM bloodlines")
     
-    def query_bloodline_members(self,bloodlineID):
-        pass
+    def query_bloodline_members(self, args, arg_vals):
+        ex_string = "SELECT bloodlineID, bloodlineName, founderID FROM BloodLines WHERE TRUE"
+        for i,(a,v) in enumerate(zip(args,arg_vals)):
+            ex_string = ex_string + ' AND ' + a + '=%s'
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute(ex_string, arg_vals)
+        result = cur.fetchall()
+        cur.close()
+        return result
 
-	# Uses CTEs to query multiple times
+    # Uses CTEs to query multiple times
     def descendant_tree(self, person, levels=0):
         cur = self.conn.cursor()
         is_id = False
@@ -263,7 +270,7 @@ class Data:
 
         result = cur.fetchall()
 
-        person = (personid, birthname, dynastyname)
+        person = [(personid, birthname, dynastyname)]
         
         cur.close()
 

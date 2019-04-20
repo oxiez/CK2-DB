@@ -213,8 +213,38 @@ if __name__=='__main__':
 
         #bloodlines
         elif words[0]=='bloodline':
-            pass
-        
+            query_args = []
+            if(len(words) %2 != 1):
+                print('ERROR: Please have one argument for each command')
+                continue
+            query_arg_vals = []
+            i = 1
+            allowed_args = {'name', 'founder_id'}
+            valid = True
+            while i < len(words):
+                if(words[i] in allowed_args):
+                    query_args.append(words[i])
+                    query_arg_vals.append(words[i+1])
+                else:
+                    print('ERROR: ' + words[i] + ' is not a valid condition, please use one of the following values:')
+                    print(allowed_args)
+                    valid = False
+                i += 2
+            if valid:
+                table = texttable.Texttable()
+                headings = ['#', 'ID', 'Type', 'Founder']
+                table.header(headings)
+                table.set_max_width(210)
+                query_result = database.query_bloodline_members(query_args,query_arg_vals)
+                for i,v in enumerate(query_result):
+                    if i > ROW_COUNT: break
+                    row = []
+                    row.append(i)
+                    row = row + [str(x) for x in v]
+                    table.add_row(row)
+                t = table.draw()
+                print(t)
+            
         else:
             print('ERROR: Unknown command!')
             print("For a list of commands, please enter 'help'")
