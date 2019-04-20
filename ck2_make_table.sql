@@ -78,6 +78,7 @@ CREATE TABLE Title(
 	deFactoLeige VARCHAR(63), 
 	deJureLeige VARCHAR(63)
 );
+
 CREATE TABLE Rulers(
 	personID INT, 
 	titleID VARCHAR(63),

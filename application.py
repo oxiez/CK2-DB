@@ -90,6 +90,7 @@ if __name__=='__main__':
             if valid:
                 query_result = database.query_dynasty(query_args,query_arg_vals)
                 table = texttable.Texttable()
+                table.set_max_width(210)
                 for i,v in enumerate(query_result):
                     if i > ROW_COUNT: break
                     row = []
