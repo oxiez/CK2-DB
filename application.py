@@ -164,9 +164,16 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
+            table = texttable.Texttable()
+            table.set_max_width(210)    
             for i,v in enumerate(query_result):
                 if i > ROW_COUNT: break
-                print(i," ".join([str(x) for x in v]))
+                row = []
+                row.append(i)
+                row = row + [str(x) for x in v]
+                table.add_row(row)
+            t = table.draw()
+            print(t)
         
         #culture
         elif words[0]=='culture':
@@ -182,10 +189,16 @@ if __name__=='__main__':
             else:
                 print('ERROR: Too many arguments.')
                 continue
+            table = texttable.Texttable()
+            table.set_max_width(210)
             for i,v in enumerate(query_result):
                 if i > ROW_COUNT: break
-                print(i," ".join([str(x) for x in v]))      
-            pass
+                row = []
+                row.append(i)
+                row = row + [str(x) for x in v]
+                table.add_row(row)
+            t = table.draw()
+            print(t) 
 
         #bloodlines
         elif words[0]=='bloodline':
