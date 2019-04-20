@@ -187,11 +187,13 @@ class Data:
     
     
     #queries for getting bloodlines
-    def query_bloodline(self):
+    def query_bloodline_members(self, b_id):
         cur = self.conn.cursor()
-        cur.execute("SELECT bloodlinename, FROM bloodlines")
+        cur.execute("SELECT birthname, dynastyname FROM person NATURAL JOIN dynasty NATURAL JOIN BloodLineMembers where bloodLineID = %s", [b_id])result = cur.fetchall()
+        cur.close()
+        return result
     
-    def query_bloodline_members(self, args, arg_vals):
+    def query_bloodline(self, args, arg_vals):
         ex_string = "SELECT bloodlineID, bloodlineName, founderID FROM BloodLines WHERE TRUE"
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             ex_string = ex_string + ' AND ' + a + '=%s'
