@@ -17,7 +17,7 @@ class Data:
     #find a specific person by their personid
     def query_personid(self,ID):
         cur = self.conn.cursor()
-        cur.execute('SELECT * FROM person WHERE personid=%s',[ID])
+        cur.execute('SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,hostid,prestige,piety,employerid,martial,diplomacy,stewardship,intrigue,learning FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE personid=%s',[ID])
         result = cur.fetchall()
         cur.close()
         return result
