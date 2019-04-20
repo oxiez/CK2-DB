@@ -32,7 +32,7 @@ class Data:
     
     # returns a list of dictionaries (easier to deal with than indexing huge list of values)
     def query_person(self, args, arg_vals):
-        ex_string = "SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,hostid,prestige,piety,employerid,martial,diplomacy,stewardship,intrigue,learning FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE TRUE"
+        ex_string = "SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,prestige,piety FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE TRUE"
         like_args = {'name','dynasty','religion', 'culture'}
         geq_args = {'culture','fertility','health','wealth','prestige','piety'}
         for i,(a,v) in enumerate(zip(args,arg_vals)):

@@ -130,10 +130,19 @@ if __name__=='__main__':
                 i += 2
             #get person with these conditions
             if valid:
+                table = texttable.Texttable()
+                headings = ['#', 'Name', 'Dynasty', 'is Male', 'Birthday', 'Deathday', 'Father', 'Real Father', 'Mother', 'Religion', 'Culture', 'Fertility', 'Health', 'Wealth', 'Prestige', 'Piety']
+                table.header(headings)
+                table.set_max_width(210)
                 query_result = database.query_person(query_args,query_arg_vals)
                 for i,v in enumerate(query_result):
                     if i > ROW_COUNT: break
-                    print(i," ".join([str(x) for x in v[1:]]))
+                    row = []
+                    row.append(i)
+                    row = row + [str(x) for x in v[1:]]
+                    table.add_row(row)
+                t = table.draw()
+                print(t)
         
         #religion
         elif words[0]=='religion':
