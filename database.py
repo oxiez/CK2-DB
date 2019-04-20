@@ -11,8 +11,9 @@ class Data:
 
     # use load_data to fill the database with info from this game
     def setup(self,filename):
+        self.conn.close()
         load_data.load_data(filename)
-
+        self.conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
 
     #find a specific person by their personid
     def query_personid(self,ID):
