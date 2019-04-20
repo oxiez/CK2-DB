@@ -89,9 +89,15 @@ if __name__=='__main__':
             #get person with these conditions
             if valid:
                 query_result = database.query_dynasty(query_args,query_arg_vals)
+                table = texttable.Texttable()
                 for i,v in enumerate(query_result):
                     if i > ROW_COUNT: break
-                    print(i," ".join([str(x) for x in v[1:]]))
+                    row = []
+                    row.append(i)
+                    row = row + [str(x) for x in v[1:]]
+                    table.add_row(row)
+                t = table.draw()
+                print(t)
         
         #title queries
         elif words[0]=='title':
