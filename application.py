@@ -36,6 +36,8 @@ if __name__=='__main__':
             print(' : dynasty <args> [displays information on dynasties]')
             print(' : title <args> [displays information on titles]')
             print(' : person <args> [displays information on characters]')
+            print(' : religion <arg> [displays information on religions]')
+            print(' : culture <arg> [displays information on cultures]')
             print(' : help [displays this text]')
             print(' : num_results <NUM> [changes the number of results displayed to NUM]')
             print(' : load <FILENAME> [loads a file]')
@@ -59,6 +61,9 @@ if __name__=='__main__':
         
         #dynasty queries  
         elif words[0]=='dynasty':
+            if(len(words) %2 != 1):
+                print('ERROR: Please have one argument for each command')
+                continue            
             query_args = []
             query_arg_vals = []
             i = 1
