@@ -187,7 +187,7 @@ class Data:
     
     
     #queries for getting bloodlines
-    def query_bloodline(self,):
+    def query_bloodline(self):
         cur = self.conn.cursor()
         cur.execute("SELECT bloodlinename, FROM bloodlines")
     
@@ -201,7 +201,7 @@ class Data:
         cur.close()
         return result
 
-	# Uses CTEs to query multiple times
+    # Uses CTEs to query multiple times
     def descendant_tree(self, person, levels=0):
         cur = self.conn.cursor()
         is_id = False
