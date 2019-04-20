@@ -109,29 +109,40 @@ if __name__=='__main__':
         
         #title queries
         elif words[0]=='title':
+            table = texttable.Texttable()
+            table.set_max_width(210)            
             # title on its own returns ???
             if len(words)==1:
                 continue
             # title id returns all titles of the given personid
             elif len(words)==2:
-                query_results = database.query_title(words[1])
+                query_result = database.query_title(words[1])
             # we are looking for personID(s) given a certain title
             elif len(words)==3:
                 #rulers
                 if words[1]=='rulers':
-                    query_results = database.query_rulers(words[2])
+                    query_result = database.query_rulers(words[2])
+                    table.add_row(['personid','Name','Dynasty','Date of Birth','Date of Death'])
                 #current
                 elif words[1]=='current':
-                    query_results = database.query_ruler(words[2])
+                    query_result = database.query_ruler(words[2])
+                    table.add_row(['personid','Name','Dynasty'])
                 else:
                     print("Queries should be of the form 'title (rulers|current) titleid.'")
                     continue
             else:
                 print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
                 continue                
-            for i,d in enumerate(query_results):
+            for i,v in enumerate(query_result):
                 if i > ROW_COUNT: break
-                print(' '.join([str(x) for x in d]))            
+                row = []
+                row = row + [str(x) for x in v]
+                table.add_row(row)
+            t = table.draw()
+            print(t)            
+            #for i,d in enumerate(query_results):
+            #    if i > ROW_COUNT: break
+            #    print(' '.join([str(x) for x in d]))     
         
         #person queries
         elif words[0]=='person':
