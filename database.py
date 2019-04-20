@@ -252,7 +252,7 @@ class Data:
 
         if not is_id:
             cur.execute(
-                """ SELECT personid, birthname, dynastyname
+                """ SELECT personid, CONCAT(birthname, COALESCE( ' ' || dynastyname, ''))
                 FROM person LEFT JOIN dynasty ON person.dynastyid = dynasty.dynastyid
                 WHERE CONCAT(birthname, COALESCE( ' ' || dynastyname, ''))
                 ILIKE %s """, [person])
@@ -260,22 +260,22 @@ class Data:
             if(len(result) > 1 or len(result) == 0):
                 return result # Prompt user to choose person by id, and show choices
             personid = result[0][0]
-            birthname = result[0][1]
-            dynastyname = result[0][2]
+            name = result[0][1]
         else:
-            cur.execute("SELECT personid, birthname, dynastyname FROM person LEFT JOIN \
-            dynasty ON person.dynastyid = dynasty.dynastyid WHERE personid = %s", [person])
+            cur.execute(
+                """ SELECT personid, CONCAT(birthname, COALESCE( ' ' || dynastyname, '')) 
+                FROM person LEFT JOIN dynasty ON person.dynastyid = dynasty.dynastyid 
+                WHERE personid = %s """, [person])
             result = cur.fetchone()
             if(result == None):
                 return []
             personid = result[0]
-            birthname = result[1]
-            dynastyname = result[2]
+            name = result[1]
 
         # Start the recursive query!
         cur.execute(
             """ WITH RECURSIVE children AS (
-            SELECT p.personid, p.birthname, d.dynastyname, p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')) mother, 
+            SELECT p.personid, CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, ''), p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')) mother, 
             p.real_fatherid, CONCAT(dad.birthname, COALESCE( ' ' || dad_d.dynastyname, '')) father
             FROM person p
             LEFT JOIN person mot ON mot.personid = p.motherid LEFT JOIN dynasty mot_d ON mot.dynastyid = mot_d.dynastyid
@@ -283,7 +283,7 @@ class Data:
             LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
             WHERE (p.motherid = %s OR p.real_fatherid = %s)
             UNION
-            SELECT p.personid, p.birthname, d.dynastyname, p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')), 
+            SELECT p.personid,  CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, ''), p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '')), 
             p.real_fatherid, CONCAT(dad.birthname, COALESCE( ' ' || dad_d.dynastyname, ''))
             FROM person p
             LEFT JOIN person mot ON mot.personid = p.motherid LEFT JOIN dynasty mot_d ON mot.dynastyid = mot_d.dynastyid
@@ -295,8 +295,24 @@ class Data:
 
         result = cur.fetchall()
 
-        person = [(personid, birthname, dynastyname)]
-        
         cur.close()
+        
+        dag = {}
+        tbl = {}
 
-        return person, result
+        tbl[0] = (personid, birthname)
+
+        for t in result:
+            tbl[t[0]] = t
+            if(not t[2] == None): # Mot
+                if(t[2] in dag):
+                    dag[t[2]].append(t[0])
+                else:
+                    dag[t[2]] = [t[0]]
+            if(not t[4] == None): # Fat
+                if(t[4] in dag):
+                    dag[t[4]].append(t[0])
+                else:
+                    dag[t[4]] = [t[0]]
+
+        return tbl, dag
