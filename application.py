@@ -165,7 +165,7 @@ if __name__=='__main__':
                 i += 2
             #get person with these conditions
             if valid:
-                headings = ['#', 'Name', 'Dynasty', 'is Male', 'Birthday', 'Deathday', 'Father', 'Real Father', 'Mother', 'Religion', 'Culture', 'Fertility', 'Health', 'Wealth', 'Prestige', 'Piety']
+                headings = ['ID', 'Name', 'Dynasty', 'is Male', 'Birthday', 'Deathday', 'Father', 'Real Father', 'Mother', 'Religion', 'Culture', 'Fertility', 'Health', 'Wealth', 'Prestige', 'Piety']
                 query_result = database.query_person(query_args,query_arg_vals)
                 table_print(query_result,headings)
         
@@ -221,7 +221,7 @@ if __name__=='__main__':
                     valid = False
                 i += 2
             if valid:
-                headings = ['#', 'ID', 'Type', 'Founder']
+                headings = ['ID', 'Type', 'Founder']
                 query_result = database.query_bloodline(query_args,query_arg_vals)
                 table_print(query_result,headings)
 
@@ -229,9 +229,9 @@ if __name__=='__main__':
             if(len(words) != 2):
                 print('ERROR bloodline_members takes one argument (the id of the bloodline) and one argument only')
             else:
-                headings = ['#', 'Name', 'Dynasty']
+                headings = ['Name', 'Dynasty']
                 query_result = database.query_bloodline_members(words[1])
-                table_print(query_result)
+                table_print(query_result,headings)
             
         else:
             print('ERROR: Unknown command!')
