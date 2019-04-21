@@ -56,7 +56,8 @@ if __name__=='__main__':
                 print(' - religion <arg> [displays information on religions]')
                 print(' - culture <arg> [displays information on cultures]')
                 print(' - bloodline <arg> [displays information on bloodlines]')
-                print(' - bloodline_members <ID> [displays characters with bloodline of ID ID]')
+                print(' - bloodline_members <ID> [displays characters with bloodline of ID]')
+                print(' - tree descendant <name/ID> [displays family tree beginning with the given person]')
                 print(' - help [displays this text]')
                 print(' - num_results <NUM> [changes the number of results displayed to NUM]')
                 print(' - load <FILENAME> [loads a file]')
@@ -118,10 +119,22 @@ We have three choices for an optional argument:
                           )
                 elif comm=='bloodline':
                     print("""\
-The 'bloodline' command on its own lists the bloodlines in the game by their ID."""
+The 'bloodline' command on its own lists the bloodlines in the game by their ID.
+Optional arguments can be added for 'bloodlinename' (to match the string of the type)
+and for 'founderID' (being the personID of the founder of the bloodline)."""
                           )
                 elif comm=='bloodline_members':
-                    pass
+                    print("""\
+The 'bloodline_members' command takes one argument, being the ID of the bloodline.
+It then prints all of the members of the bloodline."""
+                          )
+                elif comm=='tree':
+                    print("""\
+The 'tree' command prints a family tree. To generate the family tree of a person
+with a specific id, enter 'tree descendant ID'. If you are looking someone with a
+certain name, you can enter 'tree descendant name', and then options will come up
+for you to choose from."""
+                          )
                 elif comm=='help':
                     print("""\
 The help command (attempts) to display helpful information about how to use this application.
