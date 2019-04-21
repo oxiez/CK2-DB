@@ -155,6 +155,8 @@ For example, 'load leon1067_02_12.ck2' will use the data from that save game."""
                 elif comm=='quit':
                     print("""\
 Exits the program. Can also use 'q' or 'exit'.""")
+                else:
+                    print("Did not recognize command '" + comm + "'. Type help to see the list of commands.")
                 
                 
                 
