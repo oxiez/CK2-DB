@@ -58,7 +58,7 @@ if __name__=='__main__':
                 print(' - bloodline <arg> [displays information on bloodlines]')
                 print(' - bloodline_members <ID> [displays characters with bloodline of ID]')
                 print(' - tree descendant <name/ID> [displays family tree beginning with the given person]')
-                print(' - help [displays this text]')
+                print(' - help <command> [displays this text, or with an argument, explains a command]')
                 print(' - num_results <NUM> [changes the number of results displayed to NUM]')
                 print(' - load <FILENAME> [loads a file]')
                 print(' - quit [exits the program]')
@@ -138,7 +138,7 @@ for you to choose from."""
                 elif comm=='help':
                     print("""\
 The help command (attempts) to display helpful information about how to use this application.
-'help' on its own displays the command that the user can use.
+'help' on its own displays the commands that the user can use.
 'help cmd' displays information on how to use the command 'cmd'."""
                           )
                 elif comm=='num_results':
