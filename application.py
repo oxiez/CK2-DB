@@ -107,7 +107,7 @@ The 'religion' command on its own lists the religions in the game lexicographica
 We have three choices for an optional argument:
  - 'religion allmembers'   sorts religions by how many characters (throughout history) have this relgion
  - 'religion alivemembers' sorts religions by how many living characters have this religion
- - 'religion provinces'    sorts religions by how many on-map provinces have this culture"""
+ - 'religion provinces'    sorts religions by how many on-map provinces they have"""
                           )
                 elif comm=='culture':
                     print("""\
