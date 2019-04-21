@@ -288,7 +288,7 @@ if __name__=='__main__':
             if(words[1] in commands):
                 command = words[1]
             else:
-                print("ERROR: " + words[1] + " is not a valid tree command. Please use:")
+                print("ERROR: \"" + words[1] + "\" is not a valid tree command. Please use:")
                 for com in commands:
                     print("- " + com)
                 continue
@@ -298,37 +298,39 @@ if __name__=='__main__':
 
             if(isinstance(info, list)):
                 if(len(info) > 1):
-                    print("INFO: {} results found. Please rerun this command with an id from below".format(len(info)))
-                    table = Texttable(max_width=210)
-                    table.header(("ID", "Birth Name", "Dynasty"))
-                    table.add_rows(info)
-                    print(table.draw())
+                    display = True
+                    if(len(info) > 10):
+                        confirm = input("INFO: {} results found for \"{}\". Display? (y/N): ".format(len(info), args))
+                        if(not confirm.lower() == 'y'):
+                             display = False
+                    if(display):
+                        print("INFO: {} results found. Please rerun this command with an id from below".format(len(info)))
+                        table = texttable.Texttable(max_width=210)
+                        table.header(("ID", "Name"))
+                        table.add_rows(info, header=False)
+                        print(table.draw())
                 else:
                     print("INFO: No person matched with {}, try again.".format(args))
             else: # Can only be a dict
-                if(len(dag) > 0):
+                if(len(dag) == 0):
                     print("No descendants found for {}: {}".format(info[0][0], info[0][1]))
                 else:
                     print("Printing descendants of {}: {}".format(info[0][0], info[0][1]))
-                    level = 0
                     stack = [[info[0][0]]]
                     while(len(stack) > 0):
                         id = stack[-1].pop()
-                        has_children = False
-                        print("{}".format("|   " * level), end="")
-                        if(id in dag):
-                            has_children = True
-                        if(id == info[0][0]):
-                            pass
+                        level = len(stack) - 1
+                        if(level > 1):
+                            print("{}".format("|   " * (level - 1)), end="")
+                        if(level == 0): # Root
+                            print("{}: {}".format(info[id][0], info[id][1]))
                         else:
-                            print("+--", end="") 
-                        if(has_children):
-                            level += 1
+                            print("+---{}: {}".format(info[id][0], info[id][1]))
+                        if(id in dag): # Has children
                             stack += [dag[id]]
-                        if(len(stack[-1]) == 0):
-                            level -= 1
+                        while(len(stack) > 0 and len(stack[-1]) == 0):
                             stack.pop()
-                    
+
         else:
             print('ERROR: Unknown command!')
             print("For a list of commands, please enter 'help'")                        
