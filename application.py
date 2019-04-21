@@ -185,13 +185,28 @@ if __name__=='__main__':
                 print(birthname + (' ' + dynastyname if dynastyname != None else ''))
                 #dates
                 print('Born: ' + str(birthday) + ('' if deathday == None else '    Died: '+str(deathday)))
-                # family
-                
+                # parents
+                if fatherid!=None:
+                    father_query = database.query_personid(fatherid)[0]
+                    print('Father: ' + str(father_query[1]) + ' ' + ('' if father_query[2] == None else str(father_query[2])) + ' ' + str(fatherid))
+                if fatherid!=real_fatherid:
+                    father_query = database.query_personid(real_fatherid)[0]
+                    print('Real Father: ' + str(father_query[1]) + ' ' + ('' if father_query[2] == None else str(father_query[2])) + ' ' + str(real_fatherid))
+                if motherid!=None:
+                    mother_query = database.query_personid(motherid)[0]
+                    print('Mother: '  + str(mother_query[1]) + ' ' + ('' if mother_query[2] == None else str(mother_query[2])) + ' ' + str(motherid))
                 #titles
+                titles = database.query_title(personid)
+                if len(titles)!=0:
+                    print('Titles: ' + ', '.join([x[4] for x in titles]))
+                #claims
+                claims = database.query_claim(personid)
+                if len(claims)!=0:
+                    print('Claims: ' + ', '.join([x[0] for x in claims]))
                 #personal info
                 print('Sex: ' + ('M' if ismale else 'F') + '    Religion: ' + religionname + '    Culture: ' + culturename)
-                if deathday != None:
-                    print('Prestige: ' + str(prestige) + '    Piety: ' + str(piety) + '    Health: ' + str(health) + '    Wealth: ' + wealth + '    Fertility: ' + str(fertility))
+                if deathday == None:
+                    print('Prestige: ' + str(prestige) + '    Piety: ' + str(piety) + '    Health: ' + str(health) + '    Wealth: ' + str(wealth) + '    Fertility: ' + str(fertility))
                 print('Attributes: martial ' + str(martial) + ', diplomacy ' + str(diplomacy) + ', stewardship ' + str(stewardship) + ', intrigue ' + str(intrigue) + ', learning ' + str(learning))
                 print('Traits: ' + ', '.join([x[0] for x in database.query_traits(words[1])]))
                 
