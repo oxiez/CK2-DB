@@ -176,6 +176,15 @@ class Data:
         return result
     
     
+    # query for getting the claims of someone
+    def query_claim(self,personID):
+        cur = self.conn.cursor()
+        cur.execute("SELECT titleid FROM claim WHERE personid=%s",[personID])
+        result = cur.fetchall()
+        cur.close()
+        return result
+    
+    
     # query returning all of the past rulers of a given title
     def query_rulers(self,titleID):
         cur = self.conn.cursor()

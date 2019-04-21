@@ -198,7 +198,11 @@ if __name__=='__main__':
                 #titles
                 titles = database.query_title(personid)
                 if len(titles)!=0:
-                    print('Titles: ' + ', '.join([x[3] for x in titles]))
+                    print('Titles: ' + ', '.join([x[4] for x in titles]))
+                #claims
+                claims = database.query_claim(personid)
+                if len(claims)!=0:
+                    print('Claims: ' + ', '.join([x[0] for x in claims]))
                 #personal info
                 print('Sex: ' + ('M' if ismale else 'F') + '    Religion: ' + religionname + '    Culture: ' + culturename)
                 if deathday == None:
