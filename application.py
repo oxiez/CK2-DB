@@ -82,7 +82,7 @@ To build on our previous example, if we wanted to sort by prestige, we can write
                 elif comm=='title':
                     print("""\
 The title command can be used in three ways:            e.g.
- - to find the titles owned by a specific character     title 612
+ - to find the titles owned by a specific character     title 6392
  - to find the history of rulers of a given title       title ruler k_france
  - to find the current holder of a given title          title current k_france"""
                         )
@@ -144,7 +144,7 @@ The help command (attempts) to display helpful information about how to use this
                 elif comm=='num_results':
                     print("""\
 The num_results command is used to restrict the number of results that a command can return.
-For example, if we wanted to restrict the number of rows from our next command to ten,
+For example, if we wanted to restrict the number of rows from future commands to ten,
 we can enter the command 'num_results 10'."""
                           )
                 elif comm=='load':
