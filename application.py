@@ -49,17 +49,18 @@ if __name__=='__main__':
         if words[0] == 'help':
             if len(words)==1:
                 print('Commands:')
-                print(' : dynasty <args> [displays information on dynasties]')
-                print(' : title <args> [displays information on titles]')
-                print(' : person <args> [displays information on characters]')
-                print(' : religion <arg> [displays information on religions]')
-                print(' : culture <arg> [displays information on cultures]')
-                print(' : bloodline <arg> [displays information on bloodlines]')
-                print(' : bloodline_members <ID> [displays characters with bloodline of ID ID]')
-                print(' : help [displays this text]')
-                print(' : num_results <NUM> [changes the number of results displayed to NUM]')
-                print(' : load <FILENAME> [loads a file]')
-                print(' : quit [exits the program]')
+                print(' - dynasty <args> [displays information on dynasties]')
+                print(' - title <args> [displays information on titles]')
+                print(' - person <args> [displays information on characters]')
+                print(' - bio <ID> [displays information on the character with the given ID]')
+                print(' - religion <arg> [displays information on religions]')
+                print(' - culture <arg> [displays information on cultures]')
+                print(' - bloodline <arg> [displays information on bloodlines]')
+                print(' - bloodline_members <ID> [displays characters with bloodline of ID ID]')
+                print(' - help [displays this text]')
+                print(' - num_results <NUM> [changes the number of results displayed to NUM]')
+                print(' - load <FILENAME> [loads a file]')
+                print(' - quit [exits the program]')
             elif len(words) > 2:
                 print("Too many arguments. Try 'help' or 'help <arg>' for more information on a type of command.")
             else:
@@ -86,7 +87,18 @@ The title command can be used in three ways:            e.g.
                         )
                 elif comm=='person':
                     print("""\
-The person command is very complicated."""
+The person command on its own lists characters stored in the save file.
+Optionally, we can add argument/value pairs to find people with a name, dynasty, religion or culture similar to a given string.
+Also, we can specify a number for fertility, health, wealth, prestige or piety, which will restrict the results to characters
+that have a value greater than or equal to the amount specified.
+For example, the command 'person name will dynasty de health 1 prestige 100'
+will find characters with 1 or more health and 100 or more prestige who have a name like 'will' and are in a dynasty with the substring 'de'."""
+                          )
+                elif comm=='bio':
+                    print("""\
+The bio command requires a single argument: the ID of a person. You can find a personID by using
+person commands. The bio command prints information about the given character, such as name, date of birth, date of death,
+sex, religion, culture, attributes, traits, titles, claims, and so on."""
                           )
                 elif comm=='religion':
                     print("""\
@@ -106,17 +118,15 @@ We have three choices for an optional argument:
                           )
                 elif comm=='bloodline':
                     print("""\
-The 'culture' command on its own lists the cultures in the game lexicographically.
-We have three choices for an optional argument:
- - 'culture allmembers'   sorts cultures by how many characters (throughout history) have this culture
- - 'culture alivemembers' sorts cultures by how many living characters have this culture
- - 'culture provinces'    sorts cultures by how many on-map provinces they have"""
+The 'bloodline' command on its own lists the bloodlines in the game by their ID."""
                           )
                 elif comm=='bloodline_members':
                     pass
                 elif comm=='help':
                     print("""\
-The help command (attempts) to display helpful information about how to use this application."""
+The help command (attempts) to display helpful information about how to use this application.
+'help' on its own displays the command that the user can use.
+'help cmd' displays information on how to use the command 'cmd'."""
                           )
                 elif comm=='num_results':
                     print("""\
@@ -280,6 +290,12 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 if motherid!=None:
                     mother_query = data.query_personid(motherid)[0]
                     print('Mother: '  + str(mother_query[1]) + ' ' + ('' if mother_query[2] == None else str(mother_query[2])+ ' ') + str(motherid))
+                #spouse
+                spouses = data.query_spouse(personid)
+                for s in spouses:
+                    spouseid = s[0]
+                    spouse_query = data.query_personid(spouseid)[0]
+                    print('Spouse: '  + str(spouse_query[1]) + ' ' + ('' if spouse_query[2] == None else str(spouse_query[2])+ ' ') + str(spouseid))
                 #titles
                 titles = data.query_title(personid)
                 if len(titles)!=0:

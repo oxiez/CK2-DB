@@ -35,7 +35,7 @@ class Data:
     def query_person(self, args, arg_vals):
         ex_string = "SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,prestige,piety FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE TRUE"
         like_args = {'name','dynasty','religion', 'culture'}
-        geq_args = {'culture','fertility','health','wealth','prestige','piety'}
+        geq_args = {'fertility','health','wealth','prestige','piety'}
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:
                 #convert user input to columns of relation
@@ -55,6 +55,14 @@ class Data:
         cur.close()
         return result
     
+    
+    #query for getting the spouseIDs of a given person
+    def query_spouse(self,personID):
+        cur = self.conn.cursor()
+        cur.execute("SELECT spouseID FROM marriage WHERE personID=%s",[personID])
+        result = cur.fetchall()
+        cur.close()
+        return result
     
     
     # query for everyone in a specific dynasty
