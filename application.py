@@ -121,6 +121,7 @@ if __name__=='__main__':
             # title on its own returns ???
             if len(words)==1:
                 print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
+                continue
  
             # title id returns all titles of the given personid
             elif len(words)==2:
@@ -141,7 +142,7 @@ if __name__=='__main__':
                     continue
             else:
                 print('Title queries should be of the form : title personid or title rulers titleid or title current titleid')
-                continue                
+                continue            
             table_print(query_result,headings)
         
         #person queries
@@ -240,8 +241,9 @@ if __name__=='__main__':
                 table_print(query_result,headings)
 
         elif words[0]=="tree":
-            if(len(word) < 3):
+            if(len(words) < 3):
                 print("ERROR: Please format the tree command like so:\ntree descendant <person name or id>")
+                continue
             commands = ["descendant"]
             command = ""
             if(words[1] in commands):
@@ -250,6 +252,7 @@ if __name__=='__main__':
                 print("ERROR: " + words[1] + " is not a valid tree command. Please use:")
                 for com in commands:
                     print("- " + com)
+                continue
             
             args = " ".join(words[2:])
             info, dag = database.descendant_tree(args)
