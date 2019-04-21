@@ -171,6 +171,30 @@ if __name__=='__main__':
                 query_result = database.query_person(query_args,query_arg_vals)
                 table_print(query_result,headings)
         
+        #bio query: gets the full information on a person
+        elif words[0]=='bio':
+            if len(words)!=2:
+                print('ERROR: query should be of the form bio personID.')
+                continue
+            query_result = database.query_personid(words[1])
+            if len(query_result)==0:
+                print('Could not find person with personID ' + words[1])
+            else:
+                personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,hostid,prestige,piety,employerid,martial,diplomacy,stewardship,intrigue,learning = query_result[0]
+                #full name
+                print(birthname + (' ' + dynastyname if dynastyname != None else ''))
+                #dates
+                print('Born: ' + str(birthday) + ('' if deathday == None else '    Died: '+str(deathday)))
+                # family
+                
+                #titles
+                #personal info
+                print('Sex: ' + ('M' if ismale else 'F') + '    Religion: ' + religionname + '    Culture: ' + culturename)
+                if deathday != None:
+                    print('Prestige: ' + str(prestige) + '    Piety: ' + str(piety) + '    Health: ' + str(health) + '    Wealth: ' + wealth + '    Fertility: ' + str(fertility))
+                print('Attributes: martial ' + str(martial) + ', diplomacy ' + str(diplomacy) + ', stewardship ' + str(stewardship) + ', intrigue ' + str(intrigue) + ', learning ' + str(learning))
+                print('Traits: ' + ', '.join([x[0] for x in database.query_traits(words[1])]))
+                
         #religion
         elif words[0]=='religion':
             if len(words) == 1:
