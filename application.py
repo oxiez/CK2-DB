@@ -185,7 +185,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
             else:
                 #attempt at error handling here could be improved
                 try:
-                    load_file(words[1],data)
+                    load_file(command.split()[1],data)
                 except:
                     print('ERROR: issue loading file ' + words[1]+'.')
                     data = database.Data()
