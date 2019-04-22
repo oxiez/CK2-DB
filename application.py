@@ -25,6 +25,14 @@ def table_print(data,headings=None):
     t = table.draw()
     print(t)    
 
+def tree_spacer(stack):
+    level = len(stack) - 1
+    for i in range(0,level):
+        if(len(stack[i]) > 0):
+            print("|   ", end="")
+        else:
+            print("    ", end="")
+    
 #main function
 if __name__=='__main__':
     #object that maintains connection to database and performs queries
@@ -420,11 +428,11 @@ Exits the program. Can also use 'q' or 'exit'.""")
                         if(not confirm.lower() == 'y'):
                              display = False
                     if(display):
-                        print("INFO: {} results found. Please rerun this command with an id from below".format(len(info)))
                         table = texttable.Texttable(max_width=210)
                         table.header(("ID", "Name"))
                         table.add_rows(info, header=False)
                         print(table.draw())
+                        print("INFO: {} results found. Please rerun this command with an id from above".format(len(info)))
                 else:
                     print("INFO: No person matched with {}, try again.".format(args))
             else: # Can only be a dict
@@ -432,23 +440,32 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     print("No descendants found for {}: {}".format(info[0][0], info[0][1]))
                 else:
                     print("Printing descendants of {}: {}".format(info[0][0], info[0][1]))
-                    stack = [[info[0][0]]]
+                    print("{}: {}".format(info[0][0], info[0][1]))
+                    stack = [dag[info[0][0]]]
+                    # Keep track of whose child it is
+                    stack_above = [info[0][0]]
                     while(len(stack) > 0):
                         id = stack[-1].pop()
-                        level = len(stack) - 1
-                        for i in range(1,level):
-                            if(len(stack[i]) > 0):
-                                print("|   ", end="")
-                            else:
-                                print("    ", end="")
-                        if(level == 0): # Root
-                            print("{}: {}".format(info[id][0], info[id][1]))
+                        tree_spacer(stack)
+                        if(stack_above[-1] == info[id][2] and info[id][4]):
+                            print("|   ")
+                            tree_spacer(stack)
+                            print("|   Father: ({}: {})".format(info[id][4], info[id][5]))
+                        elif(stack_above[-1] == info[id][4] and info[id][2]):
+                            print("|   ")
+                            tree_spacer(stack)
+                            print("|   Mother: ({}: {})".format(info[id][2], info[id][3]))
                         else:
-                            print("+---{}: {}".format(info[id][0], info[id][1]))
+                            print("|")
+                        tree_spacer(stack)
+                        print("+---{}: {}".format(info[id][0], info[id][1])) 
+                        
                         if(id in dag): # Has children
                             stack += [dag[id]]
+                            stack_above.append(id)
                         while(len(stack) > 0 and len(stack[-1]) == 0):
                             stack.pop()
+                            stack_above.pop()
 
         else:
             print('ERROR: Unknown command!')
