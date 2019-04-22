@@ -256,6 +256,47 @@ class Data:
         cur.close()
         return result
 
+    def title_tree(self, titleid):
+        cur = self.conn.cursor()
+        cur.execute("SELECT titleid, name, level FROM title WHERE titleid = %s", [titleid])
+
+        tup = None
+        if(cur.rowcount < 1):
+            return [], None # invalid titleid
+        else:
+            tup = cur.fetchone()
+
+        cur.execute(
+            """ WITH RECURSIVE subtitle AS (
+            SELECT t.titleid, CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, '')), t.name, 
+            t.level, t.defactoleige
+            FROM title t LEFT JOIN person p ON t.holderid = p.personid 
+            LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
+            WHERE t.defactoleige = %s
+            UNION
+            SELECT t.titleid, CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, '')), t.name, 
+            t.level, t.defactoleige
+            FROM title t LEFT JOIN person p ON t.holderid = p.personid 
+            LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
+            INNER JOIN subtitle s ON t.defactoleige = s.titleid
+            )
+            SELECT * FROM subtitle """, [titleid])
+
+        result = cur.fetchall()
+        cur.close()
+        
+        info = {"start" : tup}
+        dag = {}
+
+        for t in result:
+            info[t[0]] = t
+            if(t[4] is not None):
+                if(t[4] in dag):
+                    dag[t[4]].append(t[0])
+                else:
+                    dag[t[4]] = [t[0]]
+
+        return info, dag
 
     # Uses CTEs to query multiple times
     def descendant_tree(self, person, levels=0):

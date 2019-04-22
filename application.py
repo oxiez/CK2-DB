@@ -53,6 +53,12 @@ Type 'help' for all the commands you can insert. Type 'help <command>'
 for more information about a command. You can also exit the 
 application with 'quit'
 """
+
+title_level = {'k': 'Kingdom',
+               'e': 'Empire',
+               'd': 'Duchy',
+               'c': 'County',
+               'b': 'Barony'}
     
 #main function
 if __name__=='__main__':
@@ -428,7 +434,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
             if(len(words) < 3):
                 print("ERROR: Please format the tree command like so:\ntree <descendant> <person name/id>")
                 continue
-            commands = ["descendant"]
+            commands = ["descendant", "subtitle"]
             command = ""
             if(words[1] in commands):
                 command = words[1]
@@ -437,15 +443,24 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 for com in commands:
                     print("- " + com)
                 continue
-            
-            args = " ".join(words[2:])
-            info, dag = data.descendant_tree(args)
+            args = ""
+            info = []
+            dag = {}
+            if(command == "descendant"):
+                args = " ".join(words[2:])
+                info, dag = data.descendant_tree(args)
+            elif(command == "subtitle"):
+                if(len(words) > 3):
+                    print("ERROR: 'subtitle' command only takes a titleid, which is formatted like 'k_france'")
+                    continue
+                args = words[2]
+                info, dag = data.title_tree(args)
 
             if(isinstance(info, list)):
                 if(len(info) > 1):
                     display = True
                     if(len(info) > 10):
-                        confirm = input("INFO: {} results found for \"{}\". Display? (y/N): ".format(len(info), args))
+                        confirm = input("WARN: {} results found for \"{}\". Display? (y/N): ".format(len(info), args))
                         if(not confirm.lower() == 'y'):
                              display = False
                     if(display):
@@ -453,38 +468,69 @@ Exits the program. Can also use 'q' or 'exit'.""")
                         table.header(("ID", "Name"))
                         table.add_rows(info, header=False)
                         print(table.draw())
-                        print("INFO: {} results found. Please rerun this command with an id from above".format(len(info)))
+                        print("WARN: {} results found. Please rerun this command with an id from above".format(len(info)))
                 else:
-                    print("INFO: No person matched with {}, try again.".format(args))
+                    if(command == "descendant"):
+                        print("INFO: No person matched with {}, try again.".format(args))
+                        continue
+                    elif(command == "subtitle"):
+                        print("INFO: No title has the titleid {}, try again.".format(args))
+                        continue
             else: # Can only be a dict
                 if(len(dag) == 0):
-                    print("No descendants found for {}: {}".format(info[0][0], info[0][1]))
+                    if(command == "descendant"):
+                        print("No descendants found for {}: {}".format(info[0][0], info[0][1]))
+                    else:
+                        name = info["start"][1]
+                        name = name[0].upper() + name[1:]
+                        print("No subtitles for The {} of {}".format(title_level[info["start"][2]], name))
                 else:
-                    print("Printing descendants of {}: {}".format(info[0][0], info[0][1]))
-                    print("{}: {}".format(info[0][0], info[0][1]))
-                    stack = [dag[info[0][0]]]
-                    # Keep track of whose child it is
-                    stack_above = [info[0][0]]
+                    stack = []
+                    stack_above = []
+                    if(command == "descendant"):
+                        print("Printing descendants of {}: {}".format(info[0][0], info[0][1]))
+                        print("{}: {}".format(info[0][0], info[0][1]))
+                        stack = [dag[info[0][0]]]
+                        # Keep track of whose child it is
+                        stack_above = [info[0][0]]
+                    else:
+                        name = info["start"][1]
+                        name = name[0].upper() + name[1:]
+                        print("Printing subtitles of The {} of {}".format(title_level[info["start"][2]], name))
+                        print("The {} of {}".format(title_level[info["start"][2]], name))
+                        stack = [dag[info["start"][0]]]
+                        stack_above  = [info["start"][0]]
                     while(len(stack) > 0):
                         id = stack[-1].pop()
                         tree_spacer(stack)
-                        if(stack_above[-1] == info[id][2] and info[id][4]):
-                            print("\u2502   ")
+                        if(command == "descendant"):
+                            if(stack_above[-1] == info[id][2] and info[id][4]):
+                                print("\u2502   ")
+                                tree_spacer(stack)
+                                print("\u2502   Father: ({}: {})".format(info[id][4], info[id][5]))
+                            elif(stack_above[-1] == info[id][4] and info[id][2]):
+                                print("\u2502   ")
+                                tree_spacer(stack)
+                                print("\u2502   Mother: ({}: {})".format(info[id][2], info[id][3]))
+                            else:
+                                print("\u2502")
                             tree_spacer(stack)
-                            print("\u2502   Father: ({}: {})".format(info[id][4], info[id][5]))
-                        elif(stack_above[-1] == info[id][4] and info[id][2]):
-                            print("\u2502   ")
-                            tree_spacer(stack)
-                            print("\u2502   Mother: ({}: {})".format(info[id][2], info[id][3]))
                         else:
                             print("\u2502")
-                        tree_spacer(stack)
+                            tree_spacer(stack)
+                            
                         if(len(stack[-1]) > 0):
                             print("\u251C", end="")
                         else:
                             print("\u2514", end="")
-                        print("\u2500\u2500\u2500{}: {}".format(info[id][0], info[id][1])) 
-                        
+
+                        if(command == "descendant"):
+                            print("\u2500\u2500\u2500{}: {}".format(info[id][0], info[id][1]))
+                        else:
+                            name = info[id][2]
+                            name = name[0].upper() + name[1:]
+                            print("\u2500\u2500\u2500The {} of {}".format(title_level[info[id][3]], name))
+                            
                         if(id in dag): # Has children
                             stack += [dag[id]]
                             stack_above.append(id)
