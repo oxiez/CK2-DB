@@ -397,7 +397,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
 
         elif words[0]=="tree":
             if(len(words) < 3):
-                print("ERROR: Please format the tree command like so:\ntree descendant <person name or id>")
+                print("ERROR: Please format the tree command like so:\ntree <descendant> <person name/id>")
                 continue
             commands = ["descendant"]
             command = ""
@@ -436,8 +436,11 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     while(len(stack) > 0):
                         id = stack[-1].pop()
                         level = len(stack) - 1
-                        if(level > 1):
-                            print("{}".format("|   " * (level - 1)), end="")
+                        for i in range(1,level):
+                            if(len(stack[i]) > 0):
+                                print("|   ", end="")
+                            else:
+                                print("    ", end="")
                         if(level == 0): # Root
                             print("{}: {}".format(info[id][0], info[id][1]))
                         else:
