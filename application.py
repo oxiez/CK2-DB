@@ -34,8 +34,14 @@ def tree_spacer(stack):
             print("    ", end="")
 
 help_string = """\ 
-Welcome to the Crusader Kings 2 Database Project\n
-In this application, 
+Welcome to the Crusader Kings 2 Database Project
+----------------------------------------------------
+In this application, you can learn about the details
+of the world stored within save files from the game
+Crusader Kings 2. 
+----------------------------------------------------
+You can get bios for any character with regards to 
+their 
 
 """
     
