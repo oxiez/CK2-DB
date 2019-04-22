@@ -33,16 +33,25 @@ def tree_spacer(stack):
         else:
             print("    ", end="")
 
-help_string = """\ 
-Welcome to the Crusader Kings 2 Database Project
-----------------------------------------------------
-In this application, you can learn about the details
-of the world stored within save files from the game
-Crusader Kings 2. 
-----------------------------------------------------
-You can get bios for any character with regards to 
-their 
+help_string = """
+Welcome to the Crusader Kings 2 Database Project!
+----------------------------------------------------------------------
+In this application, you can learn about the details of the world 
+stored within save files from the game Crusader Kings 2. 
+----------------------------------------------------------------------
+Some things you can do:
+- You can get bios for any character containing
+  - Date of birth and death
+  - Their statistics
+  - Religion
+- Get all members of a religion/culture
+- See the largest religion/culture (province wise)
+- List all descendants of a character
+- And much more...
 
+Type 'help' for all the commands you can insert. Type 'help <command>' 
+for more information about a command. You can also exit the 
+application with 'quit'
 """
     
 #main function
@@ -51,13 +60,13 @@ if __name__=='__main__':
     data = database.Data()
     
     #load data
-    print('\nWelcome to the Database Systems Project\n')
+    #print('\nWelcome to the Database Systems Project\n')
     if len(sys.argv) > 1:
         file_name = sys.argv[1]
         load_file(file_name,data)
     
     # main program loop (take commands until quitting)
-    print("Type 'help' for help with commands, and 'quit' to exit.")
+    print(help_string)
     command = ''
     query_result = []
     while command not in {'q','quit','exit'}:
