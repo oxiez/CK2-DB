@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS Trait;
 DROP TABLE IF EXISTS TraitLookup;
 DROP TABLE IF EXISTS Dynasty;
 DROP TABLE IF EXISTS Title;
+DROP TABLE IF EXISTS TitleHistory;
 DROP TABLE IF EXISTS Rulers;
 DROP TABLE IF EXISTS Claim;
 DROP TABLE IF EXISTS Province;
@@ -77,6 +78,13 @@ CREATE TABLE Title(
 	level CHAR(1), 
 	deFactoLeige VARCHAR(63), 
 	deJureLeige VARCHAR(63)
+);
+
+CREATE TABLE TitleHistory(
+	titleID VARCHAR(63),
+	holderID INT,
+	succession DATE,
+	PRIMARY KEY(titleID, succession)
 );
 
 CREATE TABLE Rulers(
