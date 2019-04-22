@@ -29,6 +29,7 @@ person_regex = {"^bn" : None,
 				"^piety" : None,
 				"^emp" : None,
 				"^host" : None,
+				"^oh" : None,
 				"^att" : None, # This needs to be broken up manually
 				"^tr" : None, # This needs to be broken up manually
 				"^claim" : claim_regex # Repeated
@@ -126,6 +127,13 @@ def get_chars(file, cur):
 			 obj.get("host"), obj.get("emp"), attributes.get("martial"), attributes.get("diplomacy"),
 			 attributes.get("steward"), attributes.get("intrigue"), attributes.get("learning")
 		])
+
+		if(isinstance(obj.get("oh"), list)):
+			for title_id in (obj["oh"]):
+				cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
+		elif obj.get("oh"):
+			title_id = obj["oh"]
+			cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
 
 		for tr in traits:
 			cur.execute("INSERT INTO trait Values(%s, %s)", [id, int(tr)])
