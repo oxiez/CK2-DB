@@ -52,6 +52,8 @@ def get_titles(file,cur):
                                 continue
                             except TypeError: # If no holder tag
                                 continue
+                            if (i > 0 and (hist[key][i].get("holder") == hist[key][i-1].get("holder"))):
+                                continue
                             cur.execute("INSERT INTO titlehistory VALUES(%s, %s, %s)",
                                         [obj.get("tag"),
                                          holder,
