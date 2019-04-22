@@ -130,10 +130,10 @@ def get_chars(file, cur):
 
 		if(isinstance(obj.get("oh"), list)):
 			for title_id in (obj["oh"]):
-				cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id])
+				cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
 		elif obj.get("oh"):
 			title_id = obj["oh"]
-			cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id])
+			cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
 
 		for tr in traits:
 			cur.execute("INSERT INTO trait Values(%s, %s)", [id, int(tr)])
