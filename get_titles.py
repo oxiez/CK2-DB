@@ -36,6 +36,11 @@ def get_titles(file,cur):
                      obj.get("liege"),
                      obj.get("de_jure_liege")]
         )
+        if(obj.get("holder")):
+            cur.execute("INSERT INTO rulers VALUES(%s, %s)",
+                        [obj.get("holder"),
+                         obj.get("tag")]
+            )
         
         hist = obj.get("history")
         if(not hist == None):
