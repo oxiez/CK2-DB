@@ -82,9 +82,9 @@ CREATE TABLE Title(
 
 CREATE TABLE TitleHistory(
 	titleID VARCHAR(63),
-	holderID INT,
+	personID INT,
 	succession DATE,
-	PRIMARY KEY(titleID, succession)
+	PRIMARY KEY(titleID, personID, succession)
 );
 
 CREATE TABLE Rulers(

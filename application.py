@@ -250,7 +250,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 #rulers
                 if words[1]=='rulers':
                     query_result = data.query_rulers(words[2])
-                    headings = ['personid','Name','Dynasty','Date of Birth','Date of Death']
+                    headings = ['personid', 'Name', 'Dynasty', 'Date of Birth', 'Date of Death', 'Start of Rule']
                 #current
                 elif words[1]=='current':
                     query_result = data.query_ruler(words[2])
