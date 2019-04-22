@@ -29,9 +29,15 @@ def tree_spacer(stack):
     level = len(stack) - 1
     for i in range(0,level):
         if(len(stack[i]) > 0):
-            print("|   ", end="")
+            print("\u2502   ", end="")
         else:
             print("    ", end="")
+
+help_string = """\ 
+Welcome to the Crusader Kings 2 Database Project\n
+In this application, 
+
+"""
     
 #main function
 if __name__=='__main__':
@@ -448,17 +454,21 @@ Exits the program. Can also use 'q' or 'exit'.""")
                         id = stack[-1].pop()
                         tree_spacer(stack)
                         if(stack_above[-1] == info[id][2] and info[id][4]):
-                            print("|   ")
+                            print("\u2502   ")
                             tree_spacer(stack)
-                            print("|   Father: ({}: {})".format(info[id][4], info[id][5]))
+                            print("\u2502   Father: ({}: {})".format(info[id][4], info[id][5]))
                         elif(stack_above[-1] == info[id][4] and info[id][2]):
-                            print("|   ")
+                            print("\u2502   ")
                             tree_spacer(stack)
-                            print("|   Mother: ({}: {})".format(info[id][2], info[id][3]))
+                            print("\u2502   Mother: ({}: {})".format(info[id][2], info[id][3]))
                         else:
-                            print("|")
+                            print("\u2502")
                         tree_spacer(stack)
-                        print("+---{}: {}".format(info[id][0], info[id][1])) 
+                        if(len(stack[-1]) > 0):
+                            print("\u251C", end="")
+                        else:
+                            print("\u2514", end="")
+                        print("\u2500\u2500\u2500{}: {}".format(info[id][0], info[id][1])) 
                         
                         if(id in dag): # Has children
                             stack += [dag[id]]
