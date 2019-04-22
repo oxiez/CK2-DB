@@ -434,7 +434,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
             if(len(words) < 3):
                 print("ERROR: Please format the tree command like so:\ntree <descendant> <person name/id>")
                 continue
-            commands = ["descendant", "subtitle"]
+            commands = ["descendant", "vassals"]
             command = ""
             if(words[1] in commands):
                 command = words[1]
@@ -449,9 +449,9 @@ Exits the program. Can also use 'q' or 'exit'.""")
             if(command == "descendant"):
                 args = " ".join(words[2:])
                 info, dag = data.descendant_tree(args)
-            elif(command == "subtitle"):
+            elif(command == "vassals"):
                 if(len(words) > 3):
-                    print("ERROR: 'subtitle' command only takes a titleid, which is formatted like 'k_france'")
+                    print("ERROR: 'vassals' command only takes a titleid, which is formatted like 'k_france'")
                     continue
                 args = words[2]
                 info, dag = data.title_tree(args)
@@ -473,7 +473,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     if(command == "descendant"):
                         print("INFO: No person matched with {}, try again.".format(args))
                         continue
-                    elif(command == "subtitle"):
+                    elif(command == "vassal"):
                         print("INFO: No title has the titleid {}, try again.".format(args))
                         continue
             else: # Can only be a dict
@@ -483,7 +483,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     else:
                         name = info["start"][1]
                         name = name[0].upper() + name[1:]
-                        print("No subtitles for The {} of {}".format(title_level[info["start"][2]], name))
+                        print("No vassals for The {} of {}".format(title_level[info["start"][2]], name))
                 else:
                     stack = []
                     stack_above = []
@@ -496,7 +496,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     else:
                         name = info["start"][1]
                         name = name[0].upper() + name[1:]
-                        print("Printing subtitles of The {} of {}".format(title_level[info["start"][2]], name))
+                        print("Printing vassals of The {} of {}".format(title_level[info["start"][2]], name))
                         print("The {} of {}".format(title_level[info["start"][2]], name))
                         stack = [dag[info["start"][0]]]
                         stack_above  = [info["start"][0]]

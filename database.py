@@ -267,7 +267,7 @@ class Data:
             tup = cur.fetchone()
 
         cur.execute(
-            """ WITH RECURSIVE subtitle AS (
+            """ WITH RECURSIVE vassal AS (
             SELECT t.titleid, CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, '')), t.name, 
             t.level, t.defactoleige
             FROM title t LEFT JOIN person p ON t.holderid = p.personid 
@@ -278,9 +278,9 @@ class Data:
             t.level, t.defactoleige
             FROM title t LEFT JOIN person p ON t.holderid = p.personid 
             LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
-            INNER JOIN subtitle s ON t.defactoleige = s.titleid
+            INNER JOIN vassal s ON t.defactoleige = s.titleid
             )
-            SELECT * FROM subtitle """, [titleid])
+            SELECT * FROM vassal """, [titleid])
 
         result = cur.fetchall()
         cur.close()
