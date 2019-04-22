@@ -57,7 +57,6 @@ def get_titles(file,cur):
                                          holder,
                                          day])
                     else:
-                        holder = int(hist[key].get("holder"))
                         try:
                             holder = int(hist[key].get("holder"))
                         except ValueError: # If holder tag is something like "0"
