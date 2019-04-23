@@ -92,11 +92,14 @@ if __name__=='__main__':
                 print(' - culture <arg>             [displays information on cultures]')
                 print(' - bloodline <arg>           [displays information on bloodlines]')
                 print(' - bloodline_members <ID>    [displays characters with bloodline of ID]')
-                print(' - tree descendant <name/ID> [displays family tree beginning with the given person]')
+                print(' - tree <cmd> <cmd args>     [displays various info in a tree-based format]')
                 print(' - help <command>            [displays this text, or with an argument, explains a command]')
                 print(' - num_results <NUM>         [changes the number of results displayed to NUM]')
                 print(' - load <FILENAME>           [loads a file]')
                 print(' - quit                      [exits the program]')
+                print("""\
+If you\'re confused about a command, type \'help <command>\' for a more specific list of 
+things that command can do. """)
             elif len(words) > 2:
                 print("Too many arguments. Try 'help' or 'help <arg>' for more information on a type of command.")
             else:
@@ -165,10 +168,28 @@ It then prints all of the members of the bloodline."""
                           )
                 elif comm=='tree':
                     print("""\
-The 'tree' command prints a family tree. To generate the family tree of a person
-with a specific id, enter 'tree descendant ID'. If you are looking someone with a
-certain name, you can enter 'tree descendant name', and then options will come up
-for you to choose from."""
+
+    The 'tree' command allows you to see a tree of either the 
+descendants of a character or the vassals of a title, such as the 
+Kingdom of France, or 'k_france'.
+----------------------------------------------------------------------
+To search for descendants, you can either type:
+    'tree descendant <search query>' 
+            or 
+    'tree descendant <person id>'
+If multiple people fit the search query, the command will show a
+table of potential people that fit the query and their id alongside. 
+
+For example, you can enter:
+    'tree descendant arnold karling' 
+            or 
+    'tree descendant 190412'
+----------------------------------------------------------------------
+To search for the vassals of a title, type:
+    'tree vassals <title id>'
+
+For example, type:
+    'tree vassals k_france'\n """
                           )
                 elif comm=='help':
                     print("""\
@@ -435,9 +456,11 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 print("ERROR: Please format the tree command like so:\ntree <descendant> <person name/id>")
                 continue
             commands = ["descendant", "vassals"]
-            command = ""
-            if(words[1] in commands):
-                command = words[1]
+            command = 0
+            for i in range(len(commands)):
+                if(words[1] == commands[i]):
+                    command = i
+                    break
             else:
                 print("ERROR: \"" + words[1] + "\" is not a valid tree command. Please use:")
                 for com in commands:
@@ -446,10 +469,10 @@ Exits the program. Can also use 'q' or 'exit'.""")
             args = ""
             info = []
             dag = {}
-            if(command == "descendant"):
+            if(command == 0):
                 args = " ".join(words[2:])
                 info, dag = data.descendant_tree(args)
-            elif(command == "vassals"):
+            elif(command == 1):
                 if(len(words) > 3):
                     print("ERROR: 'vassals' command only takes a titleid, which is formatted like 'k_france'")
                     continue
@@ -470,15 +493,15 @@ Exits the program. Can also use 'q' or 'exit'.""")
                         print(table.draw())
                         print("WARN: {} results found. Please rerun this command with an id from above".format(len(info)))
                 else:
-                    if(command == "descendant"):
+                    if(command == 0):
                         print("INFO: No person matched with {}, try again.".format(args))
                         continue
-                    elif(command == "vassal"):
+                    elif(command == 1):
                         print("INFO: No title has the titleid {}, try again.".format(args))
                         continue
             else: # Can only be a dict
                 if(len(dag) == 0):
-                    if(command == "descendant"):
+                    if(command == 0):
                         print("No descendants found for {}: {}".format(info[0][0], info[0][1]))
                     else:
                         name = info["start"][1]
@@ -487,7 +510,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 else:
                     stack = []
                     stack_above = []
-                    if(command == "descendant"):
+                    if(command == 0):
                         print("Printing descendants of {}: {}".format(info[0][0], info[0][1]))
                         print("{}: {}".format(info[0][0], info[0][1]))
                         stack = [dag[info[0][0]]]
@@ -503,7 +526,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                     while(len(stack) > 0):
                         id = stack[-1].pop()
                         tree_spacer(stack)
-                        if(command == "descendant"):
+                        if(command == 0):
                             if(stack_above[-1] == info[id][2] and info[id][4]):
                                 print("\u2502   ")
                                 tree_spacer(stack)
@@ -524,7 +547,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                         else:
                             print("\u2514", end="")
 
-                        if(command == "descendant"):
+                        if(command == 0):
                             print("\u2500\u2500\u2500{}: {}".format(info[id][0], info[id][1]))
                         else:
                             name = info[id][2]
