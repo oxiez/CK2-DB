@@ -145,34 +145,66 @@ dynasties by their prestige.\n """
                     )
                 elif comm=='title':
                     print("""\
+
     The 'title' command allows you to look into characters that are
 associated with a title (such as past holders and current holders)
 ----------------------------------------------------------------------
 The title command with either take a character's id, or a specifier
-(either 'ruler' or 'current') with a title id. Title ids are formatted
+(either 'rulers' or 'current') with a title id. Title ids are formatted
 as follows:
     [k/e/d/c/b]_[name]
 Where the first letter represents which level (in a heirarchy) that
 the title is in:
-- e -> Empire
-- k -> Kingdom
-- d -> Duchy
-- c -> County
-- b -> Barony
+
+    +-------+---------+
+    |Label  |Level    |
+    +-------+---------+
+    |e      |Empire   |
+    +-------+---------+
+    |k      |Kingdom  |
+    +-------+---------+
+    |d      |Duchy    |
+    +-------+---------+
+    |c      |County   |
+    +-------+---------+
+    |b      |Barony   |
+    +-------+---------+
+
 ----------------------------------------------------------------------
 Examples:                                             e.g.
 - to find the titles owned by a specific character    title 6392
-- to find the history of rulers of a given title      title ruler k_france
-- to find the current holder of a given title         title current k_france"""
+- to find the history of rulers of a given title      title rulers k_france
+- to find the current holder of a given title         title current k_france\n"""
                         )
                 elif comm=='person':
                     print("""\
-The person command on its own lists characters stored in the save file.
-Optionally, we can add argument/value pairs to find people with a name, dynasty, religion or culture similar to a given string.
-Also, we can specify a number for fertility, health, wealth, prestige or piety, which will restrict the results to characters
-that have a value greater than or equal to the amount specified.
-For example, the command 'person name will dynasty de health 1 prestige 100'
-will find characters with 1 or more health and 100 or more prestige who have a name like 'will' and are in a dynasty with the substring 'de'."""
+
+    The 'person' command allows you to explore difference characters
+within the game.
+----------------------------------------------------------------------
+The command 'person' alone will display characters (up to a set limit,
+which can be chagned with the 'num_results' command) within the game.
+To narrow down your query, you can use the following:
+
+    'dynasty <keyw_1> <keyw_1 arg> ... <keyw_n> <keyw_n arg>'
+
+Keywords can be any of the following (in any order):
+- name            [limit to characters with a similar name]
+- dynasty         [limit to characters with a similar dynasty name]
+- religion        [limit to characters with a similar religion name]
+- culture         [limit to characters with a similar culture name]
+- fertility       [limit to characters with a higher fertility value]
+- health          [limit to characters with a higher health value]
+- prestige        [limit to characters with a higher prestige value]
+- piety           [limit to characters with a higher piety value]
+
+For example:
+    'person name will dynasty de health 1 prestige 100'
+Will find characters that:
+- Have 1 or more health
+- Have 100 or more prestige 
+- Have a name like 'will'
+- Are in a dynasty with the substring 'de'.\n"""
                           )
                 elif comm=='bio':
                     print("""\
