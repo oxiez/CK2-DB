@@ -145,10 +145,25 @@ dynasties by their prestige.\n """
                     )
                 elif comm=='title':
                     print("""\
-The title command can be used in three ways:            e.g.
- - to find the titles owned by a specific character     title 6392
- - to find the history of rulers of a given title       title ruler k_france
- - to find the current holder of a given title          title current k_france"""
+    The 'title' command allows you to look into characters that are
+associated with a title (such as past holders and current holders)
+----------------------------------------------------------------------
+The title command with either take a character's id, or a specifier
+(either 'ruler' or 'current') with a title id. Title ids are formatted
+as follows:
+    [k/e/d/c/b]_[name]
+Where the first letter represents which level (in a heirarchy) that
+the title is in:
+- e -> Empire
+- k -> Kingdom
+- d -> Duchy
+- c -> County
+- b -> Barony
+----------------------------------------------------------------------
+Examples:                                             e.g.
+- to find the titles owned by a specific character    title 6392
+- to find the history of rulers of a given title      title ruler k_france
+- to find the current holder of a given title         title current k_france"""
                         )
                 elif comm=='person':
                     print("""\
