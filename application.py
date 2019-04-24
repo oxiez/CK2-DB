@@ -285,8 +285,10 @@ largest to smallest.\n"""
     The 'bloodline' command allows you to see which bloodlines
 exist in the game and get who their founders are.
 ----------------------------------------------------------------------
-The 'bloodline' command on its own lists the bloodlines in the game by
-their ID.
+The 'bloodline' command on its own lists the bloodlines (up to a set
+limit, which can be changed with the 'num_results' command) in the game 
+by their ID. To see members of a specific bloodline, use the 
+'bloodline_members' command instead.
 
 Optional arguments can be added for 
 - bloodlinename      [limits to names that match the string of the type]
@@ -297,8 +299,15 @@ For example:
                           )
                 elif comm=='bloodline_members':
                     print("""\
-The 'bloodline_members' command takes one argument, being the ID of the bloodline.
-It then prints all of the members of the bloodline."""
+
+    The 'bloodline_members' command lists members of a bloodline.
+----------------------------------------------------------------------
+The 'bloodline_members' command requres 1 argument:
+
+    'bloodline_members <bloodline ID>'
+
+You can get bloodline IDs from the 'bloodline' command. Note that the
+number of results will be limited by the 'num_results' command.\n"""
                           )
                 elif comm=='tree':
                     print("""\
@@ -327,24 +336,43 @@ For example, type:
                           )
                 elif comm=='help':
                     print("""\
-The help command (attempts) to display helpful information about how to use this application.
+
+    The 'help' command (attempts) to display helpful information about 
+how to use this application.
+----------------------------------------------------------------------
 'help' on its own displays the commands that the user can use.
-'help cmd' displays information on how to use the command 'cmd'."""
+'help <cmd>' displays information on how to use the command 'cmd'.\n"""
                           )
                 elif comm=='num_results':
                     print("""\
-The num_results command is used to restrict the number of results that a command can return.
-For example, if we wanted to restrict the number of rows from future commands to ten,
-we can enter the command 'num_results 10'."""
+    The 'num_results' command is used to restrict the number of results
+that a command can return.
+----------------------------------------------------------------------
+The 'num_results' command requires 1 argument:
+
+    'num_results <integer>'
+
+For example:
+    'num_results 10'
+Will restrict the number of rows from future commands to 10.\n"""
                           )
                 elif comm=='load':
                     print("""\
-The load command is used to load in data from a save file.
-For example, 'load leon1067_02_12.ck2' will use the data from that save game."""
+
+    The 'load' command is used to load in new data from a save file.
+----------------------------------------------------------------------
+The 'load' command requires 1 argument:
+
+    'load <file name>'
+
+For example, 
+    'load Leon1067_02_12.ck2' 
+Will use the data from that save game."""
                           )
                 elif comm=='quit':
                     print("""\
-Exits the program. Can also use 'q' or 'exit'.""")
+
+Exits the program. Can also use 'q' or 'exit'.\n""")
                 else:
                     print("Did not recognize command '" + comm + "'. Type help to see the list of commands.")
                 
