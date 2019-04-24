@@ -149,8 +149,8 @@ dynasties by their prestige.\n """
     The 'title' command allows you to look into characters that are
 associated with a title (such as past holders and current holders)
 ----------------------------------------------------------------------
-The title command with either take a character's id, or a specifier
-(either 'rulers' or 'current') with a title id. Title ids are formatted
+The title command with either take a character's ID, or a specifier
+(either 'rulers' or 'current') with a title ID. Title IDs are formatted
 as follows:
     [k/e/d/c/b]_[name]
 Where the first letter represents which level (in a heirarchy) that
@@ -179,7 +179,7 @@ Examples:                                             e.g.
                 elif comm=='person':
                     print("""\
 
-    The 'person' command allows you to explore difference characters
+    The 'person' command allows you to explore different characters
 within the game.
 ----------------------------------------------------------------------
 The command 'person' alone will display characters (up to a set limit,
@@ -208,25 +208,76 @@ Will find characters that:
                           )
                 elif comm=='bio':
                     print("""\
-The bio command requires a single argument: the ID of a person. You can find a personID by using
-person commands. The bio command prints information about the given character, such as name, date of birth, date of death,
-sex, religion, culture, attributes, traits, titles, claims, and so on."""
+
+    The 'bio' command will list all info there is to know about a
+character.
+----------------------------------------------------------------------
+The command 'bio' requires 1 argument:
+
+    'bio <person ID>'
+
+You can get character IDs from the 'person' command.
+----------------------------------------------------------------------
+Specifically, the 'bio' command displays:
+- The name of a character
+- Their date of birth
+- Their date of death (if they have one)
+- Their parents (if stored in game)
+- Their spouce (if they have one)
+- Their sex
+- Their religion
+- Their culture
+- Their attributes
+- Their traits
+- The titles that they hold (if they hold any)
+- The claims that they hold (if they hold any)\n"""
                           )
                 elif comm=='religion':
                     print("""\
-The 'religion' command on its own lists the religions in the game lexicographically.
+
+    The 'religion' command allows you to explore general statistics
+for all religions.
+----------------------------------------------------------------------
+The 'religion' command on its own lists the religions (up to a set 
+limit, which can be changed with the 'num_results' command) in the 
+game lexicographically.
+
 We have three choices for an optional argument:
- - 'religion allmembers'   sorts religions by how many characters (throughout history) have this relgion
- - 'religion alivemembers' sorts religions by how many living characters have this religion
- - 'religion provinces'    sorts religions by how many on-map provinces they have"""
+   'religion allmembers'   
+This sorts religions by how many characters (throughout history) have 
+this relgion, from largest to to smallest.
+
+   'religion alivemembers' 
+This sorts religions by how many living characters have this religion,
+from largest to smallest.
+
+   'religion provinces'
+This sorts religions by how many on-map provinces they have, from
+largest to smallest.\n"""
                           )
                 elif comm=='culture':
                     print("""\
-The 'culture' command on its own lists the cultures in the game lexicographically.
+
+    The 'culture' command allows you to explore general statistics
+for all cultures.
+----------------------------------------------------------------------
+The 'culture' command on its own lists the cultures (up to a set
+limit, which can be changed with the 'num_results' command) in the 
+game lexicographically.
+
 We have three choices for an optional argument:
- - 'culture allmembers'   sorts cultures by how many characters (throughout history) have this culture
- - 'culture alivemembers' sorts cultures by how many living characters have this culture
- - 'culture provinces'    sorts cultures by how many on-map provinces they have"""
+
+    'culture allmembers'   
+Which sorts cultures by how many characters (throughout history) have
+had this culture, from largest to smallest.
+
+    'culture alivemembers'
+Which sorts cultures by how many currently alive characters have this
+culture, from largest to smallest.
+
+    'culture provinces'
+Which sorts cultures by how many on-map provinces they have, from
+largest to smallest.\n"""
                           )
                 elif comm=='bloodline':
                     print("""\
