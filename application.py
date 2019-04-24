@@ -106,16 +106,42 @@ things that command can do. """)
                 #help with a specific argument type
                 comm = words[1]
                 if comm=='dynasty':
-                    print(
-"""The dynasty command is used to explore the different dynsaties of the game.
-On its own, the command 'dynasty' will list some of the dynasties in the game.
-Optionally, we can add arguments to match the name, religion, or culture.
-For example, if we wanted to find catholic, frankish dynasties,
-we can enter 'dynasty religion catholic culture frankish'.
-The 'orderby' argument can be followed by one of prestige, piety, wealth, and count (number of members).
-This will sort the results of the search by this term, descending from greatest to least.
-To build on our previous example, if we wanted to sort by prestige, we can write
-'dynasty orderby prestige religion catholic culture frankish'."""
+                    print("""\
+
+    The 'dynasty' command allow you to explore the different 
+dynasties, or sets of characters considered to be within the same
+family.
+----------------------------------------------------------------------
+The commmand 'dynasty' alone will display dyanasties (up to a set 
+limit, which can be changed with 'num_results' command) within the
+game. Each dynasty has it's own religion and culture associated with
+it, so you can limit your search with the following:
+
+    'dynasty <keyw_1> <keyw_1 arg> ... <keyw_n> <keyw_n arg>'
+
+Keywords can be any of the following (in any order):
+- name            [limit to dynasties with a similar name]
+- religion        [limit to dynasties with a similar religion name]
+- culture         [limit to dynasties with a similar culture name]
+- orderby         [explained in the next section]
+
+For example:
+    'dynasty religion Catholic culture Frankish'
+Which will return a list of dynasties associated with the Catholic
+religion and Frankish culture.
+----------------------------------------------------------------------
+The 'dynasty' command also has the option to order the the output from
+the greatest to the least. There are several statistics that you can
+order the output by:
+- prestige
+- piety
+- wealth
+- count           [member count]
+
+For example:
+    'dynasty orderby prestige religion Catholic culture Frankish'
+Will take the output of the previous section's example and order the
+dynasties by their prestige.\n """
                     )
                 elif comm=='title':
                     print("""\
