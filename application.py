@@ -281,9 +281,19 @@ largest to smallest.\n"""
                           )
                 elif comm=='bloodline':
                     print("""\
-The 'bloodline' command on its own lists the bloodlines in the game by their ID.
-Optional arguments can be added for 'bloodlinename' (to match the string of the type)
-and for 'founderID' (being the personID of the founder of the bloodline)."""
+
+    The 'bloodline' command allows you to see which bloodlines
+exist in the game and get who their founders are.
+----------------------------------------------------------------------
+The 'bloodline' command on its own lists the bloodlines in the game by
+their ID.
+
+Optional arguments can be added for 
+- bloodlinename      [limits to names that match the string of the type]
+- founderID          [limits to bloodlines founded by that person ID].
+
+For example:
+    'bloodline bloodlinename parthian'\n"""
                           )
                 elif comm=='bloodline_members':
                     print("""\
@@ -551,7 +561,7 @@ Exits the program. Can also use 'q' or 'exit'.""")
                 continue
             query_arg_vals = []
             i = 1
-            allowed_args = {'bloodlinename', 'founderID'}
+            allowed_args = {'bloodlinename', 'founderid'}
             valid = True
             while i < len(words):
                 if(words[i] in allowed_args):
