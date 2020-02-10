@@ -12,7 +12,7 @@ province_regex = {"culture" : None,
 
 def get_provs(file, cur):
 	province_id_dict = {}
-	with io.open(r'province_id to county_id.txt') as f:
+	with io.open(r'data/province_id to county_id.txt') as f:
 		for line in f:
 			line = line.split("\n")[0]
 			l = line.split(" ")

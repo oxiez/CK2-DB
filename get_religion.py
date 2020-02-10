@@ -3,7 +3,7 @@ import io
 #fills the religion table with entries of id,name,group
 # IMPORTANT NOTE: we need to look at the save file to determine heresies
 def get_religion(cur):
-    with io.open('00_religions.txt',encoding="cp1252") as f:
+    with io.open('data/00_religions.txt',encoding="cp1252") as f:
         #setup
         line = None
         for i in range(13):

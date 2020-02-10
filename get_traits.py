@@ -1,8 +1,8 @@
 import io
 
 def get_traits(cur):
-    trait_files = ['00_traits.txt','01_traits.txt',
-                   '02_traits.txt','03_traits.txt']
+    trait_files = ['data/00_traits.txt', 'data/01_traits.txt',
+                   'data/02_traits.txt', 'data/03_traits.txt']
     trait_id = 1
     for file in trait_files:
         trait_id = add_traits(file,cur,trait_id)
