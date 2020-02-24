@@ -12,7 +12,7 @@ jobs:
           mkdir -p saves
           cd saves
           curl https://homepages.rpi.edu/~xieo/ck2_data.tar.gz > ck2_data.tar.gz
-          tar -xvf ck2_data.tar.gz Bloodlines.ck2
+          tar -xvf ck2_data.tar.gz ./Bloodlines.ck2
       - name: Build Docker Images
         run: docker-compose build
       - name: Test Docker Images
