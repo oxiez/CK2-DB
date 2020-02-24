@@ -1,0 +1,25 @@
+name: Docker CI
+on: [push]
+
+jobs:
+  build:
+    name: Build & Test Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract save file for file loading test
+        run: |
+          mkdir -p saves
+          cd saves
+          curl https://homepages.rpi.edu/~xieo/ck2_data.tar.gz > ck2_data.tar.gz
+          tar -xvf ck2_data.tar.gz Bloodlines.ck2
+      - name: Build Docker Images
+        run: docker-compose build
+      - name: Test Docker Images
+        run: |
+          docker-compose up -d
+          for i in $(seq 1 120); do docker exec ck2-db_app_1 bash -c "test -f /data/.data_loaded" && break || sleep 1; done
+          docker exec ck2-db_app_1 bash -c "test -f /data/.data_loaded"
+      - name: Stop Docker Images
+        run: docker-compose down
+      

@@ -1,0 +1,14 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    image: nfusionz/ck2-db:latest
+    links:
+      - postgres
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
+    image: nfusionz/ck2-db-postgres:latest
