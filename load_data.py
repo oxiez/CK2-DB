@@ -14,7 +14,7 @@ import get_bloodline
 
 def load_data(filename):
 	# connect and get a cursor
-	conn = psycopg2.connect("dbname=ck2 user=charles password=frank")
+	conn = psycopg2.connect("dbname=ck2 user=charles password=frank", host="127.0.0.1")
 	conn.autocommit = False
 	cur = conn.cursor()
 

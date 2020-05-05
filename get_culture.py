@@ -1,7 +1,7 @@
 import io
 
 def get_culture(cur):
-    with io.open('00_cultures.txt',encoding="cp1252") as f:
+    with io.open('data/00_cultures.txt',encoding="cp1252") as f:
         #setup
         line = None
         #variable initialization

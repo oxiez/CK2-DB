@@ -7,7 +7,7 @@ dynasty_regex = {'^name':None,'^culture':None,'^religion':None}
 def get_dynasties(file,cur):
 	#read in historical dynasties first 
 	'''
-	with io.open('00_dynasties.txt',encoding="cp1252") as f:
+	with io.open('data/00_dynasties.txt',encoding="cp1252") as f:
 		obj = ck2_parser.getCK2Obj(f,dynasty_regex)  
 		while obj != None:
 			name = None
@@ -27,7 +27,7 @@ def get_dynasties(file,cur):
 			obj = ck2_parser.getCK2Obj(f,dynasty_regex)
 	'''
 	
-	with io.open('00_dynasties.txt',encoding="cp1252") as f:
+	with io.open('data/00_dynasties.txt',encoding="cp1252") as f:
 		line = ' '
 		while line:
 			#print(line)
