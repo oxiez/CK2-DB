@@ -5,8 +5,10 @@
 
 import datetime
 import ck2_parser as parser
-		 
-claim_regex = {"title" : None,
+
+claim_title_regex = {"^title" : None}
+
+claim_regex = {"title" : claim_title_regex,
 			   "pressed" : None,
 			   "weak" : None
 }
@@ -130,7 +132,8 @@ def get_chars(file, cur):
 
 		if(isinstance(obj.get("oh"), list)):
 			for title_id in (obj["oh"]):
-				cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
+				if title_id[1:-1] != '---':
+					cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
 		elif obj.get("oh"):
 			title_id = obj["oh"]
 			cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
@@ -147,19 +150,26 @@ def get_chars(file, cur):
 				cur.execute("INSERT INTO marriage Values(%s, %s)",
 							[id, obj["spouse"]])
 		
+
 		# Parse claims
 		if("claim" in obj):
 			if(isinstance(obj["claim"], list)):
-				for d in obj["claim"]:
+				for claim in obj["claim"]:
+					if(isinstance(claim.get("title"), dict)):
+						claim["title"] = claim["title"]["title"]
 					cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
-								[id, d.get("title"),
-								 "pressed" in d,
-								 "weak" in d])
+								[id, claim.get("title"),
+								 "pressed" in claim,
+								 "weak" in claim])
 			else:
+				claim = obj["claim"]
+				if(isinstance(claim.get("title"), dict)):
+						claim["title"] = claim["title"]["title"]
 				cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
 							[id,
-							 obj["claim"].get("title"),
-							 "pressed" in obj["claim"],
-							 "weak" in obj["claim"]])
+							 claim.get("title"),
+							 "pressed" in claim,
+							 "weak" in claim])
+
 
 		obj = parser.getCK2Obj(file, person_regex);
