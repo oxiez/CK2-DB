@@ -58,7 +58,7 @@ def get_dynasties(file,cur):
 				line = f.readline()
 			#add this dynasty to the table
 			#NOTE: dynastyID 1061019 corresponds to two dynasties!!! von Hanover and Tiversti
-			if dntID=='1061019' or dntID=='105946' or dntID=='1059971': continue
+			if dntID in ['1061019', '105946', '1059971', '1062442', '1062594']: continue
 			#print(dntID,name,cultureID,religionID)
 			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
 		
