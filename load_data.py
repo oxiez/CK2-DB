@@ -51,11 +51,11 @@ def load_data(filename):
 		get_religion.get_heresies(f, cur)
 		print('Getting provinces...')
 		get_provs.get_provs(f, cur)
-		print("Getting titles...")
-		get_titles.get_titles(f, cur)
 		# Handle case for no dlc?
 		print("Getting bloodlines...")
-		get_bloodline.get_bloodlines(f, cur)
+		get_bloodline.get_bloodlines(f, cur) # order matters because we don't rewind the file in each separate parser
+		print("Getting titles...")
+		get_titles.get_titles(f, cur)
 
 	# commit changes made and disconnect from database
 	conn.commit()
