@@ -17,12 +17,12 @@ def get_dynasties(file,cur):
 			if 'name' in obj:
 				name = obj['name']
 			if 'culture' in obj:
-				cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[obj['culture'].strip().strip('"')])
+				cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj['culture'].strip().strip('"')])
 				cultureID = cur.fetchone()[0]
 			if 'religion' in obj: 
-				cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[obj['religion'].strip().strip('"')])
+				cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj['religion'].strip().strip('"')])
 				religionID = cur.fetchone()[0]
-			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+			cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
 			print(dntID,name,cultureID,religionID)
 			obj = ck2_parser.getCK2Obj(f,dynasty_regex)
 	'''
@@ -50,17 +50,17 @@ def get_dynasties(file,cur):
 					if key=='name':
 						name = value
 					if key=='culture':
-						cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[value])
+						cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[value])
 						cultureID = cur.fetchone()[0]
 					if key=='religion' and religionID==None and '}' not in value:
-						cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[value])
+						cur.execute('SELECT religionID FROM religion WHERE religionName=?',[value])
 						religionID = cur.fetchone()[0]					
 				line = f.readline()
 			#add this dynasty to the table
 			#NOTE: dynastyID 1061019 corresponds to two dynasties!!! von Hanover and Tiversti
 			if dntID in ['1061019', '105946', '1059971', '1062442', '1062594']: continue
 			#print(dntID,name,cultureID,religionID)
-			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+			cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
 		
 	#read in the save game dynasties 
 	ck2_parser.jumpTo(file, "^dynasties=")
@@ -73,17 +73,17 @@ def get_dynasties(file,cur):
 		if 'name' in obj:
 			name = obj['name'].strip().strip('"')
 		if 'culture' in obj:
-			cur.execute('SELECT cultureID FROM culture WHERE cultureName=%s',[obj['culture'].strip().strip('"')])
+			cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj['culture'].strip().strip('"')])
 			cultureID = cur.fetchone()[0]
 		if 'religion' in obj: 
-			cur.execute('SELECT religionID FROM religion WHERE religionName=%s',[obj['religion'].strip().strip('"')])
+			cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj['religion'].strip().strip('"')])
 			religionID = cur.fetchone()[0]
-		cur.execute('SELECT COUNT(*) FROM dynasty WHERE dynastyID=%s',[dntID])
+		cur.execute('SELECT COUNT(*) FROM dynasty WHERE dynastyID=?',[dntID])
 		count = cur.fetchone()[0]
 		if count > 0:
-			if name != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[name])
-			if cultureID != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[cultureID])
-			if religionID != None: cur.execute('UPDATE dynasty SET dynastyname=%s WHERE dynastyID=%s',[religionID])
+			if name != None: cur.execute('UPDATE dynasty SET dynastyname=? WHERE dynastyID=?',[name])
+			if cultureID != None: cur.execute('UPDATE dynasty SET dynastyname=? WHERE dynastyID=?',[cultureID])
+			if religionID != None: cur.execute('UPDATE dynasty SET dynastyname=? WHERE dynastyID=?',[religionID])
 		else:
-			cur.execute('INSERT INTO dynasty Values(%s,%s,%s,%s)',[dntID,name,cultureID,religionID])
+			cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
 		obj = ck2_parser.getCK2Obj(file,dynasty_regex)

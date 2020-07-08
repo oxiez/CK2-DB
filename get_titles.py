@@ -32,7 +32,7 @@ def get_titles(file,cur):
 		if(isinstance(obj.get("de_jure_liege"), dict)):
 			obj["de_jure_liege"] = obj["de_jure_liege"]["base_title"]
 
-		cur.execute("INSERT INTO title VALUES(%s, %s, %s, %s, %s, %s)",
+		cur.execute("INSERT INTO title VALUES(?, ?, ?, ?, ?, ?)",
 					[obj.get("tag"),
 					 obj.get("holder"),
 					 name,
@@ -42,7 +42,7 @@ def get_titles(file,cur):
 		)
 
 		if(obj.get("holder")):
-			cur.execute("INSERT INTO rulers VALUES(%s, %s)",
+			cur.execute("INSERT INTO rulers VALUES(?, ?)",
 						[obj.get("holder"),
 						 obj.get("tag")]
 			)
@@ -64,7 +64,7 @@ def get_titles(file,cur):
 								continue
 							if (i > 0 and (hist[key][i].get("holder") == hist[key][i-1].get("holder"))):
 								continue
-							cur.execute("INSERT INTO titlehistory VALUES(%s, %s, %s)",
+							cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
 										[obj.get("tag"),
 										 holder,
 										 day])
@@ -75,7 +75,7 @@ def get_titles(file,cur):
 							continue
 						except TypeError: # If no holder tag
 							continue
-						cur.execute("INSERT INTO titlehistory VALUES(%s, %s, %s)",
+						cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
 									[obj.get("tag"),
 									 holder,
 									 day])

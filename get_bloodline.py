@@ -26,7 +26,7 @@ def get_bloodlines(file, cur):
 		elif line == '}':
 			if(num_brace == 2):
 				#print('pushing ' + str(birthName))
-				cur.execute('INSERT INTO BloodLines Values(%s, %s, %s)', [bloodline_ID, bloodline_name, founder_ID])
+				cur.execute('INSERT INTO BloodLines Values(?, ?, ?)', [bloodline_ID, bloodline_name, founder_ID])
 				founder_ID = None
 				bloodline_ID = None
 				bloodline_name = None
@@ -46,4 +46,4 @@ def get_bloodlines(file, cur):
 				founder_ID = int(line[6:])
 			elif line[0:7] == "member=":
 				holder_ID = line[7:]
-				cur.execute('INSERT INTO BloodLineMembers Values(%s,%s)',[holder_ID,bloodline_ID])
+				cur.execute('INSERT INTO BloodLineMembers Values(?,?)',[holder_ID,bloodline_ID])
