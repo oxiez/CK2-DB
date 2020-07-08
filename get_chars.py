@@ -61,11 +61,15 @@ def make_date(str):
 
 def get_cul_ID(cur,name):
 	cur.execute("SELECT cultureid FROM culture WHERE culturename=?",[name])
-	return cur.fetchone()
+	cultureID = cur.fetchone()
+	if cultureID!=None: cultureID=cultureID[0]
+	return cultureID
 
 def get_rel_ID(cur,name):
 	cur.execute("SELECT religionid FROM religion WHERE religionname=?",[name])
-	return cur.fetchone()
+	religionID = cur.fetchone()
+	if religionID!=None: religionID=religionID[0]
+	return religionID
 
 def get_chars(file, cur):
 	parser.jumpTo(file, "^character=")
