@@ -5,8 +5,10 @@
 
 import datetime
 import ck2_parser as parser
-		 
-claim_regex = {"title" : None,
+
+claim_title_regex = {"^title" : None}
+
+claim_regex = {"title" : claim_title_regex,
 			   "pressed" : None,
 			   "weak" : None
 }
@@ -58,12 +60,16 @@ def make_date(str):
 	return result_date
 
 def get_cul_ID(cur,name):
-	cur.execute("SELECT cultureid FROM culture WHERE culturename=%s",[name])
-	return cur.fetchone()
+	cur.execute("SELECT cultureid FROM culture WHERE culturename=?",[name])
+	cultureID = cur.fetchone()
+	if cultureID!=None: cultureID=cultureID[0]
+	return cultureID
 
 def get_rel_ID(cur,name):
-	cur.execute("SELECT religionid FROM religion WHERE religionname=%s",[name])
-	return cur.fetchone()
+	cur.execute("SELECT religionid FROM religion WHERE religionname=?",[name])
+	religionID = cur.fetchone()
+	if religionID!=None: religionID=religionID[0]
+	return religionID
 
 def get_chars(file, cur):
 	parser.jumpTo(file, "^character=")
@@ -111,16 +117,16 @@ def get_chars(file, cur):
 		#if religion or culture is missing, default to dynasty religion and culture
 		if obj.get('dnt')!=None:
 			if ('rel' not in obj):
-				cur.execute("SELECT religionID FROM dynasty WHERE dynastyID=%s",[obj.get('dnt')])
+				cur.execute("SELECT religionID FROM dynasty WHERE dynastyID=?",[obj.get('dnt')])
 				religionID = cur.fetchone()
 				if religionID!=None: religionID=religionID[0]
 			if ('cul' not in obj):
-				cur.execute("SELECT cultureID FROM dynasty WHERE dynastyID=%s",[obj.get('dnt')])
+				cur.execute("SELECT cultureID FROM dynasty WHERE dynastyID=?",[obj.get('dnt')])
 				cultureID = cur.fetchone()
 				if cultureID!=None: cultureID=cultureID[0]
 		
 		cur.execute(
-			'INSERT INTO Person Values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			'INSERT INTO Person Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[id, obj.get("bn"), obj.get("dnt"), isMale, obj.get("b_d"), obj.get("d_d"), obj.get("fat"),
 			 obj.get("rfat"), obj.get("mot"), religionID, cultureID, obj.get("fer"),
 			 obj.get("health"), obj.get("wealth"), obj.get("prs"), obj.get("piety"),
@@ -130,36 +136,44 @@ def get_chars(file, cur):
 
 		if(isinstance(obj.get("oh"), list)):
 			for title_id in (obj["oh"]):
-				cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
+				if title_id[1:-1] != '---':
+					cur.execute("INSERT INTO rulers VALUES(?, ?)", [id, title_id[1:-1]])
 		elif obj.get("oh"):
 			title_id = obj["oh"]
-			cur.execute("INSERT INTO rulers VALUES(%s, %s)", [id, title_id[1:-1]])
+			cur.execute("INSERT INTO rulers VALUES(?, ?)", [id, title_id[1:-1]])
 
 		for tr in traits:
-			cur.execute("INSERT INTO trait Values(%s, %s)", [id, int(tr)])
+			cur.execute("INSERT INTO trait Values(?, ?)", [id, int(tr)])
 
 		if("spouse" in obj):
 			if(isinstance(obj["spouse"], list)):
 				for s in obj["spouse"]:
-					cur.execute("INSERT INTO marriage Values(%s, %s)",
+					cur.execute("INSERT INTO marriage Values(?, ?)",
 								[id, s])
 			else:
-				cur.execute("INSERT INTO marriage Values(%s, %s)",
+				cur.execute("INSERT INTO marriage Values(?, ?)",
 							[id, obj["spouse"]])
 		
+
 		# Parse claims
 		if("claim" in obj):
 			if(isinstance(obj["claim"], list)):
-				for d in obj["claim"]:
-					cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
-								[id, d.get("title"),
-								 "pressed" in d,
-								 "weak" in d])
+				for claim in obj["claim"]:
+					if(isinstance(claim.get("title"), dict)):
+						claim["title"] = claim["title"]["title"]
+					cur.execute("INSERT INTO claim Values(?, ?, ?, ?)",
+								[id, claim.get("title"),
+								 "pressed" in claim,
+								 "weak" in claim])
 			else:
-				cur.execute("INSERT INTO claim Values(%s, %s, %s, %s)",
+				claim = obj["claim"]
+				if(isinstance(claim.get("title"), dict)):
+						claim["title"] = claim["title"]["title"]
+				cur.execute("INSERT INTO claim Values(?, ?, ?, ?)",
 							[id,
-							 obj["claim"].get("title"),
-							 "pressed" in obj["claim"],
-							 "weak" in obj["claim"]])
+							 claim.get("title"),
+							 "pressed" in claim,
+							 "weak" in claim])
+
 
 		obj = parser.getCK2Obj(file, person_regex);

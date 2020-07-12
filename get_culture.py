@@ -33,7 +33,7 @@ def get_culture(cur):
                         #make sure this isnt some other parameter
                         if not cul_name in ['male_names','female_names','color','alternate_start','graphical_cultures']:
                             # insert tuple<id, name,heresy,religiongroup>                          
-                            cur.execute('INSERT INTO culture Values(%s,%s,%s)',
+                            cur.execute('INSERT INTO culture Values(?,?,?)',
                                     [cul_id,cul_name,cul_group])
                             cul_id += 1
                 if '}' in line:

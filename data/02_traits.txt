@@ -1048,6 +1048,8 @@ architect = {
 	
 	stewardship = 2
 	martial = 1
+	wonder_build_cost_modifier = -0.03
+	wonder_build_time_modifier = -0.05
 	
 	command_modifier = {
 		siege = 0.2
@@ -7066,7 +7068,6 @@ zodiac_aquarius = {
 	monthly_character_prestige = 0.05
 
 	random = no	
-	religious = yes
 	opposite_opinion = -10
 	same_opinion = 5
 

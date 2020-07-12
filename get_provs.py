@@ -32,7 +32,7 @@ def get_provs(file, cur):
 		if(id not in province_id_dict):
 			province_id_dict[id] = None
 		
-		cur.execute("INSERT INTO province VALUES(%s,%s,%s,%s,%s)",
+		cur.execute("INSERT INTO province VALUES(?,?,?,?,?)",
 					[id,
 					 obj.get("name"),
 					 province_id_dict[id],
@@ -43,7 +43,7 @@ def get_provs(file, cur):
 		for key in obj.keys():
 			if(not re.match("._", key) == None):
 				name = key[2].upper() + key[3:len(key)]
-				cur.execute("INSERT INTO barony VALUES(%s, %s, %s)",
+				cur.execute("INSERT INTO barony VALUES(?, ?, ?)",
 							[name,
 							 id,
 							 obj[key]["type"]])

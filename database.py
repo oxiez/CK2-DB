@@ -18,7 +18,7 @@ class Data:
     #find a specific person by their personid
     def query_personid(self,ID):
         cur = self.conn.cursor()
-        cur.execute('SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,hostid,prestige,piety,employerid,martial,diplomacy,stewardship,intrigue,learning FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE personid=%s',[ID])
+        cur.execute('SELECT personid,birthname,dynastyname,ismale,birthday,deathday,fatherid,real_fatherid,motherid,religionname,culturename,fertility,health,wealth,hostid,prestige,piety,employerid,martial,diplomacy,stewardship,intrigue,learning FROM person NATURAL JOIN culture NATURAL JOIN religion LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid WHERE personid=?',[ID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -27,7 +27,7 @@ class Data:
     # 1) check arguments (done in application.py)
     # 2) WHERE true
     # 3) For Each arg
-    #   a) and ARG = / LIKE %s,
+    #   a) and ARG = / LIKE ?,
     #   b) add arg_val to list
     # 4) execute
     
@@ -44,11 +44,11 @@ class Data:
                 if a=='culture': a = 'culturename'
                 if a== 'religion': a= 'religionname'
                 arg_vals[i] = '%'+v+'%'
-                ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
+                ex_string = ex_string + ' AND ' + a + ' ILIKE ?'
             elif a in geq_args:
-                ex_string = ex_string + ' AND ' + a + ' >= %s'
+                ex_string = ex_string + ' AND ' + a + ' >= ?'
             else:
-                ex_string = ex_string + ' AND ' + a + '=%s'
+                ex_string = ex_string + ' AND ' + a + '=?'
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute(ex_string, arg_vals)
         result = cur.fetchall()
@@ -59,7 +59,7 @@ class Data:
     #query for getting the spouseIDs of a given person
     def query_spouse(self,personID):
         cur = self.conn.cursor()
-        cur.execute("SELECT spouseID FROM marriage WHERE personID=%s",[personID])
+        cur.execute("SELECT spouseID FROM marriage WHERE personID=?",[personID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -69,9 +69,9 @@ class Data:
     def query_dynastyid(self,ID,orderby='name'):
         cur = self.conn.cursor()
         if orderby=='name':
-            cur.execute("SELECT personid,birthname FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY birthname",[ID])
+            cur.execute("SELECT personid,birthname FROM person NATURAL JOIN dynasty WHERE dynastyid=? ORDER BY birthname",[ID])
         elif orderby in {'wealth','prestige','piety'}:
-            cur.execute('SELECT personid,birthname,'+orderby+' FROM person NATURAL JOIN dynasty WHERE dynastyid=%s ORDER BY '+orderby,[ID])
+            cur.execute('SELECT personid,birthname,'+orderby+' FROM person NATURAL JOIN dynasty WHERE dynastyid=? ORDER BY '+orderby,[ID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -108,7 +108,7 @@ class Data:
                 if a=='name': a = 'dynastyname'
                 else: a+='name'
                 arg_vals[i] = '%'+v+'%'
-                ex_string = ex_string + ' AND ' + a + ' ILIKE %s'
+                ex_string = ex_string + ' AND ' + a + ' ILIKE ?'
         #add the order by term
         if orderby in orderby_sum_vals:
             ex_string = ex_string + ' ORDER BY sum DESC'
@@ -173,9 +173,9 @@ class Data:
             """
             SELECT rlr.personid,birthname,dynastyname,name,rlr.titleid
             FROM (SELECT personid,birthname,dynastyname,titleid
-            FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=%s) ppl
+            FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=?) ppl
             LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN rulers)
-            rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=%s
+            rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=?
             """, [personID, personID])
         result = cur.fetchall()
         cur.close()
@@ -185,7 +185,7 @@ class Data:
     # query for getting the claims of someone
     def query_claim(self,personID):
         cur = self.conn.cursor()
-        cur.execute("SELECT titleid FROM claim WHERE personid=%s",[personID])
+        cur.execute("SELECT titleid FROM claim WHERE personid=?",[personID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -200,7 +200,7 @@ class Data:
             SELECT rul.holderid,birthname,dynastyname,birthday,deathday,succession
             FROM (SELECT personid AS holderid,titleid,birthname,dynastyname,birthday,deathday,succession
                 FROM titlehistory NATURAL JOIN person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid)
-            rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=%s
+            rul LEFT JOIN title ON title.titleid=rul.titleid WHERE title.titleid=?
             ORDER BY succession
             """
             ,[titleID])
@@ -212,7 +212,7 @@ class Data:
     #query returning the current ruler of a given title
     def query_ruler(self,titleID):
         cur = self.conn.cursor()
-        cur.execute('SELECT holderid,birthname,dynastyname FROM (SELECT personid AS holderid,birthname,dynastyname FROM person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) ppl NATURAL JOIN title WHERE titleid=%s',[titleID])
+        cur.execute('SELECT holderid,birthname,dynastyname FROM (SELECT personid AS holderid,birthname,dynastyname FROM person LEFT OUTER JOIN dynasty ON person.dynastyid=dynasty.dynastyid) ppl NATURAL JOIN title WHERE titleid=?',[titleID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -221,7 +221,7 @@ class Data:
     #returns a list of the direct vassals for a given title
     def query_direct_vassals(self,titleID):
         cur = self.conn.cursor()
-        cur.execute('SELECT titleid FROM title WHERE defactoleige=%s',[titleID])
+        cur.execute('SELECT titleid FROM title WHERE defactoleige=?',[titleID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -231,7 +231,7 @@ class Data:
     #query for getting all of the traits of a specific person
     def query_traits(self,personID):
         cur = self.conn.cursor()
-        cur.execute('SELECT traitname FROM person NATURAL JOIN trait NATURAL JOIN traitlookup WHERE personid=%s',[personID])
+        cur.execute('SELECT traitname FROM person NATURAL JOIN trait NATURAL JOIN traitlookup WHERE personid=?',[personID])
         result = cur.fetchall()
         cur.close()
         return result
@@ -240,7 +240,7 @@ class Data:
     #queries for getting bloodlines
     def query_bloodline_members(self, b_id):
         cur = self.conn.cursor()
-        cur.execute("SELECT birthname, dynastyname FROM person NATURAL JOIN dynasty NATURAL JOIN BloodLineMembers where bloodLineID = %s", [b_id])
+        cur.execute("SELECT birthname, dynastyname FROM person NATURAL JOIN dynasty NATURAL JOIN BloodLineMembers where bloodLineID = ?", [b_id])
         result = cur.fetchall()
         cur.close()
         return result
@@ -249,7 +249,7 @@ class Data:
     def query_bloodline(self, args, arg_vals):
         ex_string = "SELECT bloodlineID, bloodlineName, founderID FROM BloodLines WHERE TRUE"
         for i,(a,v) in enumerate(zip(args,arg_vals)):
-            ex_string = ex_string + ' AND ' + a + '=%s'
+            ex_string = ex_string + ' AND ' + a + '=?'
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute(ex_string, arg_vals)
         result = cur.fetchall()
@@ -258,7 +258,7 @@ class Data:
 
     def title_tree(self, titleid):
         cur = self.conn.cursor()
-        cur.execute("SELECT titleid, name, level FROM title WHERE titleid = %s", [titleid])
+        cur.execute("SELECT titleid, name, level FROM title WHERE titleid = ?", [titleid])
 
         tup = None
         if(cur.rowcount < 1):
@@ -272,7 +272,7 @@ class Data:
             t.level, t.defactoleige
             FROM title t LEFT JOIN person p ON t.holderid = p.personid 
             LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
-            WHERE t.defactoleige = %s
+            WHERE t.defactoleige = ?
             UNION
             SELECT t.titleid, CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, '')), t.name, 
             t.level, t.defactoleige
@@ -317,7 +317,7 @@ class Data:
                 """ SELECT personid, CONCAT(birthname, COALESCE( ' ' || dynastyname, ''))
                 FROM person LEFT JOIN dynasty ON person.dynastyid = dynasty.dynastyid
                 WHERE CONCAT(birthname, COALESCE( ' ' || dynastyname, ''))
-                ILIKE %s """, [person])
+                ILIKE ? """, [person])
             result = cur.fetchall()
             if(len(result) > 1 or len(result) == 0):
                 return result, None # Prompt user to choose person by id, and show choices
@@ -327,7 +327,7 @@ class Data:
             cur.execute(
                 """ SELECT personid, CONCAT(birthname, COALESCE( ' ' || dynastyname, '')) 
                 FROM person LEFT JOIN dynasty ON person.dynastyid = dynasty.dynastyid 
-                WHERE personid = %s """, [person])
+                WHERE personid = ? """, [person])
             result = cur.fetchone()
             if(result == None):
                 return [], None
@@ -344,7 +344,7 @@ class Data:
             LEFT JOIN person mot ON mot.personid = p.motherid LEFT JOIN dynasty mot_d ON mot.dynastyid = mot_d.dynastyid
             LEFT JOIN person dad ON dad.personid = p.real_fatherid LEFT JOIN dynasty dad_d ON dad.dynastyid = dad_d.dynastyid
             LEFT JOIN dynasty d ON p.dynastyid = d.dynastyid
-            WHERE (p.motherid = %s OR p.real_fatherid = %s)
+            WHERE (p.motherid = ? OR p.real_fatherid = ?)
             UNION
             SELECT p.personid,  CONCAT(p.birthname, COALESCE( ' ' || d.dynastyname, '' )), 
             p.motherid, CONCAT(mot.birthname, COALESCE( ' ' || mot_d.dynastyname, '' )), 

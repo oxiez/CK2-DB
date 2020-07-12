@@ -1,5 +1,3 @@
-
-import psycopg2
 import io
 import sys
 
@@ -12,15 +10,16 @@ import get_culture
 import get_traits
 import get_bloodline
 
+import sqlite3
+
 def load_data(filename):
 	# connect and get a cursor
-	conn = psycopg2.connect("dbname=ck2 user=charles password=frank", host="127.0.0.1")
-	conn.autocommit = False
+	conn = sqlite3.connect('ck2-db.db')
 	cur = conn.cursor()
 
 	# create the tables
 	with open("ck2_make_table.sql") as f:
-		cur.execute(f.read())
+		cur.executescript(f.read())
 
 	#read in religion and culture
 	print('Preloading religion...')
@@ -51,11 +50,11 @@ def load_data(filename):
 		get_religion.get_heresies(f, cur)
 		print('Getting provinces...')
 		get_provs.get_provs(f, cur)
-		print("Getting titles...")
-		get_titles.get_titles(f, cur)
 		# Handle case for no dlc?
 		print("Getting bloodlines...")
-		get_bloodline.get_bloodlines(f, cur)
+		get_bloodline.get_bloodlines(f, cur) # order matters because we don't rewind the file in each separate parser
+		print("Getting titles...")
+		get_titles.get_titles(f, cur)
 
 	# commit changes made and disconnect from database
 	conn.commit()

@@ -15,6 +15,6 @@ def add_traits(file,cur,trait_id):
             if line.find('=')!=-1 and line.find('{')!=-1 and line[0]!='\t':
                 name = line[0:line.find('=')-1]
                 if name.find('#')!=-1: continue
-                cur.execute('INSERT INTO traitlookup Values(%s,%s)',[trait_id,name])
+                cur.execute('INSERT INTO traitlookup Values(?,?)',[trait_id,name])
                 trait_id += 1
     return trait_id
