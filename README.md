@@ -1,41 +1,22 @@
-# Instructions
+# Usage
 
-You can download all of these files from (either)
+Run `load_data.py SAVE_FILE_NAME` to load the data from the specified save file. If no name is specified, `Leon1067_02_12.ck2` file is chosen by default.
+
+The data is placed into SQLite3 database file named `ck2-db.db`. You can use `sqlite3 ck2-db.db` to open it and run SQL queries by hand.
+
+The conversion should take around a minute.
+
+# Test Data
+
+You can download test data (example save files) from:
 - https://homepages.rpi.edu/~xieo/ck2_data.tar.gz
 - https://homepages.rpi.edu/~xieo/ck2_data.zip
 
-You can get the data from either one of them using
-
-`unzip ck2_data.zip`
-    or
-`tar -zxcf ck2_data.tar.gz`
-
-Both archives contain the following files:
-
-- `00_traits.txt`
-
-- `01_traits.txt`
-
-- `02_traits.txt`
-
-- `03_traits.txt`
-
-- `00_dynasties.txt`
-
-- `00_religions.txt`
-
-- `00_cultures.txt`
-
-- `province_id to county_id.txt`
+Both archives contain the following files (you can ignore the rest as it's outdated compared to what's integrated into the repo):
 
 - `Leon1067_02_12.ck2` - This is the standard dataset. Does not contain any bloodlines.
 
 - `Bloodlines.ck2` - Alternative dataset that contains bloodlines. This would need to be passed to the `load_data.py` as a parameter (i.e. `python3 load_data.py Bloodlines.ck2`)
-
-As superuser `postgres` in psql, run `ck2_setup.py` to create the ck2 database.
-This will also create the user `charles` with password `frank`.
-
-Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by default. You can optionally add the name of a different `.ck2` file to load into the database, as opposed to the default. This file should take around 60 seconds to run.
 
 # Relation Meanings
 
@@ -54,15 +35,17 @@ Now, run `load_data.py` to load the data from the `Leon1067_02_12.ck2` file by d
 | title					    | A table of tuples that describes a title (e.g. county of dorset, duchy of essex, kingdom of england, or empire of britannia) |
 | trait					    | A table that maps characters to traits |
 | traitlookup				| A table of tuples that describes a trait |
-# Basic Queries
 
-```pgsql
+
+# Example Queries
+
+```sql
 -- Query for getting all of the traits of noble people
 SELECT birthname, dynastyname, traitname 
 FROM person NATURAL JOIN dynasty NATURAL JOIN trait NATURAL JOIN traitlookup;
 ```
 
-```pgsql
+```sql
 -- Query for getting noble people and their titles.
 SELECT birthname, dynastyname, name as title, level
 FROM (
@@ -70,8 +53,9 @@ FROM (
  		FROM person NATURAL JOIN dynasty) ppl 
 NATURAL JOIN title;
 ```
+Bear in mind that natural join of `person` and `dynasty` tables will try to match not only dynastyID, but also cultureID and religionID, often resulting in less results than you'd expect.
 
-```pgsql
+```sql
 -- Query for the culture and religion for all living, noble people
 SELECT birthname, dynastyname, culturename, religionname
 FROM person NATURAL JOIN dynasty NATURAL JOIN culture NATURAL JOIN religion
