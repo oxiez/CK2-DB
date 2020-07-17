@@ -100,7 +100,7 @@ class Data:
         if orderby in orderby_sum_vals:
             ex_string = ex_string + "(SELECT dynastyid,SUM("+orderby+") AS sum FROM person WHERE "+orderby+" IS NOT NULL GROUP BY dynastyid) summation NATURAL JOIN "
         if orderby in orderby_count_vals:
-            ex_string = ex_string + "(SELECT dynastyid,COUNT(*) FROM person GROUP BY dynastyid) summation NATURAL JOIN "
+            ex_string = ex_string + "(SELECT dynastyid,COUNT(*) AS count FROM person GROUP BY dynastyid) summation NATURAL JOIN "
         ex_string = ex_string + 'dynasty NATURAL JOIN religion NATURAL JOIN culture WHERE 1'      
         for i,(a,v) in enumerate(zip(args,arg_vals)):
             if a in like_args:
@@ -134,13 +134,13 @@ class Data:
             cur.execute('SELECT religionname FROM religion ORDER BY religionname')
         #total member count
         elif orderby=='allmembers':
-            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) FROM person GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
+            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) AS count FROM person GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
         #living member count
         elif orderby=='alivemembers':
-            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) FROM person WHERE deathday IS NULL GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
+            cur.execute('SELECT religionname,count FROM (SELECT religionid,COUNT(*) AS count FROM person WHERE deathday IS NULL GROUP BY religionid) ppl NATURAL JOIN religion ORDER BY count DESC')
         #province count
         else:
-            cur.execute('SELECT religion,COUNT(*) FROM province GROUP BY religion ORDER BY count DESC')
+            cur.execute('SELECT religion,COUNT(*) AS count FROM province GROUP BY religion ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result        
@@ -154,13 +154,13 @@ class Data:
             cur.execute('SELECT culturename FROM culture ORDER BY culturename')
         #total member count
         elif orderby=='allmembers':
-            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')
+            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) AS count FROM person GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')
         #living member count
         elif orderby=='alivemembers':
-            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) FROM person WHERE deathday IS NULL GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')        
+            cur.execute('SELECT culturename,count FROM (SELECT cultureid,COUNT(*) AS count FROM person WHERE deathday IS NULL GROUP BY cultureid) ppl NATURAL JOIN culture ORDER BY count DESC')        
         #province count
         else:
-            cur.execute('SELECT culture,COUNT(*) FROM province GROUP BY culture ORDER BY count DESC')
+            cur.execute('SELECT culture,COUNT(*) AS count FROM province GROUP BY culture ORDER BY count DESC')
         result = cur.fetchall()
         cur.close()
         return result            
