@@ -259,12 +259,9 @@ class Data:
     def title_tree(self, titleid):
         cur = self.conn.cursor()
         cur.execute("SELECT titleid, name, level FROM title WHERE titleid = ?", [titleid])
-
-        tup = None
-        if(cur.rowcount < 1):
+        tup = cur.fetchone()
+        if(tup is None):
             return [], None # invalid titleid
-        else:
-            tup = cur.fetchone()
 
         cur.execute(
             """ WITH RECURSIVE vassal AS (
