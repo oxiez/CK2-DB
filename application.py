@@ -33,7 +33,7 @@ def tree_spacer(stack):
         else:
             print("    ", end="")
 
-help_string = """
+intro_string = """
 Welcome to the Crusader Kings 2 Database Project!
 ----------------------------------------------------------------------
 In this application, you can learn about the details of the world 
@@ -53,6 +53,27 @@ Type 'help' for all the commands you can insert. Type 'help <command>'
 for more information about a command. You can also exit the 
 application with 'quit'
 """
+
+help_string = """\
+
+Commands:
+ - dynasty <args>            [displays information on dynasties]
+ - title <args>              [displays information on titles]
+ - person <args>             [displays information on characters]
+ - bio <ID>                  [displays information on the character with the given ID]
+ - religion <arg>            [displays information on religions]
+ - culture <arg>             [displays information on cultures]
+ - bloodline <arg>           [displays information on bloodlines]
+ - bloodline_members <ID>    [displays characters with bloodline of ID]
+ - tree <cmd> <cmd args>     [displays various info in a tree-based format]
+ - help <command>            [displays this text, or with an argument, explains a command]
+ - num_results <NUM>         [changes the number of results displayed to NUM]
+ - load <FILENAME>           [loads a file]
+ - quit                      [exits the program]
+
+If you are confused about a command, type 'help <command>' for a more specific list of 
+things that command can do.\n"""
+
 
 # keys: command for help
 # values: string with associated information on how the command works
@@ -333,7 +354,7 @@ if __name__=='__main__':
         load_file(file_name,data)
     
     # main program loop (take commands until quitting)
-    print(help_string)
+    print(intro_string)
     command = ''
     query_result = []
     while command not in {'q','quit','exit'}:
@@ -344,23 +365,7 @@ if __name__=='__main__':
 
         if words[0] == 'help':
             if len(words)==1:
-                print('Commands:')
-                print(' - dynasty <args>            [displays information on dynasties]')
-                print(' - title <args>              [displays information on titles]')
-                print(' - person <args>             [displays information on characters]')
-                print(' - bio <ID>                  [displays information on the character with the given ID]')
-                print(' - religion <arg>            [displays information on religions]')
-                print(' - culture <arg>             [displays information on cultures]')
-                print(' - bloodline <arg>           [displays information on bloodlines]')
-                print(' - bloodline_members <ID>    [displays characters with bloodline of ID]')
-                print(' - tree <cmd> <cmd args>     [displays various info in a tree-based format]')
-                print(' - help <command>            [displays this text, or with an argument, explains a command]')
-                print(' - num_results <NUM>         [changes the number of results displayed to NUM]')
-                print(' - load <FILENAME>           [loads a file]')
-                print(' - quit                      [exits the program]')
-                print("""\
-If you\'re confused about a command, type \'help <command>\' for a more specific list of 
-things that command can do. """)
+                print(help_string)
             elif len(words) > 2:
                 print("Too many arguments. Try 'help' or 'help <arg>' for more information on a type of command.")
             else:
