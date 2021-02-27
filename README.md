@@ -20,21 +20,21 @@ Both archives contain the following files (you can ignore the rest as it's outda
 
 # Relation Meanings
 
-| Relation Name 			| Meaning |
+| Relation Name             | Meaning |
 | ------------------------- | ------- |
-| barony					| A table of tuples that describes a single city, castle, church, or other singular holding |
-| bloodlineowners			| A table that maps characters to bloodlines |
-| bloodlines				| A table of tuples that describes a bloodline by giving it a name and founder |
-| culture					| A table of tuples that describes a culture |
-| claim					    | A table that maps characters to titles they have claims on |
-| dynasty 				    | A table of tuples that describes a dynasty |
-| marriage				    | A table of tuples that describes a marriage between two characters   |
-| person					| A table of tuples that describes a character |
-| province				    | A table of tuples that describes a singular province (a section of land) |
-| religion				    | A table of tuples that describes a religion |
-| title					    | A table of tuples that describes a title (e.g. county of dorset, duchy of essex, kingdom of england, or empire of britannia) |
-| trait					    | A table that maps characters to traits |
-| traitlookup				| A table of tuples that describes a trait |
+| barony                    | A table of tuples that describes a single city, castle, church, or other singular holding |
+| bloodlineowners            | A table that maps characters to bloodlines |
+| bloodlines                | A table of tuples that describes a bloodline by giving it a name and founder |
+| culture                    | A table of tuples that describes a culture |
+| claim                        | A table that maps characters to titles they have claims on |
+| dynasty                     | A table of tuples that describes a dynasty |
+| marriage                    | A table of tuples that describes a marriage between two characters   |
+| person                    | A table of tuples that describes a character |
+| province                    | A table of tuples that describes a singular province (a section of land) |
+| religion                    | A table of tuples that describes a religion |
+| title                        | A table of tuples that describes a title (e.g. county of dorset, duchy of essex, kingdom of england, or empire of britannia) |
+| trait                        | A table that maps characters to traits |
+| traitlookup                | A table of tuples that describes a trait |
 
 
 # Example Queries
@@ -49,8 +49,8 @@ FROM person NATURAL JOIN dynasty NATURAL JOIN trait NATURAL JOIN traitlookup;
 -- Query for getting noble people and their titles.
 SELECT birthname, dynastyname, name as title, level
 FROM (
-  	SELECT personid AS holderid, birthname, dynastyname 
- 		FROM person NATURAL JOIN dynasty) ppl 
+      SELECT personid AS holderid, birthname, dynastyname 
+         FROM person NATURAL JOIN dynasty) ppl 
 NATURAL JOIN title;
 ```
 Bear in mind that natural join of `person` and `dynasty` tables will try to match not only dynastyID, but also cultureID and religionID, often resulting in less results than you'd expect.
