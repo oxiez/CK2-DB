@@ -42,9 +42,9 @@ def load_data(filename):
         print('Getting dynasties...')
         get_dynasties.get_dynasties(data['dynasties'], cur)
         print('Getting characters...')
-        get_chars.get_chars(data['character'],cur)
+        get_chars.get_chars(data['character'], cur)
         print('Getting religions...')
-        get_religion.get_heresies(f, cur)
+        get_religion.get_heresies(data['religion'], cur)
         print('Getting provinces...')
         get_provs.get_provs(f, cur)
         # Handle case for no dlc?

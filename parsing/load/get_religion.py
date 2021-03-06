@@ -44,37 +44,14 @@ def get_religion(cur):
                     brace_depth -= 1
 
 # finds religion={ in the main save file and determines which ones are heresies
-def get_heresies(file,cur):
-    line = file.readline()
-    line = line.strip()
-    while line!='religion=':
-        line = file.readline()
-        line = line.strip()
-    line = file.readline()
-    brace_depth = 1
-    rel_name = None
-    while brace_depth != 0:
-        line = file.readline()
-        line = line.strip()
-        if line=='{':
-            brace_depth += 1
-        elif line=='}':
-            brace_depth -= 1
-        #read in religion name
-        elif brace_depth==1:
-            rel_name = line[0:-1]
-        #read in religion parent
-        elif brace_depth==2:
-            index = line.find('=')
-            #parent attribute
-            if line[0:index]=='parent':
-                parent = line[index+1:]
-                parent = parent.strip('"')
-                heresy = True
-                if parent=='noreligion':
-                    heresy = False
-                cur.execute('UPDATE religion SET heresy=? WHERE religionname=?',
-                            [heresy,rel_name])
-                cur.execute('UPDATE religion SET parent=? WHERE religionname=?',
-                            [parent,rel_name])
+def get_heresies(data,cur):
+    for rel_name in data:
+        obj = data[rel_name]
+        if 'parent' in obj:
+            parent = obj.get('parent')
+            heresy = True
+            if parent=='noreligion':
+                heresy = False
+            cur.execute('UPDATE religion SET heresy=? WHERE religionname=?', [heresy, rel_name])
+            cur.execute('UPDATE religion SET parent=? WHERE religionname=?', [parent, rel_name])
             
