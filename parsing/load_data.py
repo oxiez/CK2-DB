@@ -42,7 +42,7 @@ def load_data(filename):
         print('Getting dynasties...')
         get_dynasties.get_dynasties(data['dynasties'], cur)
         print('Getting characters...')
-        get_chars.get_chars(f,cur)
+        get_chars.get_chars(data['character'],cur)
         print('Getting religions...')
         get_religion.get_heresies(f, cur)
         print('Getting provinces...')
