@@ -1,5 +1,4 @@
 import io
-from .ck2_parser import ck2_parser
 
 def get_dynasties(data, cur):
     #read in historical dynasties first 

@@ -35,23 +35,24 @@ def load_data(filename):
             quit()
 
     # parse the file and fill the tables with data
+    print('Parsing file...')
+    data = None
     with io.open(filename, encoding="cp1252") as f:
         data = parse(f.read())
 
-    with io.open(filename, encoding="cp1252") as f:
-        print('Getting dynasties...')
-        get_dynasties.get_dynasties(data['dynasties'], cur)
-        print('Getting characters...')
-        get_chars.get_chars(data['character'], cur)
-        print('Getting religions...')
-        get_religion.get_heresies(data['religion'], cur)
-        print('Getting provinces...')
-        get_provs.get_provs(data['provinces'], cur)
-        # Handle case for no dlc?
-        print("Getting bloodlines...")
-        get_bloodline.get_bloodlines(data['bloodline'], cur)
-        print("Getting titles...")
-        get_titles.get_titles(f, cur)
+    print('Loading dynasties...')
+    get_dynasties.get_dynasties(data['dynasties'], cur)
+    print('Loading characters...')
+    get_chars.get_chars(data['character'], cur)
+    print('Loading religions...')
+    get_religion.get_heresies(data['religion'], cur)
+    print('Loading provinces...')
+    get_provs.get_provs(data['provinces'], cur)
+    # Handle case for no dlc?
+    print("Loading bloodlines...")
+    get_bloodline.get_bloodlines(data['bloodline'], cur)
+    print("Loading titles...")
+    get_titles.get_titles(data['title'], cur)
 
     # commit changes made and disconnect from database
     conn.commit()
