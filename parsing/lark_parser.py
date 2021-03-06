@@ -109,7 +109,19 @@ def parse(save_string):
         def nothing(self,stuff):
             return dict()
     
-        dict = dict
+        def dict(self,pair_lst):
+            # sometimes ck2 files just re-use the same key (e.g. bloodline member=)
+            d = dict()
+            for k,v in pair_lst:
+                if k not in d:
+                    d[k] = v
+                else:
+                    if isinstance(d[k], list):
+                        d[k].append(v)
+                    else:
+                        d[k] = [d[k],v]
+            return d
+
         list = list
     
     l = Lark(ck2_grammar,parser="lalr",transformer=TreeToDict())

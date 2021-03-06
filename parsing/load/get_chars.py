@@ -122,11 +122,11 @@ def get_chars(data, cur):
 
         if(isinstance(obj.get("oh"), list)):
             for title_id in (obj["oh"]):
-                if title_id[1:-1] != '---':
-                    cur.execute("INSERT INTO rulers VALUES(?, ?)", [charID, title_id[1:-1]])
+                if title_id != '---':
+                    cur.execute("INSERT INTO rulers VALUES(?, ?)", [charID, title_id])
         elif obj.get("oh"):
             title_id = obj["oh"]
-            cur.execute("INSERT INTO rulers VALUES(?, ?)", [charID, title_id[1:-1]])
+            cur.execute("INSERT INTO rulers VALUES(?, ?)", [charID, title_id])
 
         for tr in traits:
             cur.execute("INSERT INTO trait Values(?, ?)", [charID, int(tr)])

@@ -23,6 +23,7 @@ def getCK2Obj(file, regex, ck2_obj_key = "tag"):
         raise Exception("ERROR: No statement found!")
 
     results = getAttr(file, regex, parsed)
+    print(results)
     results[ck2_obj_key] = pair[0].strip()
     
     return results

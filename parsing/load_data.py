@@ -49,7 +49,7 @@ def load_data(filename):
         get_provs.get_provs(data['provinces'], cur)
         # Handle case for no dlc?
         print("Getting bloodlines...")
-        get_bloodline.get_bloodlines(f, cur) # order matters because we don't rewind the file in each separate parser
+        get_bloodline.get_bloodlines(data['bloodline'], cur)
         print("Getting titles...")
         get_titles.get_titles(f, cur)
 

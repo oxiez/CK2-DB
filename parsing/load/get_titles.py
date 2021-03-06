@@ -19,6 +19,7 @@ title_regex = {"holder" : None,
                "^history" : history_regex}
 
 def get_titles(file,cur):
+    parser.jumpTo(file, "^bloodline=")
     parser.jumpTo(file, "^title=")
 
     obj = parser.getCK2Obj(file, title_regex)
