@@ -105,6 +105,9 @@ def parse(save_string):
     
         def objlist(self,stuff):
             return dict(stuff)
+
+        def nothing(self,stuff):
+            return dict()
     
         dict = dict
         list = list

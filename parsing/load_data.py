@@ -46,7 +46,7 @@ def load_data(filename):
         print('Getting religions...')
         get_religion.get_heresies(data['religion'], cur)
         print('Getting provinces...')
-        get_provs.get_provs(f, cur)
+        get_provs.get_provs(data['provinces'], cur)
         # Handle case for no dlc?
         print("Getting bloodlines...")
         get_bloodline.get_bloodlines(f, cur) # order matters because we don't rewind the file in each separate parser
