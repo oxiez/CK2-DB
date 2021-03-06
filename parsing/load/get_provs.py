@@ -1,7 +1,7 @@
 import io
 import re
 
-import ck2_parser as parser
+from .ck2_parser import ck2_parser as parser
 
 barony_regex = {"type" : None}
 

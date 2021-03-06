@@ -1,8 +1,8 @@
 import io
 import re
-from get_chars import make_date
+from .get_chars import make_date
 
-import ck2_parser as parser
+from .ck2_parser import ck2_parser as parser
 
 # odd_case where liege is a CK2 Obj (See c_auxerre)
 liege_regex = {"base_title" : None}

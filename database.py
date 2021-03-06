@@ -1,7 +1,7 @@
 import sqlite3
 import io
 import sys
-import load_data
+from parsing import load_data
 
 
 class Data:

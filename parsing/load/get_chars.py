@@ -4,7 +4,7 @@
          # INT intrigue, INT learning)
 
 import datetime
-import ck2_parser as parser
+from .ck2_parser import ck2_parser as parser
 
 claim_title_regex = {"^title" : None}
 

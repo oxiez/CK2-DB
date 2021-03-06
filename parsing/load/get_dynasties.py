@@ -1,5 +1,5 @@
 import io
-import ck2_parser
+from .ck2_parser import ck2_parser
 
 
 dynasty_regex = {'^name':None,'^culture':None,'^religion':None}

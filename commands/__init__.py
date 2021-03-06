@@ -1,8 +1,8 @@
 __all__ = [
+    "command",
     "bio_comm",
     "bloodline_comm",
     "bloodline_members_comm",
-    "command",
     "culture_comm",
     "dynasty_comm",
     "load_comm",

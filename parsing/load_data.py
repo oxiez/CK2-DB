@@ -1,20 +1,13 @@
 import io
 import sys
 
-import get_dynasties
-import get_chars
-import get_provs
-import get_titles
-import get_religion
-import get_culture
-import get_traits
-import get_bloodline
+from .load import *
 
 import sqlite3
 
 def load_data(filename):
     # connect and get a cursor
-    conn = sqlite3.connect('ck2-db.db')
+    conn = sqlite3.connect('../ck2-db.db')
     cur = conn.cursor()
 
     # create the tables
@@ -40,8 +33,13 @@ def load_data(filename):
             print("Unknown file type, exiting...")
             quit()
 
+    '''
     # parse the file and fill the tables with data
     with io.open(filename, encoding="cp1252") as f:
+        data = lark_parser.parse(f.read())
+    '''
+
+    with io.open(filename,encoding="cp1252") as f:
         print('Getting dynasties...')
         get_dynasties.get_dynasties(f, cur)
         print('Getting characters...')
