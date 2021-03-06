@@ -113,6 +113,6 @@ def parse(save_string):
     
     data = dict()
     for k in keywords:
-        data[k] = l.parse(substrings[k])
+        data[k] = l.parse(substrings[k])[1]
 
     return data 

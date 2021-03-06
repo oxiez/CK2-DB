@@ -2,6 +2,7 @@ import io
 import sys
 
 from .load import *
+from .lark_parser import parse
 
 import sqlite3
 
@@ -33,17 +34,15 @@ def load_data(filename):
             print("Unknown file type, exiting...")
             quit()
 
-    '''
     # parse the file and fill the tables with data
     with io.open(filename, encoding="cp1252") as f:
-        data = lark_parser.parse(f.read())
-    '''
+        data = parse(f.read())
 
-    with io.open(filename,encoding="cp1252") as f:
+    with io.open(filename, encoding="cp1252") as f:
         print('Getting dynasties...')
-        get_dynasties.get_dynasties(f, cur)
+        get_dynasties.get_dynasties(data['dynasties'], cur)
         print('Getting characters...')
-        get_chars.get_chars(f, cur)
+        get_chars.get_chars(f,cur)
         print('Getting religions...')
         get_religion.get_heresies(f, cur)
         print('Getting provinces...')

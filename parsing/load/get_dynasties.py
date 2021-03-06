@@ -1,32 +1,8 @@
 import io
 from .ck2_parser import ck2_parser
 
-
-dynasty_regex = {'^name':None,'^culture':None,'^religion':None}
-
-def get_dynasties(file,cur):
+def get_dynasties(data, cur):
     #read in historical dynasties first 
-    '''
-    with io.open('data/00_dynasties.txt',encoding="cp1252") as f:
-        obj = ck2_parser.getCK2Obj(f,dynasty_regex)  
-        while obj != None:
-            name = None
-            cultureID = None
-            religionID = None
-            dntID = obj.get('tag')
-            if 'name' in obj:
-                name = obj['name']
-            if 'culture' in obj:
-                cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj['culture'].strip().strip('"')])
-                cultureID = cur.fetchone()[0]
-            if 'religion' in obj: 
-                cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj['religion'].strip().strip('"')])
-                religionID = cur.fetchone()[0]
-            cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
-            print(dntID,name,cultureID,religionID)
-            obj = ck2_parser.getCK2Obj(f,dynasty_regex)
-    '''
-    
     with io.open('data/00_dynasties.txt',encoding="cp1252") as f:
         line = ' '
         while line:
@@ -63,20 +39,18 @@ def get_dynasties(file,cur):
             cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
         
     #read in the save game dynasties 
-    ck2_parser.jumpTo(file, "^dynasties=")
-    obj = ck2_parser.getCK2Obj(file, dynasty_regex)  
-    while obj != None:
+    for dntID in data:
         name = None
         cultureID = None
         religionID = None    
-        dntID = obj.get('tag')
+        obj = data[dntID]
         if 'name' in obj:
-            name = obj['name'].strip().strip('"')
+            name = obj['name']
         if 'culture' in obj:
-            cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj['culture'].strip().strip('"')])
+            cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj['culture']])
             cultureID = cur.fetchone()[0]
         if 'religion' in obj: 
-            cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj['religion'].strip().strip('"')])
+            cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj['religion']])
             religionID = cur.fetchone()[0]
         cur.execute('SELECT COUNT(*) FROM dynasty WHERE dynastyID=?',[dntID])
         count = cur.fetchone()[0]
@@ -86,4 +60,3 @@ def get_dynasties(file,cur):
             if religionID != None: cur.execute('UPDATE dynasty SET dynastyname=? WHERE dynastyID=?',[religionID])
         else:
             cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
-        obj = ck2_parser.getCK2Obj(file,dynasty_regex)
