@@ -2,20 +2,6 @@ import io
 import re
 from .get_chars import make_date
 
-# odd_case where liege is a CK2 Obj (See c_auxerre)
-liege_regex = {"base_title" : None}
-de_jure_liege_regex = {"base_title" : None}
-
-hist_sub_regex = {"^holder" : None}
-
-history_regex = {"^\d+\.\d+\.\d+" : hist_sub_regex}
-
-#level_id
-title_regex = {"holder" : None,
-               "^liege" : liege_regex, # Defacto Liege
-               "de_jure_liege" : de_jure_liege_regex,
-               "^history" : history_regex}
-
 def get_titles(data,cur):
     for title in data:
         obj = data[title]

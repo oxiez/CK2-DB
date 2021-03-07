@@ -5,38 +5,6 @@
 
 import datetime
 
-claim_title_regex = {"^title" : None}
-
-claim_regex = {"title" : claim_title_regex,
-               "pressed" : None,
-               "weak" : None
-}
-
-person_regex = {"^bn" : None,
-                "^dnt" : None,
-                "^fem" : None,
-                "^b_d" : None,
-                "^d_d" : None,
-                "^fat" : None, # The default for rfat if none specificed
-                "^rfat" : None,
-                "^mot" : None,
-                "^spouse" : None,
-                "^rel" : None,
-                "^cul" : None,
-                "^fer" : None,
-                "^health" : None,
-                "^wealth" : None,
-                "^prs" : None,
-                "^piety" : None,
-                "^emp" : None,
-                "^host" : None,
-                "^oh" : None,
-                "^att" : None, # This needs to be broken up manually
-                "^tr" : None, # This needs to be broken up manually
-                "^claim" : claim_regex # Repeated
-}
-
-
 def make_date(str):
     dt_arr = str.split('.')
     year = int(dt_arr[0])
@@ -64,7 +32,7 @@ def get_chars(data, cur):
         religionID = None
         cultureID = None
         isMale = True
-        attributes = {}
+        attributes = []
         traits = []
         
         # Integer conversions and list truncation
@@ -97,7 +65,6 @@ def get_chars(data, cur):
 
         if("rel" in obj): religionID = get_rel_ID(cur,obj["rel"])
         if("cul" in obj): cultureID = get_cul_ID(cur,obj["cul"])
-        if("bn" in obj): obj["bn"] = obj["bn"]
         if("b_d" in obj): obj["b_d"] = make_date(obj["b_d"])
         if("d_d" in obj): obj["d_d"] = make_date(obj["d_d"])
         if("fem" in obj): isMale = False
@@ -140,8 +107,6 @@ def get_chars(data, cur):
                 cur.execute("INSERT INTO marriage Values(?, ?)",
                             [charID, obj["spouse"]])
         
-
-        # Parse claims
         if("claim" in obj):
             if(isinstance(obj["claim"], list)):
                 for claim in obj["claim"]:

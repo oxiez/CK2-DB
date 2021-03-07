@@ -60,10 +60,3 @@ def load_data(filename):
     conn.close()
     
     print("All done!")
-
-
-if __name__=='__main__':
-    file_name = "Leon1067_02_12.ck2"
-    if len(sys.argv) > 1:
-        file_name = sys.argv[1]
-    load_data(file_name)

@@ -29,4 +29,5 @@ def get_provs(data, cur):
                 cur.execute("INSERT INTO barony VALUES(?, ?, ?)",
                             [name,
                              provID,
-                             obj[key]["type"]])
+                             obj[key]["type"]]
+                )

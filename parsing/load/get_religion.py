@@ -43,7 +43,7 @@ def get_religion(cur):
                 if '}' in line:
                     brace_depth -= 1
 
-# finds religion={ in the main save file and determines which ones are heresies
+# determines which religions are heresies according to the main save file
 def get_heresies(data,cur):
     for rel_name in data:
         obj = data[rel_name]
