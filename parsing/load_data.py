@@ -2,7 +2,7 @@ import io
 import sys
 
 from .load import *
-from .lark_parser import parse
+from .lark_parser import parse_save
 
 import sqlite3
 
@@ -38,7 +38,7 @@ def load_data(filename):
     print('Parsing file...')
     data = None
     with io.open(filename, encoding="cp1252") as f:
-        data = parse(f.read())
+        data = parse_save(f.read())
 
     print('Loading dynasties...')
     get_dynasties.get_dynasties(data['dynasties'], cur)
