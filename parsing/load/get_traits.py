@@ -1,20 +1,16 @@
 import io
+from ..lark_parser import parse
 
 def get_traits(cur):
     trait_files = ['data/00_traits.txt', 'data/01_traits.txt',
                    'data/02_traits.txt', 'data/03_traits.txt']
     trait_id = 1
-    for file in trait_files:
-        trait_id = add_traits(file,cur,trait_id)
-
-
-def add_traits(file,cur,trait_id):
-    #open the file and add traits to the traitlookup relation
-    with io.open(file,encoding="cp1252") as f:
-        for line in f.readlines():
-            if line.find('=')!=-1 and line.find('{')!=-1 and line[0]!='\t':
-                name = line[0:line.find('=')-1]
-                if name.find('#')!=-1: continue
-                cur.execute('INSERT INTO traitlookup Values(?,?)',[trait_id,name])
+    for t_file in trait_files:
+        with io.open(t_file,encoding="cp1252") as f:
+            data = parse(f.read())
+            # if a traits file has only one trait, it comes back as a tuple (trait_name, trait_data_dict)
+            if isinstance(data,tuple):
+                data = [data[0]]
+            for trait_name in data:
+                cur.execute('INSERT INTO traitlookup Values(?,?)',[trait_id,trait_name])
                 trait_id += 1
-    return trait_id
