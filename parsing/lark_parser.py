@@ -7,9 +7,9 @@ ck2_grammar = """
 
     _w: WS*
 
-    ?var: /[A-Za-z0-9_.\-\w\'’\/\,·§\!]+/    -> var_var
+    ?var: /[^\\{ \\} \\[ \\] = < > # " \\t \\n \\ ]+/    -> var_var
 
-    ?esc_var: "\\"" (var | " " | " ")* "\\""
+    ?esc_var: "\\"" [/[^"]+/] "\\""
 
     ?val: "{" _w a+ "}"         -> dict
         | "{" _w objlist "}"
