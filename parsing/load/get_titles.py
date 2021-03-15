@@ -1,30 +1,12 @@
 import io
 import re
-from get_chars import make_date
+from .get_chars import make_date
 
-import ck2_parser as parser
-
-# odd_case where liege is a CK2 Obj (See c_auxerre)
-liege_regex = {"base_title" : None}
-de_jure_liege_regex = {"base_title" : None}
-
-hist_sub_regex = {"^holder" : None}
-
-history_regex = {"^\d+\.\d+\.\d+" : hist_sub_regex}
-
-#level_id
-title_regex = {"holder" : None,
-               "^liege" : liege_regex, # Defacto Liege
-               "de_jure_liege" : de_jure_liege_regex,
-               "^history" : history_regex}
-
-def get_titles(file,cur):
-    parser.jumpTo(file, "^title=")
-
-    obj = parser.getCK2Obj(file, title_regex)
-    while(not obj == None):
-        level = obj.get("tag")[0]
-        name = obj.get("tag")[2:]
+def get_titles(data,cur):
+    for title in data:
+        obj = data[title]
+        level = title[0]
+        name = title[2:]
         
         if(isinstance(obj.get("liege"), dict)):
             obj["liege"] = obj["liege"]["base_title"] # liege id
@@ -33,7 +15,7 @@ def get_titles(file,cur):
             obj["de_jure_liege"] = obj["de_jure_liege"]["base_title"]
 
         cur.execute("INSERT INTO title VALUES(?, ?, ?, ?, ?, ?)",
-                    [obj.get("tag"),
+                    [title,
                      obj.get("holder"),
                      name,
                      level,
@@ -65,7 +47,7 @@ def get_titles(file,cur):
                             if (i > 0 and (hist[key][i].get("holder") == hist[key][i-1].get("holder"))):
                                 continue
                             cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
-                                        [obj.get("tag"),
+                                        [title,
                                          holder,
                                          day])
                     else:
@@ -76,8 +58,7 @@ def get_titles(file,cur):
                         except TypeError: # If no holder tag
                             continue
                         cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
-                                    [obj.get("tag"),
+                                    [title,
                                      holder,
                                      day])
                     
-        obj = parser.getCK2Obj(file, title_regex)

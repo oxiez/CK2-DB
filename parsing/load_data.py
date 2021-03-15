@@ -1,20 +1,14 @@
 import io
 import sys
 
-import get_dynasties
-import get_chars
-import get_provs
-import get_titles
-import get_religion
-import get_culture
-import get_traits
-import get_bloodline
+from .load import *
+from .lark_parser import parse_save
 
 import sqlite3
 
 def load_data(filename):
     # connect and get a cursor
-    conn = sqlite3.connect('ck2-db.db')
+    conn = sqlite3.connect('../ck2-db.db')
     cur = conn.cursor()
 
     # create the tables
@@ -41,20 +35,24 @@ def load_data(filename):
             quit()
 
     # parse the file and fill the tables with data
+    print('Parsing file...')
+    data = None
     with io.open(filename, encoding="cp1252") as f:
-        print('Getting dynasties...')
-        get_dynasties.get_dynasties(f, cur)
-        print('Getting characters...')
-        get_chars.get_chars(f, cur)
-        print('Getting religions...')
-        get_religion.get_heresies(f, cur)
-        print('Getting provinces...')
-        get_provs.get_provs(f, cur)
-        # Handle case for no dlc?
-        print("Getting bloodlines...")
-        get_bloodline.get_bloodlines(f, cur) # order matters because we don't rewind the file in each separate parser
-        print("Getting titles...")
-        get_titles.get_titles(f, cur)
+        data = parse_save(f.read())
+
+    print('Loading dynasties...')
+    get_dynasties.get_dynasties(data['dynasties'], cur)
+    print('Loading characters...')
+    get_chars.get_chars(data['character'], cur)
+    print('Loading religions...')
+    get_religion.get_heresies(data['religion'], cur)
+    print('Loading provinces...')
+    get_provs.get_provs(data['provinces'], cur)
+    # Handle case for no dlc?
+    print("Loading bloodlines...")
+    get_bloodline.get_bloodlines(data['bloodline'], cur)
+    print("Loading titles...")
+    get_titles.get_titles(data['title'], cur)
 
     # commit changes made and disconnect from database
     conn.commit()
@@ -62,10 +60,3 @@ def load_data(filename):
     conn.close()
     
     print("All done!")
-
-
-if __name__=='__main__':
-    file_name = "Leon1067_02_12.ck2"
-    if len(sys.argv) > 1:
-        file_name = sys.argv[1]
-    load_data(file_name)
