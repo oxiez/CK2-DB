@@ -61,7 +61,7 @@ Specifically, the 'bio' command displays:
             #titles
             titles = data.query_title(personid)
             if len(titles)!=0:
-                print('Titles: ' + ', '.join([x[4] for x in titles]))
+                print('Titles: ' + ', '.join([x[0] for x in titles]))
             #claims
             claims = data.query_claim(personid)
             if len(claims)!=0:
