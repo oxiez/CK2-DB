@@ -35,7 +35,7 @@ def load_data(filename):
             quit()
 
     # parse the file and fill the tables with data
-    print('Parsing file...')
+    print('Parsing file- this may take a minute...')
     data = None
     with io.open(filename, encoding="cp1252") as f:
         data = parse_save(f.read())
@@ -48,9 +48,12 @@ def load_data(filename):
     get_religion.get_heresies(data['religion'], cur)
     print('Loading provinces...')
     get_provs.get_provs(data['provinces'], cur)
-    # Handle case for no dlc?
-    print("Loading bloodlines...")
-    get_bloodline.get_bloodlines(data['bloodline'], cur)
+    # Not all save files have bloodlines (part of Holy Fury DLC)
+    if 'bloodline' in data:
+        print("Loading bloodlines...")
+        get_bloodline.get_bloodlines(data['bloodline'], cur)
+    else:
+        print("No bloodlines found in save, continuing...")
     print("Loading titles...")
     get_titles.get_titles(data['title'], cur)
 
