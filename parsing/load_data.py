@@ -8,7 +8,7 @@ import sqlite3
 
 def load_data(filename):
     # connect and get a cursor
-    conn = sqlite3.connect('../ck2-db.db')
+    conn = sqlite3.connect('./ck2-db.db')
     cur = conn.cursor()
 
     # create the tables
