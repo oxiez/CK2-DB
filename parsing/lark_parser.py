@@ -1,4 +1,5 @@
 from lark import Lark, Transformer
+from multiprocessing import Pool
 
 ck2_grammar = """
     ?start: a+
@@ -72,13 +73,15 @@ class TreeToDict(Transformer):
     list = list
 
 parser = Lark(ck2_grammar,parser="lalr",transformer=TreeToDict())
+def parse_string(string):
+    return parser.parse(string)
 
 def parse(save_string, keywords=None):
     # preprocessing
     # if { ... } is a list of primitives, rewrite it as [ ... ]
     # if keywords is specified, only parse the top-level assignments we care about
     processed_string = [c for c in save_string]
-    substrings = dict()
+    substrings = dict() # maps top-level keywords to their relevant substrings of the file
 
     stack = []
     skip = False
@@ -128,9 +131,12 @@ def parse(save_string, keywords=None):
                 processed_string[end] = ']'
             if len(stack)==0 and key is not None and (keywords is None or key in keywords): #and (str(key) not in blacklist):
                 substrings[key] = key+"="+"".join(processed_string[start:end+1])
-
-    data = parser.parse("".join(substrings.values()))
-    return data 
+    
+    # take advantage of multiprocessing and parse in parallel
+    parsed_vals = None
+    with Pool() as p:
+        parsed_vals = p.map(parse_string, substrings.values())
+    return dict(parsed_vals) 
 
 # returns a dictionary representing the relevant sections of the save file
 def parse_save(save_string):
