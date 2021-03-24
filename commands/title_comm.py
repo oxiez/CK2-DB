@@ -44,7 +44,7 @@ Examples:                                             e.g.
         # title id returns all titles of the given personid
         elif len(args)==1:
             query_result = data.query_title(args[0])
-            headings = ['Person ID', 'Name', 'Dynasty', 'Title Name', 'Title ID']
+            headings = ['Title ID']
         # we are looking for personID(s) given a certain title
         elif len(args)==2:
             #rulers

@@ -171,12 +171,8 @@ class Data:
         cur = self.conn.cursor()
         cur.execute(
             """
-            SELECT rlr.personid,birthname,dynastyname,name,rlr.titleid
-            FROM (SELECT personid,birthname,dynastyname,titleid
-            FROM (SELECT personid AS holderid,birthname,dynastyid FROM person WHERE personid=?) ppl
-            LEFT OUTER JOIN dynasty ON ppl.dynastyid=dynasty.dynastyid NATURAL JOIN rulers)
-            rlr LEFT OUTER JOIN title ON rlr.titleID=title.titleID WHERE personid=?
-            """, [personID, personID])
+            SELECT titleID FROM title where holderID=?
+            """, (personID,))
         result = cur.fetchall()
         cur.close()
         return result
