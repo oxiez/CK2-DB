@@ -1,43 +1,29 @@
 import io
+from ..lark_parser import parse
 
-def get_dynasties(data, cur):
-    #read in historical dynasties first 
+#read in historical dynasties first 
+def get_hist_dynasties(cur):
     with io.open('data/00_dynasties.txt',encoding="cp1252") as f:
-        line = ' '
-        while line:
-            #print(line)
-            line = f.readline()
-            if len(line)==0: break
-            if line == '\n' or line[0]=='#': continue
-            dntID = line[0:line.find('=')].strip()
-            line = f.readline()
-            name = None
+        data = parse(f.read())
+        for dntID in data:
+            obj = data.get(dntID)
+            # NOTE: some dynasties have duplicate dynastyIDs e.g.  1061019, 1061019, 105946, 1059971, 1062442, 1062594
+            # handle collisions by using the dynasty object furthest down the file
+            if isinstance(obj,list):
+                obj = obj[-1]
+            name = obj.get('name')
             cultureID = None
             religionID = None
-            while line != '}\n' and line != '}':
-                line = line.strip()
-                index = line.find('=')
-                if index != -1:
-                    key = line[0:index].strip()
-                    value = line[index+1:]
-                    if '#' in value: value = value[0:value.index('#')]
-                    value = value.strip().strip('"').rstrip().rstrip('"')
-                    if key=='name':
-                        name = value
-                    if key=='culture':
-                        cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[value])
-                        cultureID = cur.fetchone()[0]
-                    if key=='religion' and religionID==None and '}' not in value:
-                        cur.execute('SELECT religionID FROM religion WHERE religionName=?',[value])
-                        religionID = cur.fetchone()[0]                    
-                line = f.readline()
-            #add this dynasty to the table
-            #NOTE: dynastyID 1061019 corresponds to two dynasties!!! von Hanover and Tiversti
-            if dntID in ['1061019', '105946', '1059971', '1062442', '1062594']: continue
-            #print(dntID,name,cultureID,religionID)
+            if 'culture' in obj:
+                cur.execute('SELECT cultureID FROM culture WHERE cultureName=?',[obj.get('culture')])
+                cultureID = cur.fetchone()[0]
+            if 'religion' in obj:
+                cur.execute('SELECT religionID FROM religion WHERE religionName=?',[obj.get('religion')])
+                religionID = cur.fetchone()[0]                    
             cur.execute('INSERT INTO dynasty Values(?,?,?,?)',[dntID,name,cultureID,religionID])
         
-    #read in the save game dynasties 
+#read in the save game dynasties 
+def get_dynasties(data, cur):
     for dntID in data:
         name = None
         cultureID = None

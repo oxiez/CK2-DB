@@ -15,13 +15,15 @@ def load_data(filename):
     with open("ck2_make_table.sql") as f:
         cur.executescript(f.read())
 
-    #read in religion and culture
+    # preload default game files
     print('Preloading religion...')
     get_religion.get_religion(cur)
     print('Preloading culture...')
     get_culture.get_culture(cur)
     print('Preloading traits...')
     get_traits.get_traits(cur)
+    print('Preloading historical dynasties...')
+    get_dynasties.get_hist_dynasties(cur)
 
     with io.open(filename, "rb") as f:
         label = f.read(2) # Get byte object
