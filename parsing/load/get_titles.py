@@ -30,35 +30,20 @@ def get_titles(data,cur):
             )
         
         hist = obj.get("history")
-        if(not hist == None):
-            for key in hist.keys():
-                if(not re.match("^\d+\.\d+\.\d+", key) == None):
-                    day = make_date(key)
-                    holder = None
-                    # There's an odd case for c_modena (but also many more)
-                    if(isinstance(hist[key], list)):
-                        for i in range(len(hist[key])):
-                            try:
-                                holder = int(hist[key][i].get("holder"))
-                            except ValueError: # If holder tag is something like "0"
-                                continue
-                            except TypeError: # If no holder tag
-                                continue
-                            if (i > 0 and (hist[key][i].get("holder") == hist[key][i-1].get("holder"))):
-                                continue
-                            cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
-                                        [title,
-                                         holder,
-                                         day])
-                    else:
-                        try:
-                            holder = int(hist[key].get("holder"))
-                        except ValueError: # If holder tag is something like "0"
-                            continue
-                        except TypeError: # If no holder tag
-                            continue
-                        cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
-                                    [title,
-                                     holder,
-                                     day])
-                    
+        if hist is not None:
+            for date in hist:
+                holder = hist.get(date)
+                # sometimes succession entries are listed twice
+                if isinstance(holder,list):
+                    holder = holder[-1]
+                holder = holder.get('holder')
+                # sometimes two people inherit on the same day
+                # probably a ruler receiving a title then granting it away on the same day
+                if isinstance(holder,list):
+                    holder = holder[-1]
+                # somtimes the holder information comes with info on how they inherited
+                if isinstance(holder,dict):
+                    holder = holder.get('who')
+                # case where title goes out of existence: holder == "0"
+                cur.execute("INSERT INTO titlehistory VALUES(?, ?, ?)",
+                            [title, holder, make_date(date)])
