@@ -1,6 +1,8 @@
 from lark import Lark, Transformer
 from multiprocessing import Pool
 
+import re
+
 ck2_grammar = """
     ?start: a+
 
@@ -76,69 +78,51 @@ parser = Lark(ck2_grammar,parser="lalr",transformer=TreeToDict())
 def parse_string(string):
     return parser.parse(string)
 
-def parse(save_string, keywords=None):
-    # preprocessing
-    # if { ... } is a list of primitives, rewrite it as [ ... ]
-    # if keywords is specified, only parse the top-level assignments we care about
-    processed_string = [c for c in save_string]
-    substrings = dict() # maps top-level keywords to their relevant substrings of the file
+list_re = r'''{\s*([^{}\[\]=<>#"\t\n ]+|"[^"]*")(\s+([^{}\[\]=<>#"\t\n ]+|"[^"]*"))*\s*}'''
+bracket_prog = re.compile(list_re)
+comment_re = r'''#.+\n'''
+comment_prog = re.compile(comment_re)
 
-    stack = []
-    skip = False
-    comment = False
-    for i,c in enumerate(save_string):
-        if c == '#':
-            comment = True
+# delete comments, replace lists { ... } as [ ... ] so our lalr grammar is well-defined
+def preprocess(save_string):
+    return bracket_prog.sub(
+            lambda matchobj: "["+matchobj.group(0)[1:-1]+"]",
+            comment_prog.sub(lambda x: "\n", save_string)
+    )
 
-        if comment:
-            if c == '\n':
-                comment = False
-            continue
-
+# given an assignment list, extract out only the top-level assignments of interest
+def extract_key_strings(save_string,keywords):
+    substrings = []
+    depth = 0
+    kstart = 0
+    key = ""
+    for i,c in enumerate(save_string): 
         if c == '{':
-            key = None
-            if len(stack) == 0:
+            if depth == 0:
+                key = None
                 kend = i
                 while not save_string[kend].isalnum(): kend -= 1
                 kstart = kend
                 while save_string[kstart].isalnum() or save_string[kstart] == '_': kstart -= 1
                 kstart += 1
                 key = save_string[kstart:kend+1]
-            stack.append((key,i))
-            skip = False
-
+            depth += 1
         if c == '}':
-            if len(stack) == 0:
-                break
-            key, start = stack.pop()
-            end = i
-            if skip:
-                continue
-            substr = save_string[start+1:end]
-            lst = substr.split()
-            # empty object
-            if len(lst) == 0:
-                skip = True
-                continue
-            # list of non-assignments
-            flag = True
-            for token in lst:
-                if '=' in token:
-                    flag = False
-                    break
-            if flag: # the object { ... } is really a list
-                processed_string[start] = '['
-                processed_string[end] = ']'
-            if len(stack)==0 and key is not None and (keywords is None or key in keywords): #and (str(key) not in blacklist):
-                substrings[key] = key+"="+"".join(processed_string[start:end+1])
-    
-    # take advantage of multiprocessing and parse in parallel
-    parsed_vals = None
-    with Pool() as p:
-        parsed_vals = p.map(parse_string, substrings.values())
-    return dict(parsed_vals) 
+            depth -= 1 
+            if depth == 0 and key in keywords:
+                substrings.append(save_string[kstart:i+1])
+    return substrings
+
+def parse(save_string):
+    return parse_string(preprocess(save_string))
 
 # returns a dictionary representing the relevant sections of the save file
 def parse_save(save_string):
-    keys = ["dynasties", "character", "religion", "provinces", "bloodline", "title"]
-    return parse(save_string, keywords=keys)
+    string = save_string[8:save_string.rfind("}")]
+    string = preprocess(string)
+    strings = extract_key_strings(string, keywords=["dynasties", "character", "religion", "provinces", "bloodline", "title"])
+    parsed_vals = None
+    # take advantage of multiprocessing and parse in parallel
+    with Pool() as p:
+        parsed_vals = p.map(parse_string, strings)
+    return dict(parsed_vals) 
