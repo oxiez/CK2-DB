@@ -75,7 +75,7 @@ class TreeToDict(Transformer):
     list = list
 
 parser = Lark(ck2_grammar,parser="lalr",transformer=TreeToDict())
-def parse_string(string):
+def lark_parse(string):
     return parser.parse(string)
 
 list_re = r'''{\s*([^{}\[\]=<>#"\t\n ]+|"[^"]*")(\s+([^{}\[\]=<>#"\t\n ]+|"[^"]*"))*\s*}'''
@@ -114,15 +114,44 @@ def extract_key_strings(save_string,keywords):
     return substrings
 
 def parse(save_string):
-    return parse_string(preprocess(save_string))
+    return lark_parse(preprocess(save_string))
+
+def parse_character(character_string):
+    chunks = []
+    depth = 0
+    kstart = 0
+    # parallelize the parsing of individual characters
+    # we can do this because we know that characterID is actually a unique identifier
+    for i,c in enumerate(character_string): 
+        if c == '{':
+            if depth == 1:
+                kend = i
+                while not character_string[kend].isalnum(): kend -= 1
+                kstart = kend
+                while character_string[kstart].isalnum() or character_string[kstart] == '_': kstart -= 1
+                kstart += 1
+            depth += 1
+        if c == '}':
+            depth -= 1 
+            if depth == 1:
+                chunks.append(character_string[kstart:i+1])
+    parsed_chunks = None
+    with Pool() as p:
+        parsed_chunks = p.map(lark_parse, chunks)
+    res =  ('character', dict(parsed_chunks))
+    return res
 
 # returns a dictionary representing the relevant sections of the save file
 def parse_save(save_string):
-    string = save_string[8:save_string.rfind("}")]
-    string = preprocess(string)
-    strings = extract_key_strings(string, keywords=["dynasties", "character", "religion", "provinces", "bloodline", "title"])
-    parsed_vals = None
+    strings = extract_key_strings(
+            preprocess(save_string[8:save_string.rfind("}")]), # save data starts with "CK2txt" and ends with the trailing '''}\nchecksum="..."'''
+            keywords=["dynasties", "character", "religion", "provinces", "bloodline", "title"]
+    )
+    character = strings.pop(1)
     # take advantage of multiprocessing and parse in parallel
+    parsed_vals = None
     with Pool() as p:
-        parsed_vals = p.map(parse_string, strings)
+        parsed_vals = p.map(lark_parse, strings)
+    # parse character with multiprocessing separately
+    parsed_vals.append(parse_character(character))
     return dict(parsed_vals) 
